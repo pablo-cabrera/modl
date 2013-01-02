@@ -1,0 +1,17 @@
+{
+    "name" : "modl",
+    "version": "0.0.1",
+    "author" : "Pablo Cabrera <pablo.cabrera.munoz@gmail.com>",
+    "main" : "./lib/modl.js",
+    
+    "devDependencies" : {
+        "ytestrunner": "*",
+        "yuitest": "*"
+    },
+    
+    "scripts" : {
+    	"test" : "grunt" 
+    },
+    
+    "license": "MIT"
+}
