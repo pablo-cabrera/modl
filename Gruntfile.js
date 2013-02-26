@@ -3,31 +3,28 @@ module.exports = function(grunt) {
 
     // Project configuration.
     grunt.initConfig({
-        pkg : '<json:package.json>',
+        pkg : "<json:package.json>",
         meta : {
-            banner : '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
-                '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-                '<%= pkg.homepage ? "* " + pkg.homepage + "\n" : "" %>' +
-                '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
-                ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */'
-        },
-        lint : {
-            files : ['grunt.js', 'lib/**/*.js', 'test/**/*.js']
+            banner : "/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - " +
+                "<%= grunt.template.today(\"yyyy-mm-dd\") %>\n" +
+                "<%= pkg.homepage ? \"* \" + pkg.homepage + \"\n\" : \"\" %>" +
+                "* Copyright (c) <%= grunt.template.today(\"yyyy\") %> <%= pkg.author.name %>;" +
+                " Licensed <%= _.pluck(pkg.licenses, \"type\").join(\", \") %> */"
         },
 
         test : {
-            files : ['test/**/*.js']
+            files : ["test/**/*.js"]
         },
 
         uglify : {
             dist : {
                 src : "lib/modl.js",
-                dest : 'dist/modl.js'
+                dest : "dist/modl.js"
             }
         },
         watch : {
-            files : '<config:lint.files>',
-            tasks : 'lint'
+            files : "<config:lint.files>",
+            tasks : "lint"
         },
         jshint : {
             options : {
@@ -48,17 +45,20 @@ module.exports = function(grunt) {
 
                 /* relaxing */
                 eqnull : true,
+                sub : true,
 
                 /* environment */
                 browser : true,
                 node : true
             },
-            globals : {}
+            globals : {},
+
+            files : ["Gruntfile.js", "lib/**/*.js", "test/**/*.js"]
         }
     });
 
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks("grunt-contrib-jshint");
+    grunt.loadNpmTasks("grunt-contrib-uglify");
 
     // Local tasks
     grunt.loadTasks("tasks");

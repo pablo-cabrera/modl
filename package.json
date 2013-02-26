@@ -6,7 +6,6 @@
 
     "devDependencies" : {
         "grunt-contrib-jshint" : "*",
-        "grunt-contrib-concat" : "*",
         "grunt-contrib-uglify" : "*",
         "grunt" : "~0.4.0",
         "grunt-shell": "0.2.0",
