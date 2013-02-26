@@ -19,17 +19,10 @@ module.exports = function(grunt) {
             files : ['test/**/*.js']
         },
 
-        concat : {
+        uglify : {
             dist : {
-                src : ['<banner:meta.banner>',
-                        '<file_strip_banner:lib/<%= pkg.name %>.js>'],
-                dest : 'dist/<%= pkg.name %>.js'
-            }
-        },
-        min : {
-            dist : {
-                src : ['<banner:meta.banner>', '<config:concat.dist.dest>'],
-                dest : 'dist/<%= pkg.name %>.js'
+                src : "lib/modl.js",
+                dest : 'dist/modl.js'
             }
         },
         watch : {
@@ -61,18 +54,16 @@ module.exports = function(grunt) {
                 node : true
             },
             globals : {}
-        },
-        uglify : {}
+        }
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
     // Local tasks
     grunt.loadTasks("tasks");
 
     // Defaults
-    grunt.registerTask("default", ["jshint", "test", "concat", "uglify"]);
+    grunt.registerTask("default", ["jshint", "test", "uglify"]);
 
 };
