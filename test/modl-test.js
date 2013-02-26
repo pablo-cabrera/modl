@@ -1,22 +1,50 @@
 (function(global) {
     "use strict";
 
-    var cwd = process.cwd(),
-        YUITest = global.YUITest || require("yuitest"),
-        modl = global.modl || require(cwd + "/lib/modl"),
-        Assert = YUITest.Assert;
+    var YUITest = global.YUITest || require("yuitest"),
+        root = (typeof exports !== 'undefined' && global.exports !== exports) ? process.cwd() + "/" : "../",
+        modl = global.modl || require(root + "/lib/modl"),
+        Assert = YUITest.Assert,
 
-    YUITest.TestRunner.add(new YUITest.TestCase({
+        test = new YUITest.TestCase({
 
-        name : "modl-test",
+            setUp : function() {
+                try {
+                    modl.setup({
+                        "root" : root + "test-runner"
+                    });
+                } catch (e) {
+                    console.log("wtf?!", e);
+                    throw "wtf?!";
+                }
+            },
 
-        "should have an object" : function() {
-            Assert.isObject(modl);
-        },
+            name : "modl-test",
+            "should load a single module" : function() {
+                modl.
+                require("mod-a").
+                exports(function(modl, imports) {
+                    test.resume(function() {
+                        Assert.isObject(imports);
+                        Assert.isObject(imports["mod-a"]);
+                    });
+                });
 
-        "should clear all modules" : function() {
-            modl.clear();
-            Assert.isObject(modl);
-        }
-    }));
+                test.wait();
+            },
+            "should load a file within module" : function() {
+                modl.
+                require("mod-a/AssetA").
+                exports(function(modl, imports) {
+                    test.resume(function() {
+                        Assert.isObject(imports);
+                        Assert.isObject(imports["AssetA"]);
+                    });
+                });
+
+                test.wait();
+            }
+        });
+
+    YUITest.TestRunner.add(test);
 }(this));

@@ -3,15 +3,22 @@
     "version": "0.0.1",
     "author" : "Pablo Cabrera <pablo.cabrera.munoz@gmail.com>",
     "main" : "./lib/modl.js",
-    
+
     "devDependencies" : {
+        "grunt-contrib-jshint" : "*",
+        "grunt-contrib-concat" : "*",
+        "grunt-contrib-uglify" : "*",
+        "grunt" : "~0.4.0",
+        "grunt-shell": "0.2.0",
+        "grunt-bump": "0.0.2",
         "ytestrunner": "*",
-        "yuitest": "*"
+        "yuitest": "*",
+        "colors" : "*"
     },
-    
+
     "scripts" : {
-    	"test" : "grunt" 
+        "test" : "grunt"
     },
-    
+
     "license": "MIT"
 }
