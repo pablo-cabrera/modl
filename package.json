@@ -1,17 +1,21 @@
 {
     "name" : "modl",
-    "version": "0.0.1",
+    "version" : "0.0.1",
     "author" : "Pablo Cabrera <pablo.cabrera.munoz@gmail.com>",
     "main" : "./lib/modl.js",
 
     "devDependencies" : {
         "grunt-contrib-jshint" : "*",
         "grunt-contrib-uglify" : "*",
+        "grunt-contrib-yuidoc" : "~0.4.0",
+
         "grunt" : "~0.4.0",
-        "grunt-shell": "0.2.0",
-        "grunt-bump": "0.0.2",
-        "ytestrunner": "*",
-        "yuitest": "*",
+        "grunt-shell" : "0.2.0",
+        "grunt-bump" : "0.0.2",
+
+        "ytestrunner" : "*",
+        "yuitest" : "*",
+
         "colors" : "*"
     },
 
@@ -19,5 +23,5 @@
         "test" : "grunt"
     },
 
-    "license": "MIT"
+    "license" : "MIT"
 }

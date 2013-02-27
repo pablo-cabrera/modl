@@ -3,7 +3,8 @@ module.exports = function(grunt) {
 
     // Project configuration.
     grunt.initConfig({
-        pkg : "<json:package.json>",
+        pkg : grunt.file.readJSON("package.json"),
+
         meta : {
             banner : "/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - " +
                 "<%= grunt.template.today(\"yyyy-mm-dd\") %>\n" +
@@ -22,10 +23,7 @@ module.exports = function(grunt) {
                 dest : "dist/modl.js"
             }
         },
-        watch : {
-            files : "<config:lint.files>",
-            tasks : "lint"
-        },
+
         jshint : {
             options : {
                 /* enforcing */
@@ -54,16 +52,32 @@ module.exports = function(grunt) {
             globals : {},
 
             files : ["Gruntfile.js", "lib/**/*.js", "test/**/*.js"]
-        }
+        },
+
+        yuidoc : {
+            compile: {
+                name: "<%= pkg.name %>",
+                description: "<%= pkg.description %>",
+                version: "<%= pkg.version %>",
+                url: "<%= pkg.homepage %>",
+                options: {
+                    paths: "lib/",
+                    outdir: "docs/"
+                }
+            }
+          }
+
     });
 
+    // These plugins provide necessary tasks.
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-contrib-uglify");
+    grunt.loadNpmTasks("grunt-contrib-yuidoc");
 
     // Local tasks
     grunt.loadTasks("tasks");
 
     // Defaults
-    grunt.registerTask("default", ["jshint", "test", "uglify"]);
+    grunt.registerTask("default", ["jshint", "test", "uglify", "yuidoc"]);
 
 };
