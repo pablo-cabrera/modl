@@ -2,3 +2,4 @@
 dist
 test-result
 node_modules
+!test-runner/node_modules
