@@ -1,0 +1,9 @@
+#eclipse crap
+.project
+.externalToolBuilders/
+.settings/
+
+dist
+test-result
+node_modules
+!test-runner/node_modules
