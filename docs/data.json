@@ -330,7 +330,7 @@
                 }
             ],
             "return": {
-                "description": "Wether a property exists within the object or not",
+                "description": "whether a property exists within the object or not",
                 "type": "Boolean"
             },
             "class": "modl"
@@ -488,7 +488,7 @@
         {
             "file": "lib/modl.js",
             "line": 375,
-            "description": "Indicates wether the instance is ready or not",
+            "description": "Indicates whether the instance is ready or not",
             "itemtype": "property",
             "name": "_readyStatus",
             "access": "private",
@@ -681,7 +681,7 @@
         {
             "file": "lib/modl.js",
             "line": 664,
-            "description": "Indicates wether the promise has been fulfilled",
+            "description": "Indicates whether the promise has been fulfilled",
             "itemtype": "property",
             "name": "_fulfilled",
             "access": "private",
