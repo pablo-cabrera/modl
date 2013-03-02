@@ -43,6 +43,10 @@
             
                 <li><a href="..&#x2F;classes/Asset.html">Asset</a></li>
             
+                <li><a href="..&#x2F;classes/Future.html">Future</a></li>
+            
+                <li><a href="..&#x2F;classes/Loader.html">Loader</a></li>
+            
                 <li><a href="..&#x2F;classes/modl.html">modl</a></li>
             
                 <li><a href="..&#x2F;classes/Module.html">Module</a></li>
@@ -636,7 +640,7 @@
                 },
 
                 &#x2F;**
-                 * Loads child module within the module &lt;i&gt;(yo dawn!)&lt;&#x2F;i&gt;.
+                 * Loads child module within the module &lt;i&gt;(Yo dawg! I heard you like modules...)&lt;&#x2F;i&gt;.
                  *
                  * @method module
                  * @for Module
@@ -725,8 +729,68 @@
             }
         }),
 
+        &#x2F;**
+         * Represents a future promise
+         *
+         * @class Future
+         * @constructor
+         * @private
+         *&#x2F;
         Future = type({
+            constr : function() {
+                merge(this, {
+                    &#x2F;**
+                     * Holds the sent error
+                     *
+                     * @property _err
+                     * @for Future
+                     * @private
+                     * @type {mixed}
+                     *&#x2F;
+                    _err : undef,
+
+                    &#x2F;**
+                     * Holds the sent data
+                     *
+                     * @property _data
+                     * @for Future
+                     * @private
+                     * @type {mixed}
+                     *&#x2F;
+                    _data : undef,
+
+                    &#x2F;**
+                     * Indicates wether the promise has been fulfilled
+                     *
+                     * @property _fulfilled
+                     * @for Future
+                     * @private
+                     * @type {boolean}
+                     *&#x2F;
+                    _fulfilled : false,
+
+
+                    &#x2F;**
+                     * Holds the callback to be executed whenever the promise is fulfilled
+                     *
+                     * @property _when
+                     * @for Future
+                     * @private
+                     * @type {function}
+                     *&#x2F;
+                    _when : undef
+                });
+            },
             proto: {
+
+                &#x2F;**
+                 * Fulfills the promise
+                 *
+                 * @method fulfill
+                 * @for Future
+                 * @param {mixed} [err] The error to be sent
+                 * @param {mixed} [data] The data to be sent
+                 *&#x2F;
                 fulfill : function(err, data) {
                     this._err = err;
                     this._data = data;
@@ -741,6 +805,15 @@
                     }
                 },
 
+                &#x2F;**
+                 * Register the callback if the promise is to be fulfilled,
+                 * otherwise just runs it passing along the error&#x2F;data
+                 * associated with the future
+                 *
+                 * @method when
+                 * @for Future
+                 * @param {function} f The callback function
+                 *&#x2F;
                 when : function(f) {
                     if (this._fulfilled) {
                         f(this._err, this._data);
@@ -751,14 +824,51 @@
             }
         }),
 
+        &#x2F;**
+         * The loader class responsible for loading the various dependencies between modules and assets
+         *
+         * @class Loader
+         * @extends Ready
+         * @constructor
+         * @private
+         *&#x2F;
         Loader = Ready.descend({
             constr : function() {
                 merge(this, {
+                    &#x2F;**
+                     * The requires collection containing the various required
+                     * data
+                     *
+                     * @property _requires
+                     * @for Loader
+                     * @private
+                     * @type {array}
+                     *&#x2F;
                     _requires : [],
+
+                    &#x2F;**
+                     * The modl instance to be passed along to the exports
+                     * callback function when called
+                     *
+                     * @property _modl
+                     * @for Loader
+                     * @private
+                     * @type {object}
+                     *&#x2F;
                     _modl : {
                         imports : {},
                         exports : {}
                     },
+
+                    &#x2F;**
+                     * The callback function to be executed when all the
+                     * requires are ready
+                     *
+                     * @property _payload
+                     * @for Loader
+                     * @private
+                     * @type {function}
+                     *&#x2F;
                     _payload : function() {}
                 });
 
@@ -768,11 +878,65 @@
             },
 
             proto : {
+
+                &#x2F;**
+                 * Requires an asset from it. The &lt;b&gt;resource&lt;&#x2F;b&gt; string may
+                 * have the following formats:
+                 *
+                 *  - &lt;code&gt;&quot;&#x2F;path&#x2F;to&#x2F;asset&lt;&#x2F;code&gt;: in this case the asset
+                 * within the current module will be loaded
+                 *
+                 *  - &lt;code&gt;&quot;module&quot;&lt;&#x2F;code&gt;: in this case the &quot;module&quot; within
+                 * &lt;code&gt;node_modules&lt;&#x2F;code&gt; folder will be required, and
+                 * afterwards the &lt;code&gt;&#x2F;modl&lt;&#x2F;code&gt; asset within the module
+                 * will be loaded.
+                 *
+                 *  - &lt;code&gt;&quot;module&#x2F;path&#x2F;to&#x2F;asset&quot;&lt;&#x2F;code&gt;: in this case the
+                 * &quot;module&quot; within &lt;code&gt;node_modules&lt;&#x2F;code&gt; folder will be
+                 * required, and afterwards the indicated asset within the
+                 * module will be loaded.
+                 *
+                 * Optionally an &lt;b&gt;alias&lt;&#x2F;b&gt; property may be passed to name
+                 * the required asset within the &lt;b&gt;imports&lt;&#x2F;b&gt; object. If
+                 * ommited, the alias will be automatically generated based the
+                 * &lt;b&gt;resource&lt;&#x2F;b&gt; value.
+                 *
+                 * @param {string} resource A given resource to be required
+                 * @param {string} [alias] An optional alias which to be named
+                 *              within the &lt;b&gt;imports&lt;&#x2F;b&gt; object.
+                 * @method require
+                 * @for Loader
+                 * @chainable
+                 * @return {Loader} The loader instance
+                 *&#x2F;
                 require : function(resource, alias) {
                     this._requires.push({resource : resource, alias : alias});
                     return this;
                 },
 
+                &#x2F;**
+                 * Schedules a given &lt;b&gt;payload&lt;&#x2F;b&gt;
+                 * function export the &lt;i&gt;asset&lt;&#x2F;i&gt;. The &lt;b&gt;payload&lt;&#x2F;b&gt; will only
+                 * run when all the requires are loaded and ready for prime time.
+                 *
+                 * When called, the &lt;b&gt;payload&lt;&#x2F;b&gt; function will receive the
+                 * &lt;b&gt;module&lt;&#x2F;b&gt; struct as its first argument and as second
+                 * argument, the &lt;b&gt;imports&lt;&#x2F;b&gt; object containing all required
+                 * resources within will be passed.
+                 *
+                 * The &lt;b&gt;module&lt;&#x2F;b&gt; object will have an &lt;code&gt;exports&lt;&#x2F;code&gt;
+                 * property which will be published for this asset. This property
+                 * can be overwritten with any value this asset may want to publish (&lt;i&gt;a
+                 * la&lt;&#x2F;i&gt; nodejs module system).
+                 *
+                 * The &lt;b&gt;module&lt;&#x2F;b&gt; object will also have an &lt;code&gt;imports&lt;&#x2F;code&gt;
+                 * object containing all required resources which will be also
+                 * passed as a second argument to the &lt;b&gt;payload&lt;&#x2F;b&gt; function
+                 *
+                 * @method exports
+                 * @for Loader
+                 * @param {function} payload The payload function
+                 *&#x2F;
                 exports : function(payload) {
                     if (loadingAsset) {
                         this._attachAsset(loadingAsset);
@@ -782,13 +946,42 @@
                     this._dispatch();
                 },
 
+                &#x2F;**
+                 * Attach a given asset to this Loader. When the loader is
+                 * ready, the asset will also be market as ready
+                 *
+                 * @method _attachAsset
+                 * @for Loader
+                 * @private
+                 * @param {Asset} asset The asset to be attached
+                 *&#x2F;
                 _attachAsset : function(asset) {
                     asset._loader = this;
                     this._whenReady(function() { asset._ready(); });
                 },
 
+                &#x2F;**
+                 * Dispatches the loader processing. It will start loading all
+                 * its requires and finally will run the payload function.
+                 *
+                 * @method _dispatch
+                 * @for Loader
+                 * @private
+                 *&#x2F;
                 _dispatch : function() {
-                    var that = this;
+                    var that = this,
+                        aliases = {};
+
+                    forEach(this._requires, function(r) {
+                        r.details = parseResource(r);
+
+                        if (hop(aliases, r.details.alias)) {
+                            throw new Error(&quot;Alias clash: &quot; + r.details.alias);
+                        }
+
+                        aliases[r.details.alias] = undef;
+                    });
+
                     setTimeout(function() {
                         that._loadRequires().
                         when(function() {
@@ -798,6 +991,14 @@
                     });
                 },
 
+                &#x2F;**
+                 * Loads all requires for the loader.
+                 *
+                 * @method _loadRequires
+                 * @for Loader
+                 * @private
+                 * @return {Future} A promise for when all the requires are ready.
+                 *&#x2F;
                 _loadRequires : function() {
                     var future = new Future(),
                         that = this,
@@ -819,25 +1020,28 @@
                     return future;
                 },
 
+                &#x2F;**
+                 * Loads a given requicre
+                 *
+                 * @param {object} require The require struct containing all its details
+                 * @return {Future} The promise for when the require is done
+                 *&#x2F;
                 _loadRequire : function(require) {
                     var
-                        resource,
-                        module,
-                        asset,
+                        details = require.details,
+                        module = details.module,
+                        asset = details.asset,
+                        alias = details.alias,
                         future = new Future(),
                         that = this,
 
-                        when = function(err, asset) {
+                        when = function(err, assetInstance) {
                             log(&quot;require loaded: &quot;, require);
-                            that._modl.imports[resource.alias] = asset;
+                            that._modl.imports[alias] = assetInstance;
                             future.fulfill();
                         };
 
                     log(&quot;loading require: &quot;, require);
-
-                    resource = parseResource(require);
-                    module = resource.module;
-                    asset = resource.asset;
 
                     if (module) {
                         current.module(module).
