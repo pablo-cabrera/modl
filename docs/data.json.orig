@@ -13,17 +13,25 @@
                 "modl": 1,
                 "Ready": 1,
                 "Module": 1,
+<<<<<<< HEAD
+                "Asset": 1
+=======
                 "Asset": 1,
                 "Future": 1,
                 "Loader": 1
+>>>>>>> gh-pages
             },
             "fors": {
                 "modl": 1,
                 "Ready": 1,
                 "Module": 1,
+<<<<<<< HEAD
+                "Asset": 1
+=======
                 "Asset": 1,
                 "Future": 1,
                 "Loader": 1
+>>>>>>> gh-pages
             },
             "namespaces": {}
         }
@@ -39,7 +47,11 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "lib/modl.js",
+<<<<<<< HEAD
+            "line": 764,
+=======
             "line": 964,
+>>>>>>> gh-pages
             "description": "The modl loader",
             "static": 1
         },
@@ -113,6 +125,8 @@
                     "type": "String"
                 }
             ]
+<<<<<<< HEAD
+=======
         },
         "Future": {
             "name": "Future",
@@ -144,6 +158,7 @@
             "is_constructor": 1,
             "access": "private",
             "tagname": ""
+>>>>>>> gh-pages
         }
     },
     "classitems": [
@@ -330,7 +345,11 @@
                 }
             ],
             "return": {
+<<<<<<< HEAD
                 "description": "Wether a property exists within the object or not",
+=======
+                "description": "whether a property exists within the object or not",
+>>>>>>> gh-pages
                 "type": "Boolean"
             },
             "class": "modl"
@@ -488,7 +507,11 @@
         {
             "file": "lib/modl.js",
             "line": 375,
+<<<<<<< HEAD
             "description": "Indicates wether the instance is ready or not",
+=======
+            "description": "Indicates whether the instance is ready or not",
+>>>>>>> gh-pages
             "itemtype": "property",
             "name": "_readyStatus",
             "access": "private",
@@ -608,7 +631,11 @@
         {
             "file": "lib/modl.js",
             "line": 544,
+<<<<<<< HEAD
+            "description": "Loads child module within the module <i>(yo dawn!)</i>.",
+=======
             "description": "Loads child module within the module <i>(Yo dawg! I heard you like modules...)</i>.",
+>>>>>>> gh-pages
             "itemtype": "method",
             "name": "module",
             "params": [
@@ -658,6 +685,9 @@
         },
         {
             "file": "lib/modl.js",
+<<<<<<< HEAD
+            "line": 772,
+=======
             "line": 644,
             "description": "Holds the sent error",
             "itemtype": "property",
@@ -681,7 +711,7 @@
         {
             "file": "lib/modl.js",
             "line": 664,
-            "description": "Indicates wether the promise has been fulfilled",
+            "description": "Indicates whether the promise has been fulfilled",
             "itemtype": "property",
             "name": "_fulfilled",
             "access": "private",
@@ -872,6 +902,7 @@
         {
             "file": "lib/modl.js",
             "line": 972,
+>>>>>>> gh-pages
             "description": "Creates a <b>Loader</b> and requires an asset from it. The\n<b>resource</b> string may have the following formats:\n\n - <code>\"/path/to/asset</code>: in this case the asset within\nthe current module will be loaded\n\n - <code>\"module\"</code>: in this case the \"module\" within\n<code>node_modules</code> folder will be required, and\nafterwards the <code>/modl</code> asset within the module will\nbe loaded.\n\n - <code>\"module/path/to/asset\"</code>: in this case the\n\"module\" within <code>node_modules</code> folder will be\nrequired, and afterwards the indicated asset within the module\nwill be loaded.\n\nOptionally an <b>alias</b> property may be passed to name the\nrequired asset within the <b>imports</b> object. If\nommited, the alias will be automatically generated based the\n<b>resource</b> value.",
             "params": [
                 {
@@ -898,7 +929,11 @@
         },
         {
             "file": "lib/modl.js",
+<<<<<<< HEAD
+            "line": 809,
+=======
             "line": 1009,
+>>>>>>> gh-pages
             "description": "Creates a <b>Loader</b> and schedules a given <b>payload</b>\nfunction export the <i>asset</i>. The <b>payload</b> will only\nrun when all the requires are loaded and ready for prime time.\n\nWhen called, the <b>payload</b> function will receive the\n<b>module</b> struct as its first argument and as second\nargument, the <b>imports</b> object containing all required\nresources within will be passed.\n\nThe <b>module</b> object will have an <code>exports</code>\nproperty which will be published for this asset. This property\ncan be overwritten with any value this asset may want to publish (<i>a\nla</i> nodejs module system).\n\nThe <b>module</b> object will also have an <code>imports</code>\nobject containing all required resources which will be also\npassed as a second argument to the <b>payload</b> function",
             "itemtype": "method",
             "name": "exports",
@@ -914,7 +949,11 @@
         },
         {
             "file": "lib/modl.js",
+<<<<<<< HEAD
+            "line": 839,
+=======
             "line": 1039,
+>>>>>>> gh-pages
             "description": "Sets up the modl environment. It will reset all loaded modules\nand will set up the settings object along with the values passed\nalong with the <b>options</b> parameter.\n\nThis function <b>MUST</b> be called before any require/exports\ncan be actually made.",
             "itemtype": "method",
             "name": "setup",
@@ -942,10 +981,14 @@
             "class": "modl"
         }
     ],
+<<<<<<< HEAD
+    "warnings": []
+=======
     "warnings": [
         {
             "message": "Missing item type\nLoads a given requicre",
             "line": " lib/modl.js:925"
         }
     ]
+>>>>>>> gh-pages
 }

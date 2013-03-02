@@ -43,10 +43,13 @@
             
                 <li><a href="..&#x2F;classes/Asset.html">Asset</a></li>
             
+<<<<<<< HEAD
+=======
                 <li><a href="..&#x2F;classes/Future.html">Future</a></li>
             
                 <li><a href="..&#x2F;classes/Loader.html">Loader</a></li>
             
+>>>>>>> gh-pages
                 <li><a href="..&#x2F;classes/modl.html">modl</a></li>
             
                 <li><a href="..&#x2F;classes/Module.html">Module</a></li>
@@ -100,7 +103,11 @@
 
     
         <div class="foundat">
+<<<<<<< HEAD
+            Defined in: <a href="..&#x2F;files&#x2F;lib_modl.js.html#l764"><code>lib&#x2F;modl.js:764</code></a>
+=======
             Defined in: <a href="..&#x2F;files&#x2F;lib_modl.js.html#l964"><code>lib&#x2F;modl.js:964</code></a>
+>>>>>>> gh-pages
         </div>
     
 
@@ -407,7 +414,11 @@
             
         
         
+<<<<<<< HEAD
+        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l809"><code>lib&#x2F;modl.js:809</code></a>
+=======
         <a href="..&#x2F;files&#x2F;lib_modl.js.html#l1009"><code>lib&#x2F;modl.js:1009</code></a>
+>>>>>>> gh-pages
         
         </p>
 
@@ -701,7 +712,11 @@ argument and the index or property name as it's second argument.</p>
                     
                         <span class="type">Boolean</span>:
                     
+<<<<<<< HEAD
                     Wether a property exists within the object or not
+=======
+                    whether a property exists within the object or not
+>>>>>>> gh-pages
                 
             </div>
         </div>
@@ -1281,7 +1296,11 @@ can be passes a property whitelist</p>
 
     
         <span class="returns-inline">
+<<<<<<< HEAD
+            <span class="type">Loader</span>
+=======
             <span class="type"><a href="../classes/Loader.html" class="crosslink">Loader</a></span>
+>>>>>>> gh-pages
         </span>
     
 
@@ -1312,7 +1331,11 @@ can be passes a property whitelist</p>
             
         
         
+<<<<<<< HEAD
+        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l772"><code>lib&#x2F;modl.js:772</code></a>
+=======
         <a href="..&#x2F;files&#x2F;lib_modl.js.html#l972"><code>lib&#x2F;modl.js:972</code></a>
+>>>>>>> gh-pages
         
         </p>
 
@@ -1394,7 +1417,11 @@ ommited, the alias will be automatically generated based the
             <div class="returns-description">
                 
                     
+<<<<<<< HEAD
+                        <span class="type">Loader</span>:
+=======
                         <span class="type"><a href="../classes/Loader.html" class="crosslink">Loader</a></span>:
+>>>>>>> gh-pages
                     
                     The loader instance
                 
@@ -1450,7 +1477,11 @@ ommited, the alias will be automatically generated based the
             
         
         
+<<<<<<< HEAD
+        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l839"><code>lib&#x2F;modl.js:839</code></a>
+=======
         <a href="..&#x2F;files&#x2F;lib_modl.js.html#l1039"><code>lib&#x2F;modl.js:1039</code></a>
+>>>>>>> gh-pages
         
         </p>
 

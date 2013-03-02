@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Module - modl</title>
+    <title>Asset - modl</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -43,10 +43,13 @@
             
                 <li><a href="..&#x2F;classes/Asset.html">Asset</a></li>
             
+<<<<<<< HEAD
+=======
                 <li><a href="..&#x2F;classes/Future.html">Future</a></li>
             
                 <li><a href="..&#x2F;classes/Loader.html">Loader</a></li>
             
+>>>>>>> gh-pages
                 <li><a href="..&#x2F;classes/modl.html">modl</a></li>
             
                 <li><a href="..&#x2F;classes/Module.html">Module</a></li>
@@ -92,7 +95,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Module Class</h1>
+                        <h1>Asset Class</h1>
 <div class="box meta">
     
 
@@ -104,7 +107,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;lib_modl.js.html#l429"><code>lib&#x2F;modl.js:429</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;lib_modl.js.html#l577"><code>lib&#x2F;modl.js:577</code></a>
         </div>
     
 
@@ -116,17 +119,15 @@
 
 
 <div class="box intro">
-    <p>The Module class represents a module within the modl tree. It can
-load other <b>modules</b>(dependencies contained within
-<code>node_modules</code> directory) and <b>assets</b> (files
-referenced within a module).</p>
+    <p>The Asset class represents an script file being loaded within a
+module.</p>
 </div>
 
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_Module" class="method item private">
-    <h3 class="name"><code>Module</code></h3>
+        <div id="method_Asset" class="method item private">
+    <h3 class="name"><code>Asset</code></h3>
 
     
         <div class="args">
@@ -175,7 +176,7 @@ referenced within a module).</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l429"><code>lib&#x2F;modl.js:429</code></a>
+        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l577"><code>lib&#x2F;modl.js:577</code></a>
         
         </p>
 
@@ -204,7 +205,7 @@ referenced within a module).</p>
                     
 
                     <div class="param-description">
-                        <p>The module's name</p>
+                        <p>It's name</p>
                     </div>
 
                     
@@ -219,7 +220,7 @@ referenced within a module).</p>
                     
 
                     <div class="param-description">
-                        <p>The module's path</p>
+                        <p>It's path</p>
                     </div>
 
                     
@@ -261,6 +262,13 @@ referenced within a module).</p>
 
                     <ul class="index-list methods extends">
                         
+                            <li class="index-item method private">
+                                <a href="#method__load">_load</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method private inherited">
                                 <a href="#method__ready">_ready</a>
 
@@ -270,27 +278,6 @@ referenced within a module).</p>
                         
                             <li class="index-item method private inherited">
                                 <a href="#method__whenReady">_whenReady</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_asset">asset</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_initialize">initialize</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_module">module</a>
 
                                 
                                 
@@ -306,22 +293,8 @@ referenced within a module).</p>
 
                     <ul class="index-list properties extends">
                         
-                            <li class="index-item property private">
-                                <a href="#property__assets">_assets</a>
-
-                                
-                                
-                            </li>
-                        
                             <li class="index-item property private inherited">
                                 <a href="#property__callbacks">_callbacks</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property private">
-                                <a href="#property__modules">_modules</a>
 
                                 
                                 
@@ -334,15 +307,15 @@ referenced within a module).</p>
                                 
                             </li>
                         
-                            <li class="index-item property private">
-                                <a href="#property__path">_path</a>
+                            <li class="index-item property private inherited">
+                                <a href="#property__readyStatus">_readyStatus</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item property private inherited">
-                                <a href="#property__readyStatus">_readyStatus</a>
+                            <li class="index-item property private">
+                                <a href="#property__script">_script</a>
 
                                 
                                 
@@ -360,6 +333,62 @@ referenced within a module).</p>
         
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
+
+                
+                    <div id="method__load" class="method item private">
+    <h3 class="name"><code>_load</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l620"><code>lib&#x2F;modl.js:620</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Actually fires the asset loading</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
 
                 
                     <div id="method__ready" class="method item private inherited">
@@ -502,323 +531,12 @@ instance is marked as <b>ready</b></p>
 </div>
 
                 
-                    <div id="method_asset" class="method item">
-    <h3 class="name"><code>asset</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>name</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"><a href="../classes/Future.html" class="crosslink">Future</a></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l515"><code>lib&#x2F;modl.js:515</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Loads an asset within the module.</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The asset's name</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type"><a href="../classes/Future.html" class="crosslink">Future</a></span>:
-                    
-                    The future representing when the asset will
-        be loaded
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_initialize" class="method item">
-    <h3 class="name"><code>initialize</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l498"><code>lib&#x2F;modl.js:498</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Initializes the module loading its <code>/modl</code> asset</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_module" class="method item">
-    <h3 class="name"><code>module</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>name</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"><a href="../classes/Future.html" class="crosslink">Future</a></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l544"><code>lib&#x2F;modl.js:544</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Loads child module within the module <i>(Yo dawg! I heard you like modules...)</i>.</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The module's name</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type"><a href="../classes/Future.html" class="crosslink">Future</a></span>:
-                    
-                    The future representing when the module will
-        be loaded
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
             </div>
         
 
         
             <div id="properties" class="api-class-tabpanel">
                 <h2 class="off-left">Properties</h2>
-
-                
-                    <div id="property__assets" class="property item private">
-    <h3 class="name"><code>_assets</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l478"><code>lib&#x2F;modl.js:478</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>It's assets. This will contain the references for all
-assets currently loaded within this module.</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
 
                 
                     <div id="property__callbacks" class="property item private inherited">
@@ -864,53 +582,6 @@ assets currently loaded within this module.</p>
 </div>
 
                 
-                    <div id="property__modules" class="property item private">
-    <h3 class="name"><code>_modules</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l467"><code>lib&#x2F;modl.js:467</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>It's inner modules. This will contain the references for
-the children modules currently loaded for this module.</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
                     <div id="property__name" class="property item private">
     <h3 class="name"><code>_name</code></h3>
     <span class="type">String</span>
@@ -936,7 +607,7 @@ the children modules currently loaded for this module.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l447"><code>lib&#x2F;modl.js:447</code></a>
+        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l592"><code>lib&#x2F;modl.js:592</code></a>
         
         </p>
 
@@ -946,53 +617,7 @@ the children modules currently loaded for this module.</p>
     </div>
 
     <div class="description">
-        <p>It's name</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property__path" class="property item private">
-    <h3 class="name"><code>_path</code></h3>
-    <span class="type">String</span>
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l457"><code>lib&#x2F;modl.js:457</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>It's path</p>
+        <p>The asset's name</p>
     </div>
 
     
@@ -1035,7 +660,57 @@ the children modules currently loaded for this module.</p>
     </div>
 
     <div class="description">
+<<<<<<< HEAD
         <p>Indicates wether the instance is ready or not</p>
+=======
+        <p>Indicates whether the instance is ready or not</p>
+>>>>>>> gh-pages
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property__script" class="property item private">
+    <h3 class="name"><code>_script</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l602"><code>lib&#x2F;modl.js:602</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The asset's script path</p>
     </div>
 
     
