@@ -4,5 +4,7 @@
     var node = (typeof exports !== "undefined" && global.exports !== exports),
         modl = node ? require(process.cwd() + "/lib/modl") : global.modl;
 
-    modl.exports(function(module) {});
+    modl.exports(function(modl) {
+        modl.exports.name = "LocalAsset";
+    });
 }(this));
