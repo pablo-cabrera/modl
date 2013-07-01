@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8">
     <title>Asset - modl</title>
-    <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
-    <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
-    <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
-    <link rel="shortcut icon" type="image/png" href="..&#x2F;assets/favicon.png">
-    <script src="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;combo?3.8.0&#x2F;build&#x2F;yui&#x2F;yui-min.js"></script>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
 </head>
 <body class="yui3-skin-sam">
 
@@ -15,7 +15,7 @@
     <div id="hd" class="yui3-g header">
         <div class="yui3-u-3-4">
             
-                <h1><img src="..&#x2F;assets/css/logo.png" title="modl"></h1>
+                <h1><img src="../assets/css/logo.png" title="modl"></h1>
             
         </div>
         <div class="yui3-u-1-4 version">
@@ -41,17 +41,21 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="..&#x2F;classes/Asset.html">Asset</a></li>
+                <li><a href="../classes/Asset.html">Asset</a></li>
             
-                <li><a href="..&#x2F;classes/Future.html">Future</a></li>
+                <li><a href="../classes/Loader.html">Loader</a></li>
             
-                <li><a href="..&#x2F;classes/Loader.html">Loader</a></li>
+                <li><a href="../classes/modl.html">modl</a></li>
             
-                <li><a href="..&#x2F;classes/modl.html">modl</a></li>
+                <li><a href="../classes/modl.Util.html">modl.Util</a></li>
             
-                <li><a href="..&#x2F;classes/Module.html">Module</a></li>
+                <li><a href="../classes/modl.Util.Future.html">modl.Util.Future</a></li>
             
-                <li><a href="..&#x2F;classes/Ready.html">Ready</a></li>
+                <li><a href="../classes/modl.Util.Token.html">modl.Util.Token</a></li>
+            
+                <li><a href="../classes/Module.html">Module</a></li>
+            
+                <li><a href="../classes/Ready.html">Ready</a></li>
             
             </ul>
 
@@ -104,7 +108,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;lib_modl.js.html#l577"><code>lib&#x2F;modl.js:577</code></a>
+            Defined in: <a href="../files/lib_modl.js.html#l460"><code>lib&#x2F;modl.js:460</code></a>
         </div>
     
 
@@ -173,7 +177,7 @@ module.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l577"><code>lib&#x2F;modl.js:577</code></a>
+        <a href="../files/lib_modl.js.html#l460"><code>lib&#x2F;modl.js:460</code></a>
         
         </p>
 
@@ -259,22 +263,15 @@ module.</p>
 
                     <ul class="index-list methods extends">
                         
-                            <li class="index-item method private">
-                                <a href="#method__load">_load</a>
+                            <li class="index-item method inherited">
+                                <a href="#method_ready">ready</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method private inherited">
-                                <a href="#method__ready">_ready</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private inherited">
-                                <a href="#method__whenReady">_whenReady</a>
+                            <li class="index-item method inherited">
+                                <a href="#method_whenReady">whenReady</a>
 
                                 
                                 
@@ -291,28 +288,21 @@ module.</p>
                     <ul class="index-list properties extends">
                         
                             <li class="index-item property private inherited">
-                                <a href="#property__callbacks">_callbacks</a>
+                                <a href="#property_callbacks">callbacks</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item property private">
-                                <a href="#property__name">_name</a>
+                            <li class="index-item property">
+                                <a href="#property_exports">exports</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property private inherited">
-                                <a href="#property__readyStatus">_readyStatus</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property private">
-                                <a href="#property__script">_script</a>
+                                <a href="#property_readyStatus">readyStatus</a>
 
                                 
                                 
@@ -332,8 +322,8 @@ module.</p>
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method__load" class="method item private">
-    <h3 class="name"><code>_load</code></h3>
+                    <div id="method_ready" class="method item inherited">
+    <h3 class="name"><code>ready</code></h3>
 
     
         <span class="paren">()</span>
@@ -343,64 +333,6 @@ module.</p>
 
     
 
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l620"><code>lib&#x2F;modl.js:620</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Actually fires the asset loading</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method__ready" class="method item private inherited">
-    <h3 class="name"><code>_ready</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
     
 
     
@@ -415,11 +347,11 @@ module.</p>
         
             
                 <p>Inherited from
-                <a href="..&#x2F;classes&#x2F;Ready.html#method__ready">Ready</a>:
+                <a href="../classes/Ready.html#method_ready">Ready</a>:
             
         
         
-        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l415"><code>lib&#x2F;modl.js:415</code></a>
+        <a href="../files/lib_modl.js.html#l447"><code>lib&#x2F;modl.js:447</code></a>
         
         </p>
 
@@ -441,8 +373,8 @@ module.</p>
 </div>
 
                 
-                    <div id="method__whenReady" class="method item private inherited">
-    <h3 class="name"><code>_whenReady</code></h3>
+                    <div id="method_whenReady" class="method item inherited">
+    <h3 class="name"><code>whenReady</code></h3>
 
     
         <div class="args">
@@ -463,8 +395,6 @@ module.</p>
     
 
     
-        <span class="flag private">private</span>
-    
 
     
 
@@ -478,11 +408,11 @@ module.</p>
         
             
                 <p>Inherited from
-                <a href="..&#x2F;classes&#x2F;Ready.html#method__whenReady">Ready</a>:
+                <a href="../classes/Ready.html#method_whenReady">Ready</a>:
             
         
         
-        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l398"><code>lib&#x2F;modl.js:398</code></a>
+        <a href="../files/lib_modl.js.html#l431"><code>lib&#x2F;modl.js:431</code></a>
         
         </p>
 
@@ -536,8 +466,8 @@ instance is marked as <b>ready</b></p>
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property__callbacks" class="property item private inherited">
-    <h3 class="name"><code>_callbacks</code></h3>
+                    <div id="property_callbacks" class="property item private inherited">
+    <h3 class="name"><code>callbacks</code></h3>
     <span class="type">Array</span>
 
     
@@ -554,11 +484,11 @@ instance is marked as <b>ready</b></p>
         
             
                 <p>Inherited from
-                <a href="..&#x2F;classes&#x2F;Ready.html#property__callbacks">Ready</a>:
+                <a href="../classes/Ready.html#property_callbacks">Ready</a>:
             
         
         
-        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l385"><code>lib&#x2F;modl.js:385</code></a>
+        <a href="../files/lib_modl.js.html#l419"><code>lib&#x2F;modl.js:419</code></a>
         
         </p>
 
@@ -579,14 +509,12 @@ instance is marked as <b>ready</b></p>
 </div>
 
                 
-                    <div id="property__name" class="property item private">
-    <h3 class="name"><code>_name</code></h3>
-    <span class="type">String</span>
+                    <div id="property_exports" class="property item">
+    <h3 class="name"><code>exports</code></h3>
+    <span class="type">Mixed</span>
 
     
 
-    
-        <span class="flag private">private</span>
     
 
     
@@ -604,7 +532,7 @@ instance is marked as <b>ready</b></p>
             
         
         
-        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l592"><code>lib&#x2F;modl.js:592</code></a>
+        <a href="../files/lib_modl.js.html#l474"><code>lib&#x2F;modl.js:474</code></a>
         
         </p>
 
@@ -614,7 +542,7 @@ instance is marked as <b>ready</b></p>
     </div>
 
     <div class="description">
-        <p>The asset's name</p>
+        <p>Holds the asset's exports</p>
     </div>
 
     
@@ -625,8 +553,8 @@ instance is marked as <b>ready</b></p>
 </div>
 
                 
-                    <div id="property__readyStatus" class="property item private inherited">
-    <h3 class="name"><code>_readyStatus</code></h3>
+                    <div id="property_readyStatus" class="property item private inherited">
+    <h3 class="name"><code>readyStatus</code></h3>
     <span class="type">Boolean</span>
 
     
@@ -643,11 +571,11 @@ instance is marked as <b>ready</b></p>
         
             
                 <p>Inherited from
-                <a href="..&#x2F;classes&#x2F;Ready.html#property__readyStatus">Ready</a>:
+                <a href="../classes/Ready.html#property_readyStatus">Ready</a>:
             
         
         
-        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l375"><code>lib&#x2F;modl.js:375</code></a>
+        <a href="../files/lib_modl.js.html#l409"><code>lib&#x2F;modl.js:409</code></a>
         
         </p>
 
@@ -658,52 +586,6 @@ instance is marked as <b>ready</b></p>
 
     <div class="description">
         <p>Indicates whether the instance is ready or not</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property__script" class="property item private">
-    <h3 class="name"><code>_script</code></h3>
-    <span class="type">String</span>
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;lib_modl.js.html#l602"><code>lib&#x2F;modl.js:602</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The asset's script path</p>
     </div>
 
     
@@ -729,13 +611,13 @@ instance is marked as <b>ready</b></p>
         </div>
     </div>
 </div>
-<script src="..&#x2F;assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
 <script>prettyPrint();</script>
-<script src="..&#x2F;assets/js/yui-prettify.js"></script>
-<script src="..&#x2F;assets/../api.js"></script>
-<script src="..&#x2F;assets/js/api-filter.js"></script>
-<script src="..&#x2F;assets/js/api-list.js"></script>
-<script src="..&#x2F;assets/js/api-search.js"></script>
-<script src="..&#x2F;assets/js/apidocs.js"></script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
 </body>
 </html>

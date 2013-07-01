@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>lib&#x2F;modl.js - modl</title>
-    <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
-    <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
-    <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
-    <link rel="shortcut icon" type="image/png" href="..&#x2F;assets/favicon.png">
-    <script src="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;combo?3.8.0&#x2F;build&#x2F;yui&#x2F;yui-min.js"></script>
+    <title>lib/modl.js - modl</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
 </head>
 <body class="yui3-skin-sam">
 
@@ -15,7 +15,7 @@
     <div id="hd" class="yui3-g header">
         <div class="yui3-u-3-4">
             
-                <h1><img src="..&#x2F;assets/css/logo.png" title="modl"></h1>
+                <h1><img src="../assets/css/logo.png" title="modl"></h1>
             
         </div>
         <div class="yui3-u-1-4 version">
@@ -41,17 +41,21 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="..&#x2F;classes/Asset.html">Asset</a></li>
+                <li><a href="../classes/Asset.html">Asset</a></li>
             
-                <li><a href="..&#x2F;classes/Future.html">Future</a></li>
+                <li><a href="../classes/Loader.html">Loader</a></li>
             
-                <li><a href="..&#x2F;classes/Loader.html">Loader</a></li>
+                <li><a href="../classes/modl.html">modl</a></li>
             
-                <li><a href="..&#x2F;classes/modl.html">modl</a></li>
+                <li><a href="../classes/modl.Util.html">modl.Util</a></li>
             
-                <li><a href="..&#x2F;classes/Module.html">Module</a></li>
+                <li><a href="../classes/modl.Util.Future.html">modl.Util.Future</a></li>
             
-                <li><a href="..&#x2F;classes/Ready.html">Ready</a></li>
+                <li><a href="../classes/modl.Util.Token.html">modl.Util.Token</a></li>
+            
+                <li><a href="../classes/Module.html">Module</a></li>
+            
+                <li><a href="../classes/Ready.html">Ready</a></li>
             
             </ul>
 
@@ -92,7 +96,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: lib&#x2F;modl.js</h1>
+                        <h1 class="file-heading">File: lib/modl.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
@@ -100,7 +104,7 @@
     &quot;use strict&quot;;
 
     var
-        &#x2F;**
+        /**
          * The defaults asset for a modl
          *
          * @property MODL_ASSET
@@ -109,22 +113,10 @@
          * @static
          * @private
          * @final
-         *&#x2F;
-        MODL_ASSET = &quot;&#x2F;modl&quot;,
+         */
+        MODL_ASSET = &quot;/modl&quot;,
 
-        &#x2F;**
-         * The regex to parse a resource
-         *
-         * @property RESOURCE_RE
-         * @for modl
-         * @type RegEx
-         * @static
-         * @private
-         * @final
-         *&#x2F;
-        RESOURCE_RE = &#x2F;([^\&#x2F;]*)(\&#x2F;.+)?&#x2F;,
-
-        &#x2F;**
+        /**
          * The regex to get the alias from the resource name
          *
          * @property ALIAS_RE
@@ -133,10 +125,10 @@
          * @static
          * @private
          * @final
-         *&#x2F;
-        ALIAS_RE = &#x2F;(.*\&#x2F;)?([^\&#x2F;]+)$&#x2F;,
+         */
+        ALIAS_RE = /(.*\/)?([^\/]+)$/,
 
-        &#x2F;**
+        /**
          * The regex used to remove double (or more) slashes from a path
          *
          * @property PATH_RE
@@ -145,10 +137,10 @@
          * @static
          * @private
          * @final
-         *&#x2F;
-        PATH_RE = &#x2F;\&#x2F;{2,}&#x2F;g,
+         */
+        PATH_RE = /\/{2,}/g,
 
-        &#x2F;**
+        /**
          * A reference to the undefined value used internally
          *
          * @property undef
@@ -157,21 +149,20 @@
          * @static
          * @private
          * @final
-         *&#x2F;
+         */
         undef = void 0,
 
-        &#x2F;**
-         * Flag that indicates if we are running under nodejs environment
-         *
-         * @property node
-         * @type boolean
-         * @static
-         * @private
-         * @final
-         *&#x2F;
+        objectProto = Object.prototype,
+
+        arrayProto = Array.prototype,
+
         node = typeof exports !== &quot;undefined&quot; &amp;&amp; global.exports !== exports,
 
-        &#x2F;**
+        constant = function(v) { return function() { return v; }; },
+
+        k = constant(),
+
+        /**
          * Array containing all
          *
          * @property node
@@ -180,10 +171,10 @@
          * @static
          * @private
          * @final
-         *&#x2F;
+         */
         validSettings = [&quot;debug&quot;, &quot;root&quot;],
 
-        &#x2F;**
+        /**
          * Contains current settings for the modl loader
          *
          * @property settings
@@ -191,10 +182,10 @@
          * @type Object
          * @static
          * @private
-         *&#x2F;
+         */
         settings = null,
 
-        &#x2F;**
+        /**
          * Points to the current module being loaded
          *
          * @property current
@@ -202,10 +193,10 @@
          * @type Module
          * @static
          * @private
-         *&#x2F;
+         */
         current,
 
-        &#x2F;**
+        /**
          * Points to the asset being loaded at the moment
          *
          * @property loadingAsset
@@ -213,10 +204,14 @@
          * @type Asset
          * @static
          * @private
-         *&#x2F;
+         */
         loadingAsset,
 
-        &#x2F;**
+        work = function(f) {
+            return setTimeout(f, 0);
+        },
+
+        /**
          * Helper function to log messages when the debug flag is enabled
          *
          * @method log
@@ -224,59 +219,41 @@
          * @param args* {mixed} Arguments to be logged
          * @private
          * @static
-         *&#x2F;
+         */
         log = function() {
-            var args, d;
+            var args;
             if (settings.debug &amp;&amp; console &amp;&amp; typeof console.log === &quot;function&quot;) {
-                args = Array.prototype.slice.call(arguments);
+                args = slice(arguments);
                 args.unshift(ts());
+                if (node) {
+                    forEach(args, function(v, i) {
+                        args[i] = require(&quot;util&quot;).inspect(v, {depth: null});
+                    });
+                }
                 console.log.apply(this, args);
             }
         },
 
-        &#x2F;**
-         * Returns a formatted current timestamp with &lt;code&gt;hh:mm:ss&lt;&#x2F;code&gt; to be used for logging purposes
+        /**
+         * Returns a formatted current timestamp with &lt;code&gt;hh:mm:ss&lt;/code&gt; to be used for logging purposes
          *
          * @method ts
          * @for modl
          * @private
          * @static
          * @return {string} The formatted timestamp
-         *&#x2F;
+         */
         ts = function() {
             var d = new Date(),
                 z = function(n) { return n &lt; 10 ? &quot;0&quot; + n : String(n); };
 
-            return &quot;[&quot; + z(d.getHours()) + &quot;:&quot; + z(d.getMinutes()) + &quot;:&quot; + z(d.getSeconds()) + &quot;]&quot;;
+            return &quot;[&quot; + z(d.getHours()) + &quot;:&quot; + z(d.getMinutes()) + &quot;:&quot; + z(d.getSeconds()) + &quot;.&quot; + String(1000 + d.getMilliseconds()).substr(1) + &quot;]&quot;;
         },
 
-        &#x2F;**
-         * Short for Object.prototype.hasOwnProperty
-         *
-         * @method hop
-         * @for modl
-         * @private
-         * @static
-         * @param {object} o Object to check its property
-         * @param {string} p Property name
-         * @return {boolean} whether a property exists within the object or not
-         *&#x2F;
         hop = function(o, p) {
-            return Object.prototype.hasOwnProperty.call(o, p);
+            return objectProto.hasOwnProperty.call(o, p);
         },
 
-        &#x2F;**
-         * Merges all properties from &lt;b&gt;b&lt;&#x2F;b&gt; into &lt;b&gt;a&lt;&#x2F;b&gt;. Optionally it
-         * can be passes a property whitelist
-         *
-         * @method merge
-         * @for modl
-         * @private
-         * @static
-         * @param {object} a The target object
-         * @param {object} b The source object
-         * @param {array} [list] Properties whitelist
-         *&#x2F;
         merge = function(a, b, list) {
             if (list) {
                 forEach(list, function(p) {
@@ -291,45 +268,11 @@
             }
         },
 
-        &#x2F;**
-         * Iterates over an object&#x27;s properties or an array&#x27;s values calling the
-         * &lt;b&gt;f&lt;&#x2F;b&gt; callback function each time passing the value as it&#x27;s first
-         * argument and the index or property name as it&#x27;s second argument.
-         *
-         * @method forEach
-         * @for modl
-         * @private
-         * @static
-         * @param {array|object} a The array or object to be iterated
-         * @param {function} f The callback function for each iteration
-         *&#x2F;
-        forEach = function(a, f) {
-            indexOf(a, function(v, i) {
-                f(v, i);
-                return false;
-            });
-        },
-
-        &#x2F;**
-         * Iterates over an object&#x27;s properties or an array&#x27;s values calling the
-         * &lt;b&gt;f&lt;&#x2F;b&gt; callback function each time passing the value as it&#x27;s first
-         * argument and the index or property name as it&#x27;s second argument. The
-         * callback function must return either &lt;code&gt;true&lt;&#x2F;code&gt; or
-         * &lt;code&gt;false&lt;&#x2F;code&gt;. If for a given property or index the function
-         * returns &lt;code&gt;true&lt;&#x2F;code&gt; then the indexOf function will return the
-         * current property name or index.
-         *
-         * @method indexOf
-         * @for modl
-         * @private
-         * @static
-         * @param {array|object} a The array or object to be iterated
-         * @param {function} f The callback function for each iteration
-         *&#x2F;
         indexOf = function(a, f) {
-            var i, l;
+            var i = null,
+                l;
 
-            if (Object.prototype.toString.call(a) === &quot;[object Array]&quot;) {
+            if (objectProto.toString.call(a) === &quot;[object Array]&quot;) {
                 for (i = 0, l = a.length; i &lt; l; i += 1) {
                     if (f(a[i], i)) {
                         return i;
@@ -346,97 +289,191 @@
             }
         },
 
-        &#x2F;**
-         * A type creator helper. This function will construct a pseudo-class
-         * using the &lt;b&gt;specs&lt;&#x2F;b&gt; object for it&#x27;s definition.
-         *
-         * The &lt;b&gt;specs&lt;&#x2F;b&gt; object must have a &lt;b&gt;constr&lt;&#x2F;b&gt; object for it
-         * will be used as the constructor function. Optionally, it could have a
-         * &lt;b&gt;proto&lt;&#x2F;b&gt; object that may contain properties which will be
-         * augmented to the constructor&#x27;s prototype.
-         *
-         * The constructor function will have a &lt;b&gt;descend&lt;&#x2F;b&gt; method that can
-         * be called to create another type using the same constraints as the
-         * &lt;b&gt;type&lt;&#x2F;b&gt; method, plus the child constructor will have an
-         * &lt;b&gt;ancestor&lt;&#x2F;b&gt; property which will reference the parent&#x27;s
-         * prototype.
-         *
-         * @method type
-         * @for modl
-         * @private
-         * @static
-         * @param {object} specs The specs object
-         * @param {function} specs.constr The constructor function
-         * @param {object} [specs.proto] Object containing properties to augment the constructor&#x27;s prototype with
-         * @return {function} The new created type
-         *&#x2F;
-        type = function(specs) {
-            var constr = specs.constr || function() {};
-            if (specs.proto) {
-                merge(constr.prototype, specs.proto);
-            }
-
-            constr.descend = function(specs) {
-                var child = specs.constr || function() {},
-                    F = function() {};
-
-                F.prototype = constr.prototype;
-                child.prototype = new F();
-                child.prototype.constructor = child;
-                child.ancestor = constr.prototype;
-
-                if (specs.proto) {
-                    merge(child.prototype, specs.proto);
-                }
-
-                return child;
-            };
-
-            return constr;
+        forEach = function(a, f) {
+            indexOf(a, function(v, i) {
+                f(v, i);
+                return false;
+            });
         },
 
-        &#x2F;**
-         * Parses a require struct into a resource
-         *
-         * @method parseResource
-         * @for modl
-         * @static
-         * @private
-         * @param {object} require The require struct
-         * @return {object} The parsed resource
-         *&#x2F;
-        parseResource = function(require) {
-            var matches = require.resource.match(RESOURCE_RE),
-                alias = require.alias,
-                module = matches[1],
-                asset = matches[2],
-                aliasRe;
+        map = function(a, f) {
+            var o = [];
+            forEach(a, function(v, i) { o.push(f(v, i)); });
+            return o;
+        },
 
-            if (!alias) {
-                if (module) {
-                    if (asset) {
-                        alias = asset.replace(ALIAS_RE, &quot;$2&quot;);
-                    } else {
-                        alias = module;
-                        asset = MODL_ASSET;
+        slice = function() {
+            var args = arrayProto.slice.call(arguments);
+            return arrayProto.slice.apply(args.shift(), args);
+        },
+
+        overload = function() {
+            var functions = {},
+                args = slice(arguments);
+
+            forEach(args, function(f) { functions[f.length] = f; });
+            functions[&quot;default&quot;] = args[args.length - 1];
+
+            return function() {
+                var args = slice(arguments),
+                    f = functions[args.length] || functions[&quot;default&quot;];
+
+                return f.apply(this, args);
+            };
+        },
+
+        that = function(f) {
+            return function() {
+                var args = slice(arguments);
+                args.unshift(this);
+                return f.apply(this, args);
+            };
+        },
+
+        Token = (function() {
+            var mark = typeof Object.defineProperty === &quot;function&quot; ?
+                function(t) { return function(o, v) { Object.defineProperty(o, t, {enumerable: false, configurable: true, writable: true, value: v}); }; } :
+                function(t) { return function(o, v) { o[t] = v; }; };
+
+            return function(token) {
+
+                /**
+                 * Token&#x27;s toString
+                 *
+                 * @method toString
+                 * @for modl.Util.Token
+                 * @return {string}
+                 */
+                this.toString = constant(token);
+
+                /**
+                 * Token&#x27;s valueOf
+                 *
+                 * @method valueOf
+                 * @for modl.Util.Token
+                 * @return {string}
+                 */
+                this.valueOf = this.toString;
+
+                /**
+                 * Defines the token as a property for the given object
+                 *
+                 * @method mark
+                 * @for modl.Util.Token
+                 * @param {object} o
+                 * @param {mixed} [v] Optional value
+                 */
+                this.mark = mark(token);
+            };
+        }()),
+
+        token = (function() {
+            var
+                chars = &quot;abcdefghijklmnopqrstwxyzABCDEFGHIJKLMNOPQRSTWXYZ&quot;,
+                length = chars.length,
+                lastChar = chars.charAt(chars.length - 1),
+                firstChar = chars.charAt(0),
+                id = [],
+                suffix = [];
+
+            while (suffix.length &lt; 32) {
+                suffix.push(chars.charAt(Math.floor(Math.random() * length)));
+            }
+            suffix = suffix.join(&quot;&quot;);
+
+            return function() {
+                var i, c;
+                for (i = id.length - 1; i &gt; -1; i -= 1) {
+                    c = id[i];
+                    if (c !== lastChar) {
+                        id[i] = chars.charAt(chars.indexOf(c) + 1);
+                        break;
                     }
-                } else {
-                    alias = asset.replace(ALIAS_RE, &quot;$2&quot;);
+
+                    id[i] = firstChar;
                 }
-            }
 
-            if (!asset) {
-                asset = MODL_ASSET;
-            }
+                if (i === -1) {
+                    id.unshift(firstChar);
+                }
 
-            return {
-                module : matches[1],
-                asset : asset,
-                alias : alias
+                return new Token(id.join(&quot;&quot;) + suffix);
             };
-        },
+        }()),
 
-        &#x2F;**
+        kin = (function() {
+
+            var
+                define = function(o, p, v) {
+                    if (p instanceof Token) {
+                        p.mark(o, v);
+                    } else {
+                        o[p] = v;
+                    }
+                },
+
+                utils = {
+                    proto: overload(
+                        function(constructor, values) {
+                            forEach(values, function(v, p) { constructor.proto(p, v); });
+                            return constructor;
+                        },
+                        function(constructor, name, value) {
+                            define(constructor.prototype, name, value);
+                            return constructor;
+                        }),
+
+                    descend: function(constructor, descendant) {
+                        var F = function() {};
+                        F.prototype = constructor.prototype;
+                        descendant.prototype = new F();
+                        prepare(descendant);
+                        descendant.ancestor = constructor.prototype;
+                        return descendant;
+                    },
+
+                    constant: function(constructor, name) {
+                        if (name in constructor) {
+                            return constructor[name];
+                        }
+
+                        if (&quot;ancestor&quot; in constructor) {
+                            return constructor.ancestor.constructor.constant(name);
+                        }
+                    },
+
+                    defConstant: overload(
+                        function(constructor, values) {
+                            forEach(values, function(v, p) { constructor.defConstant(p, v); });
+                            return constructor;
+                        },
+
+                        function(constructor, name, value) {
+                            define(constructor, name, value);
+                            return constructor;
+                        })
+
+                },
+
+                prepare = function(constructor) {
+                    constructor.prototype.constructor = constructor;
+
+                    forEach(utils, function(f, p) {
+                        constructor[p] = function() {
+                            var args = slice(arguments);
+                            args.unshift(this);
+                            return f.apply(this, args);
+                        };
+                    });
+                };
+
+            return function(constructor) {
+                prepare(constructor);
+                return constructor;
+            };
+        }()),
+
+        /**
          * Loads a given script.
          *
          * @method loadScript
@@ -444,235 +481,85 @@
          * @static
          * @private
          * @param {string} src The script&#x27;s src
-         *&#x2F;
-        loadScript = (function() {
-            return node ?
-                function(src) {
-                    delete require.cache[src];
-                    require(src);
-                } :
-                function(src) {
-                    var s = document.createElement(&quot;script&quot;),
-                        d = document.documentElement;
-                    s.src = src;
-                    d.insertBefore(s, d.firstChild);
-                };
-        }()),
+         */
+        loadScript = node?
+            function(src) {
+                delete require.cache[src];
+                work(function() { require(src); });
+            }:
+            function(src) {
+                var s = document.createElement(&quot;script&quot;),
+                    d = document.documentElement;
+                s.src = src;
+                d.insertBefore(s, d.firstChild);
+            },
 
-        &#x2F;**
+        /**
          * The Ready class provides the functionality of scheduling callbacks
          * for when a given Ready instance is marked as ready
          *
          * @class Ready
          * @constructor
          * @private
-         *&#x2F;
-        Ready = type({
-            constr : function() {
-                merge(this, {
-                    &#x2F;**
+         */
+        Ready = (function() {
+            var
+                readyStatus = token(),
+                callbacks = token();
+
+            return kin(function() {
+                    /**
                      * Indicates whether the instance is ready or not
                      *
-                     * @property _readyStatus
+                     * @property readyStatus
                      * @for Ready
                      * @private
                      * @type {boolean}
-                     *&#x2F;
-                    _readyStatus : false,
+                     */
+                    readyStatus.mark(this, false);
 
-                    &#x2F;**
+                    /**
                      * Callback functions are stored within this guy
                      *
-                     * @property _callbacks
+                     * @property callbacks
                      * @for Ready
                      * @private
                      * @type {array}
-                     *&#x2F;
-                    _callbacks : []
+                     */
+                    callbacks.mark(this, []);
+                }).
+
+                proto({
+                    /**
+                     * Schedules an &lt;b&gt;f&lt;/b&gt; callback to be executed once the
+                     * instance is marked as &lt;b&gt;ready&lt;/b&gt;
+                     *
+                     * @method whenReady
+                     * @for Ready
+                     * @param {function} f The callback function to be scheduled
+                     */
+                    whenReady: function(f) {
+                        if (this[readyStatus]) {
+                            f();
+                        } else {
+                            this[callbacks].push(f);
+                        }
+                    },
+
+                    /**
+                     * Marks the instance as &lt;b&gt;ready&lt;/b&gt; and runs all it&#x27;s callbacks
+                     *
+                     * @method ready
+                     * @for Ready
+                     */
+                    ready: function() {
+                        this[readyStatus] = true;
+                        forEach(this[callbacks], function(f) { f(); });
+                    }
                 });
-            },
+        }()),
 
-            proto : {
-                &#x2F;**
-                 * Schedules an &lt;b&gt;f&lt;&#x2F;b&gt; callback to be executed once the
-                 * instance is marked as &lt;b&gt;ready&lt;&#x2F;b&gt;
-                 *
-                 * @method _whenReady
-                 * @for Ready
-                 * @private
-                 * @param {function} f The callback function to be scheduled
-                 *&#x2F;
-                _whenReady : function(f) {
-                    if (this._readyStatus) {
-                        f();
-                    } else {
-                        this._callbacks.push(f);
-                    }
-                },
-
-                &#x2F;**
-                 * Marks the instance as &lt;b&gt;ready&lt;&#x2F;b&gt; and runs all it&#x27;s callbacks
-                 *
-                 * @method _ready
-                 * @for Ready
-                 * @private
-                 *&#x2F;
-                _ready : function() {
-                    this._readyStatus = true;
-                    forEach(this._callbacks, function(f) { f(); });
-                }
-            }
-        }),
-
-        &#x2F;**
-         * The Module class represents a module within the modl tree. It can
-         * load other &lt;b&gt;modules&lt;&#x2F;b&gt;(dependencies contained within
-         * &lt;code&gt;node_modules&lt;&#x2F;code&gt; directory) and &lt;b&gt;assets&lt;&#x2F;b&gt; (files
-         * referenced within a module).
-         *
-         * @class Module
-         * @extends Ready
-         * @constructor
-         * @private
-         * @param {string} name The module&#x27;s name
-         * @param {string} path The module&#x27;s path
-         *&#x2F;
-        Module = Ready.descend({
-            constr : function(name, path) {
-
-                merge(this, {
-
-                    &#x2F;**
-                     * It&#x27;s name
-                     *
-                     * @property _name
-                     * @for Module
-                     * @private
-                     * @type {string}
-                     *&#x2F;
-                    _name : name,
-
-                    &#x2F;**
-                     * It&#x27;s path
-                     *
-                     * @property _path
-                     * @for Module
-                     * @private
-                     * @type {string}
-                     *&#x2F;
-                    _path : path,
-
-                    &#x2F;**
-                     * It&#x27;s inner modules. This will contain the references for
-                     * the children modules currently loaded for this module.
-                     *
-                     * @property _modules
-                     * @for Module
-                     * @private
-                     * @type {object}
-                     *&#x2F;
-                    _modules : {},
-
-                    &#x2F;**
-                     * It&#x27;s assets. This will contain the references for all
-                     * assets currently loaded within this module.
-                     *
-                     * @property _assets
-                     * @for Module
-                     * @private
-                     * @type {object}
-                     *&#x2F;
-                    _assets : {}
-
-                });
-
-                Ready.call(this);
-                log(&quot;module created: &quot;, this);
-                this.initialize();
-            },
-
-            proto : {
-
-                &#x2F;**
-                 * Initializes the module loading its &lt;code&gt;&#x2F;modl&lt;&#x2F;code&gt; asset
-                 *
-                 * @method initialize
-                 * @for Module
-                 *&#x2F;
-                initialize : function() {
-                    var that = this;
-
-                    if (this._name !== &quot;&quot;) {
-                        this.asset(&quot;&#x2F;modl&quot;).
-                        when(function(err, asset) { that._ready(); });
-                    } else {
-                        this._ready();
-                    }
-                },
-
-                &#x2F;**
-                 * Loads an asset within the module.
-                 *
-                 * @method asset
-                 * @for Module
-                 * @param {string} name The asset&#x27;s name
-                 * @return {Future} The future representing when the asset will
-                 *         be loaded
-                 *&#x2F;
-                asset : function(name) {
-                    var future = new Future(),
-                        asset;
-
-                    if (name in this._assets) {
-                        log(&quot;old&quot;);
-                        asset = this._assets[name];
-                    } else {
-                        log(&quot;new&quot;);
-                        asset = new Asset(name, this._path);
-                        this._assets[name] = asset;
-                    }
-
-                    asset._whenReady(function() {
-                        future.fulfill(null, asset._loader._modl.exports);
-                    });
-
-                    return future;
-                },
-
-                &#x2F;**
-                 * Loads child module within the module &lt;i&gt;(Yo dawg! I heard you like modules...)&lt;&#x2F;i&gt;.
-                 *
-                 * @method module
-                 * @for Module
-                 * @param {string} name The module&#x27;s name
-                 * @return {Future} The future representing when the module will
-                 *         be loaded
-                 *&#x2F;
-                module : function(name) {
-                    var future = new Future(),
-                        module,
-                        that = this;
-
-                    if (name in this._modules) {
-                        module = this._modules[name];
-                    } else {
-                        module = new Module(name, this._path + &quot;&#x2F;node_modules&#x2F;&quot; + name);
-                        this._modules[name] = module;
-                    }
-
-                    current = module;
-
-                    module._whenReady(function() {
-                        current = that;
-                        future.fulfill(null, module);
-                    });
-
-                    return future;
-                }
-            }
-        }),
-
-        &#x2F;**
+        /**
          * The Asset class represents an script file being loaded within a
          * module.
          *
@@ -682,464 +569,598 @@
          * @private
          * @param {string} name It&#x27;s name
          * @param {string} path It&#x27;s path
-         *&#x2F;
-        Asset = Ready.descend({
-            constr : function(name, path) {
-                merge(this, {
+         */
+        Asset = Ready.descend(function(name, path) {
+            var script = (path + name + &quot;.js&quot;).replace(PATH_RE, &quot;/&quot;);
 
-                    &#x2F;**
-                     * The asset&#x27;s name
-                     *
-                     * @property _name
-                     * @for Asset
-                     * @private
-                     * @type {string}
-                     *&#x2F;
-                    _name : name,
+            /**
+             * Holds the asset&#x27;s exports
+             *
+             * @property exports
+             * @for Asset
+             * @type {mixed}
+             */
+            this.exports = undef;
 
-                    &#x2F;**
-                     * The asset&#x27;s script path
-                     *
-                     * @property _script
-                     * @for Asset
-                     * @private
-                     * @type {string}
-                     *&#x2F;
-                    _script : (path + &quot;&#x2F;lib&quot; + name + &quot;.js&quot;).replace(PATH_RE, &quot;&#x2F;&quot;)
-                });
+            Ready.call(this);
 
-                Ready.call(this);
-                log(&quot;asset created: &quot;, this);
-                this._load();
-            },
+            log(&quot;Asset created: &quot;, this);
 
-            proto : {
-
-                &#x2F;**
-                 * Actually fires the asset loading
-                 *
-                 * @method _load
-                 * @for Asset
-                 * @private
-                 *&#x2F;
-                _load : function() {
-                    loadingAsset = this;
-                    loadScript(this._script);
-                }
-            }
+            loadingAsset = this;
+            loadScript(script);
         }),
 
-        &#x2F;**
-         * Represents a future promise
+        /**
+         * The Module class represents a module within the modl tree. It can
+         * load other &lt;b&gt;modules&lt;/b&gt;(dependencies contained within
+         * &lt;code&gt;node_modules&lt;/code&gt; directory) and &lt;b&gt;assets&lt;/b&gt; (files
+         * referenced within a module).
          *
-         * @class Future
+         * @class Module
+         * @extends Ready
          * @constructor
          * @private
-         *&#x2F;
-        Future = type({
-            constr : function() {
-                merge(this, {
-                    &#x2F;**
-                     * Holds the sent error
+         * @param {string} name The module&#x27;s name
+         * @param {string} path The module&#x27;s path
+         */
+        Module = (function() {
+            var _name = token(),
+                _path = token(),
+                modules = token(),
+                assets = token();
+
+
+            return Ready.descend(function(name, path) {
+                    /**
+                     * It&#x27;s name
                      *
-                     * @property _err
-                     * @for Future
+                     * @property _name
+                     * @for Module
                      * @private
+                     * @type {string}
+                     */
+                    _name.mark(this, name);
+
+                    /**
+                     * It&#x27;s path
+                     *
+                     * @property _path
+                     * @for Module
+                     * @private
+                     * @type {string}
+                     */
+                    _path.mark(this, path);
+
+                    /**
+                     * It&#x27;s inner modules. This will contain the references for
+                     * the children modules currently loaded for this module.
+                     *
+                     * @property _modules
+                     * @for Module
+                     * @private
+                     * @type {object}
+                     */
+                    modules.mark(this, {});
+
+                    /**
+                     * It&#x27;s assets. This will contain the references for all
+                     * assets currently loaded within this module.
+                     *
+                     * @property _assets
+                     * @for Module
+                     * @private
+                     * @type {object}
+                     */
+                    assets.mark(this, {});
+
+                    /**
+                     * Holds the asset&#x27;s exports
+                     *
+                     * @property exports
+                     * @for Module
                      * @type {mixed}
-                     *&#x2F;
-                    _err : undef,
+                     */
+                    this.exports = undef;
 
-                    &#x2F;**
-                     * Holds the sent data
+
+                    Ready.call(this);
+                    log(&quot;module created: &quot;, this);
+                    this.initialize();
+                }).
+                proto({
+
+                    /**
+                     * Initializes the module loading its &lt;code&gt;/modl&lt;/code&gt; asset
                      *
-                     * @property _data
-                     * @for Future
-                     * @private
-                     * @type {mixed}
-                     *&#x2F;
-                    _data : undef,
+                     * @method initialize
+                     * @for Module
+                     */
+                    initialize : that(function(that) {
+                        if (this[_name] !== &quot;&quot;) {
+                            this.asset(MODL_ASSET).
+                            when(function(err, asset) {
+                                that.exports = asset.exports;
+                                that.ready();
+                            });
+                        } else {
+                            this.ready();
+                        }
+                    }),
 
-                    &#x2F;**
-                     * Indicates whether the promise has been fulfilled
+                    /**
+                     * Loads an asset within the module.
                      *
-                     * @property _fulfilled
-                     * @for Future
-                     * @private
-                     * @type {boolean}
-                     *&#x2F;
-                    _fulfilled : false,
+                     * @method asset
+                     * @for Module
+                     * @param {string} name The asset&#x27;s name
+                     * @return {modl.Util.Future} The future representing when the asset will
+                     *         be loaded
+                     */
+                    asset: function(name) {
+                        var future = new Future(),
+                            asset;
 
+                        if (name in this[assets]) {
+                            asset = this[assets][name];
+                        } else {
+                            asset = new Asset(name, this[_path]);
+                            this[assets][name] = asset;
+                        }
 
-                    &#x2F;**
-                     * Holds the callback to be executed whenever the promise is fulfilled
+                        asset.whenReady(function() {
+                            future.fulfill(null, asset);
+                        });
+
+                        return future;
+                    },
+
+                    /**
+                     * Loads child module within the module &lt;i&gt;(Yo dawg! I heard you like modules...)&lt;/i&gt;.
                      *
-                     * @property _when
-                     * @for Future
-                     * @private
-                     * @type {function}
-                     *&#x2F;
-                    _when : undef
+                     * @method module
+                     * @for Module
+                     * @param {string} name The module&#x27;s name
+                     * @return {modl.Util.Future} The future representing when the module will
+                     *         be loaded
+                     */
+                    module: that(function(that, name) {
+                        var future = new Future(),
+                            module;
+
+                        if (name in this[modules]) {
+                            module = this[modules][name];
+                        } else {
+                            module = new Module(name, this[_path] + &quot;/node_modules/&quot; + name);
+                            this[modules][name] = module;
+                        }
+
+                        current = module;
+
+                        module.whenReady(function() {
+                            current = that;
+                            future.fulfill(null, module);
+                        });
+
+                        return future;
+                    })
                 });
-            },
-            proto: {
+        }()),
 
-                &#x2F;**
+        Future = (function() {
+            var _err = token(),
+                _data = token(),
+                fulfilled = token(),
+                when = token(),
+                runWhen = token();
+
+            return kin(function() {
+
+                /**
+                 * Holds the sent error
+                 *
+                 * @property _err
+                 * @for modl.Util.Future
+                 * @private
+                 * @type {mixed}
+                 */
+                _err.mark(this);
+
+                /**
+                 * Holds the sent data
+                 *
+                 * @property _data
+                 * @for modl.Util.Future
+                 * @private
+                 * @type {mixed}
+                 */
+                _data.mark(this);
+
+                /**
+                 * Indicates whether the promise has been fulfilled
+                 *
+                 * @property fulfilled
+                 * @for modl.Util.Future
+                 * @private
+                 * @type {boolean}
+                 */
+                fulfilled.mark(this, false);
+
+                /**
+                 * Holds the callback to be executed whenever the promise is fulfilled
+                 *
+                 * @property when
+                 * @for modl.Util.Future
+                 * @private
+                 * @type {function}
+                 */
+
+                when.mark(this, k);
+            }).
+
+            proto(runWhen, that(function(that, when) {
+                work(function() { when.call(null, that[_err], that[_data]); });
+            })).
+
+            proto({
+
+                /**
                  * Fulfills the promise
                  *
                  * @method fulfill
-                 * @for Future
+                 * @for modl.Util.Future
                  * @param {mixed} [err] The error to be sent
                  * @param {mixed} [data] The data to be sent
-                 *&#x2F;
-                fulfill : function(err, data) {
-                    this._err = err;
-                    this._data = data;
-
-                    if (this._fulfilled) {
+                 */
+                fulfill: that(function(that, err, data) {
+                    if (this[fulfilled]) {
                         throw new Error(&quot;Future already fulfilled&quot;);
                     }
 
-                    this._fulfilled = true;
-                    if (this._when) {
-                        this._when.call(null, err, data);
-                    }
-                },
+                    this[_err] = err;
+                    this[_data] = data;
+                    this[fulfilled] = true;
+                    this[runWhen](this[when]);
+                }),
 
-                &#x2F;**
+                /**
                  * Register the callback if the promise is to be fulfilled,
-                 * otherwise just runs it passing along the error&#x2F;data
+                 * otherwise just runs it passing along the error/data
                  * associated with the future
                  *
                  * @method when
-                 * @for Future
+                 * @for modl.Util.Future
                  * @param {function} f The callback function
-                 *&#x2F;
-                when : function(f) {
-                    if (this._fulfilled) {
-                        f(this._err, this._data);
+                 */
+                when: function(f) {
+                    if (this[fulfilled]) {
+                        this[runWhen](f);
                     } else {
-                        this._when = f;
+                        this[when] = f;
                     }
                 }
-            }
-        }),
+            });
+        }()),
 
-        &#x2F;**
+        /**
          * The loader class responsible for loading the various dependencies between modules and assets
          *
          * @class Loader
          * @extends Ready
          * @constructor
          * @private
-         *&#x2F;
-        Loader = Ready.descend({
-            constr : function() {
-                merge(this, {
-                    &#x2F;**
-                     * The requires collection containing the various required
-                     * data
-                     *
-                     * @property _requires
-                     * @for Loader
-                     * @private
-                     * @type {array}
-                     *&#x2F;
-                    _requires : [],
+         */
+        Loader = (function() {
+            var requires = token(),
+                modl = token(),
+                _payload = token(),
+                attachAsset = token(),
+                dispatch = token(),
+                loadRequires = token(),
+                loadRequire = token();
 
-                    &#x2F;**
-                     * The modl instance to be passed along to the exports
-                     * callback function when called
-                     *
-                     * @property _modl
-                     * @for Loader
-                     * @private
-                     * @type {object}
-                     *&#x2F;
-                    _modl : {
-                        imports : {},
-                        exports : {}
-                    },
+            return Ready.descend(function() {
+                /**
+                 * The requires collection containing the various required
+                 * data
+                 *
+                 * @property requires
+                 * @for Loader
+                 * @private
+                 * @type {object}
+                 */
+                requires.mark(this, {});
 
-                    &#x2F;**
-                     * The callback function to be executed when all the
-                     * requires are ready
-                     *
-                     * @property _payload
-                     * @for Loader
-                     * @private
-                     * @type {function}
-                     *&#x2F;
-                    _payload : function() {}
+                /**
+                 * The modl instance to be passed along to the exports
+                 * callback function when called
+                 *
+                 * @property modl
+                 * @for Loader
+                 * @private
+                 * @type {object}
+                 */
+                modl.mark(this, {
+                    imports: {},
+                    exports: {}
                 });
+
+                /**
+                 * The callback function to be executed when all the
+                 * requires are ready
+                 *
+                 * @property _payload
+                 * @for Loader
+                 * @private
+                 * @type {function}
+                 */
+                _payload.mark(this, k);
 
                 Ready.call(this);
 
                 log(&quot;loader created: &quot;, this);
-            },
+            }).
 
-            proto : {
+            /**
+             * Attach a given asset to this Loader. When the loader is
+             * ready, the asset will also be market as ready
+             *
+             * @method attachAsset
+             * @for Loader
+             * @private
+             * @param {Asset} asset The asset to be attached
+             */
+            proto(attachAsset, that(function(that, asset) {
+                this.whenReady(function() {
+                    log(&quot;loader ready, triggering asset&quot;);
+                    asset.exports = that[modl].exports;
+                    asset.ready();
+                });
+            })).
 
-                &#x2F;**
-                 * Requires an asset from it. The &lt;b&gt;resource&lt;&#x2F;b&gt; string may
+            /**
+             * Dispatches the loader processing. It will start loading all
+             * its requires and finally will run the payload function.
+             *
+             * @method dispatch
+             * @for Loader
+             * @private
+             */
+            proto(dispatch, that(function(that) {
+                var aliases = {};
+                forEach(this[requires], function(alias, require) {
+                    if (!alias) {
+                        that[requires][require] = alias = require.replace(ALIAS_RE, &quot;$2&quot;);
+                    }
+
+                    if (hop(aliases, alias)) {
+                        throw new Error(&quot;Alias clash: &quot; + alias);
+                    }
+
+                    aliases[alias] = undef;
+                });
+
+
+                that[loadRequires]().
+                when(function() {
+                    log(&quot;Running payload&quot;);
+                    that[_payload].call(null, that[modl], that[modl].imports);
+                    that.ready();
+                });
+            })).
+
+            /**
+             * Loads all requires for the loader.
+             *
+             * @method loadRequires
+             * @for Loader
+             * @private
+             * @return {modl.Util.Future} A promise for when all the requires are ready.
+             */
+            proto(loadRequires, that(function(that) {
+                var future = new Future(),
+                    reqs = map(this[requires], function(v, k) { return k; }),
+                    load = function(require) {
+                        if (!require) {
+                            log(&quot;done loading requires, moving on&quot;);
+                            future.fulfill();
+                        } else {
+                            that[loadRequire](require).
+                            when(function() { load(reqs.shift()); });
+                        }
+                    };
+
+                log(&quot;loading requires&quot;);
+
+                load(reqs.shift());
+                return future;
+            })).
+
+            /**
+             * Loads a given require
+             *
+             * @method loadRequire
+             * @for Loader
+             * @private
+             * @param {string} require The require name
+             * @return {modl.Util.Future} The promise for when the require is done
+             */
+            proto(loadRequire, that(function(that, require) {
+                var
+                    alias = this[requires][require],
+                    future = new Future(),
+
+                    when = function(err, thing) {
+                        log(&quot;Require loaded: &quot;, require);
+                        that[modl].imports[alias] = thing.exports;
+                        future.fulfill();
+                    };
+
+                log(&quot;loading require: &quot;, require, alias);
+
+                if (require.indexOf(&quot;/&quot;) === 0) {
+                    current.asset(require).
+                    when(when);
+                } else {
+                    current.module(require).
+                    when(when);
+                }
+
+                return future;
+            })).
+
+            proto({
+
+                /**
+                 * Requires an asset from it. The &lt;b&gt;resource&lt;/b&gt; string may
                  * have the following formats:
                  *
-                 *  - &lt;code&gt;&quot;&#x2F;path&#x2F;to&#x2F;asset&lt;&#x2F;code&gt;: in this case the asset
+                 *  - &lt;code&gt;&quot;/path/to/asset&lt;/code&gt;: in this case the asset
                  * within the current module will be loaded
                  *
-                 *  - &lt;code&gt;&quot;module&quot;&lt;&#x2F;code&gt;: in this case the &quot;module&quot; within
-                 * &lt;code&gt;node_modules&lt;&#x2F;code&gt; folder will be required, and
-                 * afterwards the &lt;code&gt;&#x2F;modl&lt;&#x2F;code&gt; asset within the module
+                 *  - &lt;code&gt;&quot;module&quot;&lt;/code&gt;: in this case the &quot;module&quot; within
+                 * &lt;code&gt;node_modules&lt;/code&gt; folder will be required, and
+                 * afterwards the &lt;code&gt;/modl&lt;/code&gt; asset within the module
                  * will be loaded.
                  *
-                 *  - &lt;code&gt;&quot;module&#x2F;path&#x2F;to&#x2F;asset&quot;&lt;&#x2F;code&gt;: in this case the
-                 * &quot;module&quot; within &lt;code&gt;node_modules&lt;&#x2F;code&gt; folder will be
+                 *  - &lt;code&gt;&quot;module/path/to/asset&quot;&lt;/code&gt;: in this case the
+                 * &quot;module&quot; within &lt;code&gt;node_modules&lt;/code&gt; folder will be
                  * required, and afterwards the indicated asset within the
                  * module will be loaded.
                  *
-                 * Optionally an &lt;b&gt;alias&lt;&#x2F;b&gt; property may be passed to name
-                 * the required asset within the &lt;b&gt;imports&lt;&#x2F;b&gt; object. If
+                 * Optionally an &lt;b&gt;alias&lt;/b&gt; property may be passed to name
+                 * the required asset within the &lt;b&gt;imports&lt;/b&gt; object. If
                  * ommited, the alias will be automatically generated based the
-                 * &lt;b&gt;resource&lt;&#x2F;b&gt; value.
+                 * &lt;b&gt;resource&lt;/b&gt; value.
                  *
                  * @param {string} resource A given resource to be required
                  * @param {string} [alias] An optional alias which to be named
-                 *              within the &lt;b&gt;imports&lt;&#x2F;b&gt; object.
+                 *              within the &lt;b&gt;imports&lt;/b&gt; object.
                  * @method require
                  * @for Loader
                  * @chainable
                  * @return {Loader} The loader instance
-                 *&#x2F;
+                 */
                 require : function(resource, alias) {
-                    this._requires.push({resource : resource, alias : alias});
+                    this[requires][resource] = alias;
                     return this;
                 },
 
-                &#x2F;**
-                 * Schedules a given &lt;b&gt;payload&lt;&#x2F;b&gt;
-                 * function export the &lt;i&gt;asset&lt;&#x2F;i&gt;. The &lt;b&gt;payload&lt;&#x2F;b&gt; will only
+                /**
+                 * Schedules a given &lt;b&gt;payload&lt;/b&gt;
+                 * function export the &lt;i&gt;asset&lt;/i&gt;. The &lt;b&gt;payload&lt;/b&gt; will only
                  * run when all the requires are loaded and ready for prime time.
                  *
-                 * When called, the &lt;b&gt;payload&lt;&#x2F;b&gt; function will receive the
-                 * &lt;b&gt;module&lt;&#x2F;b&gt; struct as its first argument and as second
-                 * argument, the &lt;b&gt;imports&lt;&#x2F;b&gt; object containing all required
+                 * When called, the &lt;b&gt;payload&lt;/b&gt; function will receive the
+                 * &lt;b&gt;module&lt;/b&gt; struct as its first argument and as second
+                 * argument, the &lt;b&gt;imports&lt;/b&gt; object containing all required
                  * resources within will be passed.
                  *
-                 * The &lt;b&gt;module&lt;&#x2F;b&gt; object will have an &lt;code&gt;exports&lt;&#x2F;code&gt;
+                 * The &lt;b&gt;module&lt;/b&gt; object will have an &lt;code&gt;exports&lt;/code&gt;
                  * property which will be published for this asset. This property
                  * can be overwritten with any value this asset may want to publish (&lt;i&gt;a
-                 * la&lt;&#x2F;i&gt; nodejs module system).
+                 * la&lt;/i&gt; nodejs module system).
                  *
-                 * The &lt;b&gt;module&lt;&#x2F;b&gt; object will also have an &lt;code&gt;imports&lt;&#x2F;code&gt;
+                 * The &lt;b&gt;module&lt;/b&gt; object will also have an &lt;code&gt;imports&lt;/code&gt;
                  * object containing all required resources which will be also
-                 * passed as a second argument to the &lt;b&gt;payload&lt;&#x2F;b&gt; function
+                 * passed as a second argument to the &lt;b&gt;payload&lt;/b&gt; function
                  *
                  * @method exports
                  * @for Loader
                  * @param {function} payload The payload function
-                 *&#x2F;
+                 */
                 exports : function(payload) {
                     if (loadingAsset) {
-                        this._attachAsset(loadingAsset);
+                        this[attachAsset](loadingAsset);
                         loadingAsset = undef;
                     }
-                    this._payload = payload;
-                    this._dispatch();
-                },
 
-                &#x2F;**
-                 * Attach a given asset to this Loader. When the loader is
-                 * ready, the asset will also be market as ready
-                 *
-                 * @method _attachAsset
-                 * @for Loader
-                 * @private
-                 * @param {Asset} asset The asset to be attached
-                 *&#x2F;
-                _attachAsset : function(asset) {
-                    asset._loader = this;
-                    this._whenReady(function() { asset._ready(); });
-                },
-
-                &#x2F;**
-                 * Dispatches the loader processing. It will start loading all
-                 * its requires and finally will run the payload function.
-                 *
-                 * @method _dispatch
-                 * @for Loader
-                 * @private
-                 *&#x2F;
-                _dispatch : function() {
-                    var that = this,
-                        aliases = {};
-
-                    forEach(this._requires, function(r) {
-                        r.details = parseResource(r);
-
-                        if (hop(aliases, r.details.alias)) {
-                            throw new Error(&quot;Alias clash: &quot; + r.details.alias);
-                        }
-
-                        aliases[r.details.alias] = undef;
-                    });
-
-                    setTimeout(function() {
-                        that._loadRequires().
-                        when(function() {
-                            that._payload.call(null, that._modl, that._modl.imports);
-                            that._ready();
-                        });
-                    });
-                },
-
-                &#x2F;**
-                 * Loads all requires for the loader.
-                 *
-                 * @method _loadRequires
-                 * @for Loader
-                 * @private
-                 * @return {Future} A promise for when all the requires are ready.
-                 *&#x2F;
-                _loadRequires : function() {
-                    var future = new Future(),
-                        that = this,
-                        requires = this._requires.slice(),
-
-                        load = function(require) {
-                            if (!require) {
-                                log(&quot;done loading requires, moving on&quot;);
-                                return future.fulfill();
-                            }
-
-                            that._loadRequire(require).
-                            when(function() { load(requires.shift()); });
-                        };
-
-                    log(&quot;loading requires&quot;);
-
-                    load(requires.shift());
-                    return future;
-                },
-
-                &#x2F;**
-                 * Loads a given requicre
-                 *
-                 * @param {object} require The require struct containing all its details
-                 * @return {Future} The promise for when the require is done
-                 *&#x2F;
-                _loadRequire : function(require) {
-                    var
-                        details = require.details,
-                        module = details.module,
-                        asset = details.asset,
-                        alias = details.alias,
-                        future = new Future(),
-                        that = this,
-
-                        when = function(err, assetInstance) {
-                            log(&quot;require loaded: &quot;, require);
-                            that._modl.imports[alias] = assetInstance;
-                            future.fulfill();
-                        };
-
-                    log(&quot;loading require: &quot;, require);
-
-                    if (module) {
-                        current.module(module).
-                        when(function(err, module) {
-                            module.asset(asset).
-                            when(when);
-                        });
-                    } else {
-                        current.asset(asset).
-                        when(when);
-                    }
-
-                    return future;
+                    this[_payload] = payload;
+                    this[dispatch]();
                 }
-            }
-        }),
+            });
+        }()),
 
-        &#x2F;**
+        /**
          * The modl loader
          *
          * @class modl
          * @static
-         *&#x2F;
+         */
         modl = {
 
-            &#x2F;**
-             * Creates a &lt;b&gt;Loader&lt;&#x2F;b&gt; and requires an asset from it. The
-             * &lt;b&gt;resource&lt;&#x2F;b&gt; string may have the following formats:
+            /**
+             * Creates a &lt;b&gt;Loader&lt;/b&gt; and requires an asset from it. The
+             * &lt;b&gt;resource&lt;/b&gt; string may have the following formats:
              *
-             *  - &lt;code&gt;&quot;&#x2F;path&#x2F;to&#x2F;asset&lt;&#x2F;code&gt;: in this case the asset within
+             *  - &lt;code&gt;&quot;/path/to/asset&lt;/code&gt;: in this case the asset within
              * the current module will be loaded
              *
-             *  - &lt;code&gt;&quot;module&quot;&lt;&#x2F;code&gt;: in this case the &quot;module&quot; within
-             * &lt;code&gt;node_modules&lt;&#x2F;code&gt; folder will be required, and
-             * afterwards the &lt;code&gt;&#x2F;modl&lt;&#x2F;code&gt; asset within the module will
+             *  - &lt;code&gt;&quot;module&quot;&lt;/code&gt;: in this case the &quot;module&quot; within
+             * &lt;code&gt;node_modules&lt;/code&gt; folder will be required, and
+             * afterwards the &lt;code&gt;/modl&lt;/code&gt; asset within the module will
              * be loaded.
              *
-             *  - &lt;code&gt;&quot;module&#x2F;path&#x2F;to&#x2F;asset&quot;&lt;&#x2F;code&gt;: in this case the
-             * &quot;module&quot; within &lt;code&gt;node_modules&lt;&#x2F;code&gt; folder will be
+             *  - &lt;code&gt;&quot;module/path/to/asset&quot;&lt;/code&gt;: in this case the
+             * &quot;module&quot; within &lt;code&gt;node_modules&lt;/code&gt; folder will be
              * required, and afterwards the indicated asset within the module
              * will be loaded.
              *
-             * Optionally an &lt;b&gt;alias&lt;&#x2F;b&gt; property may be passed to name the
-             * required asset within the &lt;b&gt;imports&lt;&#x2F;b&gt; object. If
+             * Optionally an &lt;b&gt;alias&lt;/b&gt; property may be passed to name the
+             * required asset within the &lt;b&gt;imports&lt;/b&gt; object. If
              * ommited, the alias will be automatically generated based the
-             * &lt;b&gt;resource&lt;&#x2F;b&gt; value.
+             * &lt;b&gt;resource&lt;/b&gt; value.
              *
              * @param {string} resource A given resource to be required
              * @param {string} [alias] An optional alias which to be named within the
-             *            &lt;b&gt;imports&lt;&#x2F;b&gt; object.
+             *            &lt;b&gt;imports&lt;/b&gt; object.
              * @method require
              * @for modl
              * @static
              * @chainable
              * @return {Loader} The loader instance
-             *&#x2F;
-            require : function(resource, alias) {
+             */
+            require: function(resource, alias) {
                 log(&quot;modl.require called, creating new loader&quot;);
                 var loader = new Loader();
                 return loader.require(resource, alias);
             },
 
-            &#x2F;**
-             * Creates a &lt;b&gt;Loader&lt;&#x2F;b&gt; and schedules a given &lt;b&gt;payload&lt;&#x2F;b&gt;
-             * function export the &lt;i&gt;asset&lt;&#x2F;i&gt;. The &lt;b&gt;payload&lt;&#x2F;b&gt; will only
+            /**
+             * Creates a &lt;b&gt;Loader&lt;/b&gt; and schedules a given &lt;b&gt;payload&lt;/b&gt;
+             * function export the &lt;i&gt;asset&lt;/i&gt;. The &lt;b&gt;payload&lt;/b&gt; will only
              * run when all the requires are loaded and ready for prime time.
              *
-             * When called, the &lt;b&gt;payload&lt;&#x2F;b&gt; function will receive the
-             * &lt;b&gt;module&lt;&#x2F;b&gt; struct as its first argument and as second
-             * argument, the &lt;b&gt;imports&lt;&#x2F;b&gt; object containing all required
+             * When called, the &lt;b&gt;payload&lt;/b&gt; function will receive the
+             * &lt;b&gt;module&lt;/b&gt; struct as its first argument and as second
+             * argument, the &lt;b&gt;imports&lt;/b&gt; object containing all required
              * resources within will be passed.
              *
-             * The &lt;b&gt;module&lt;&#x2F;b&gt; object will have an &lt;code&gt;exports&lt;&#x2F;code&gt;
+             * The &lt;b&gt;module&lt;/b&gt; object will have an &lt;code&gt;exports&lt;/code&gt;
              * property which will be published for this asset. This property
              * can be overwritten with any value this asset may want to publish (&lt;i&gt;a
-             * la&lt;&#x2F;i&gt; nodejs module system).
+             * la&lt;/i&gt; nodejs module system).
              *
-             * The &lt;b&gt;module&lt;&#x2F;b&gt; object will also have an &lt;code&gt;imports&lt;&#x2F;code&gt;
+             * The &lt;b&gt;module&lt;/b&gt; object will also have an &lt;code&gt;imports&lt;/code&gt;
              * object containing all required resources which will be also
-             * passed as a second argument to the &lt;b&gt;payload&lt;&#x2F;b&gt; function
+             * passed as a second argument to the &lt;b&gt;payload&lt;/b&gt; function
              *
              * @method exports
              * @for modl
              * @static
              * @param {function} payload The payload function
-             *&#x2F;
-            exports : function(payload) {
+             */
+            exports: function(payload) {
                 log(&quot;modl.exports called, creating new loader&quot;);
                 var loader = new Loader();
                 loader.exports(payload);
             },
 
-            &#x2F;**
+            /**
              * Sets up the modl environment. It will reset all loaded modules
              * and will set up the settings object along with the values passed
-             * along with the &lt;b&gt;options&lt;&#x2F;b&gt; parameter.
+             * along with the &lt;b&gt;options&lt;/b&gt; parameter.
              *
-             * This function &lt;b&gt;MUST&lt;&#x2F;b&gt; be called before any require&#x2F;exports
+             * This function &lt;b&gt;MUST&lt;/b&gt; be called before any require/exports
              * can be actually made.
              *
              * @method setup
@@ -1150,11 +1171,189 @@
              *            assets and modules
              * @param {boolean} [options.debug] If this flag is on, it will emit debug
              *            messages to a console if available
-             *&#x2F;
-            setup : function(options) {
+             */
+            setup: function(options) {
                 settings = {};
                 merge(settings, options, validSettings);
                 current = new Module(&quot;&quot;, settings.root);
+            },
+
+            /**
+             * Util class that provides inner utils to the outside world
+             *
+             * @class modl.Util
+             * @static
+             */
+            Util: {
+
+                /**
+                 * Flag that indicates if we are running under nodejs environment
+                 *
+                 * @property Uode
+                 * @for modl.Util
+                 * @type boolean
+                 * @final
+                 */
+                node: node,
+
+                /**
+                 * Returns a function that always returns the same value
+                 *
+                 * @method constant
+                 * @for modl.Util
+                 * @param {mixed} v Returned value
+                 * @return {function}
+                 */
+                constant: constant,
+
+                /**
+                 * Short for setTimeout(f, 0);
+                 *
+                 * @method work
+                 * @for modl.Util
+                 * @param {function} f Work function
+                 * @return {number} timeout id
+                 */
+                work: work,
+
+                /**
+                 * Short for Object.prototype.hasOwnProperty
+                 *
+                 * @method hop
+                 * @for modl
+                 * @param {object} o Object to check its property
+                 * @param {string} p Property name
+                 * @return {boolean} whether a property exists within the object or not
+                 */
+                hop: hop,
+
+                /**
+                 * Merges all properties from &lt;b&gt;b&lt;/b&gt; into &lt;b&gt;a&lt;/b&gt;. Optionally it
+                 * can be passes a property whitelist
+                 *
+                 * @method merge
+                 * @for modl.Util
+                 * @param {object} a The target object
+                 * @param {object} b The source object
+                 * @param {array} [list] Properties whitelist
+                 */
+                merge: merge,
+
+                /**
+                 * Iterates over an object&#x27;s properties or an array&#x27;s values calling the
+                 * &lt;b&gt;f&lt;/b&gt; callback function each time passing the value as it&#x27;s first
+                 * argument and the index or property name as it&#x27;s second argument. The
+                 * callback function must return either &lt;code&gt;true&lt;/code&gt; or
+                 * &lt;code&gt;false&lt;/code&gt;. If for a given property or index the function
+                 * returns &lt;code&gt;true&lt;/code&gt; then the indexOf function will return the
+                 * current property name or index.
+                 *
+                 * @method indexOf
+                 * @for modl.Util
+                 * @param {array|object} a The array or object to be iterated
+                 * @param {function} f The callback function for each iteration
+                 */
+                indexOf: indexOf,
+
+                /**
+                 * Iterates over an object&#x27;s properties or an array&#x27;s values calling the
+                 * &lt;b&gt;f&lt;/b&gt; callback function each time passing the value as it&#x27;s first
+                 * argument and the index or property name as it&#x27;s second argument.
+                 *
+                 * @method forEach
+                 * @for modl.Util
+                 * @param {array|object} a The array or object to be iterated
+                 * @param {function} f The callback function for each iteration
+                 */
+                forEach: forEach,
+
+                /**
+                 * Short for Array.prototype.slice.apply(arguments[0], arguments[1...n])
+                 *
+                 * @method slice
+                 * @for modl.Util
+                 * @return {array}
+                 */
+                slice: slice,
+
+                /**
+                 * Iterates over an object&#x27;s properties or an array&#x27;s values
+                 * calling the &lt;b&gt;f&lt;/b&gt; callback function each time passing the
+                 * value as it&#x27;s first argument and the index or property name
+                 * as it&#x27;s second argument. The returned value of each function
+                 * call is stored in a new array that is returned in the end.
+                 *
+                 * @method map
+                 * @for modl.Util
+                 * @param {array|object} a The array or object to be iterated
+                 * @param {function} f The callback function for each iteration
+                 * @return {array}
+                 */
+                map: map,
+
+                /**
+                 * Returns a function that decides which function to call based on the number of arguments passed.
+                 *
+                 * @method overload
+                 * @for modl.Util
+                 * @param {function} functions*
+                 * @return {function}
+                 */
+                overload: overload,
+
+                /**
+                 * Returns another function that passes the this arguments as first argument to the other function
+                 *
+                 * @method that
+                 * @for modl.Util
+                 * @param {function} f Function that receives &quot;this&quot; as &quot;that&quot;
+                 * @return {function}
+                 */
+                that: that,
+
+                /**
+                 * Creates a unique token
+                 *
+                 * @method token
+                 * @for modl.Util
+                 * @return {modl.Util.Token}
+                 */
+                token: token,
+
+                /**
+                 * Creates new classes of things
+                 *
+                 * @method kin
+                 * @for modl.Util
+                 * @param {function} constructor
+                 * @return {function} A new kin, or class if you may
+                 */
+                kin: kin,
+
+                /**
+                 * A noop function
+                 *
+                 * @method k
+                 * @for modl.Util
+                 */
+                k: k,
+
+                /**
+                 * Token class
+                 *
+                 * @class modl.Util.Token
+                 * @constructor
+                 * @param {string} token Token value
+                 */
+                Token: Token,
+
+                /**
+                 * Represents a future promise
+                 *
+                 * @class modl.Util.Future
+                 * @constructor
+                 */
+                Future: Future
             }
         };
 
@@ -1174,13 +1373,13 @@
         </div>
     </div>
 </div>
-<script src="..&#x2F;assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
 <script>prettyPrint();</script>
-<script src="..&#x2F;assets/js/yui-prettify.js"></script>
-<script src="..&#x2F;assets/../api.js"></script>
-<script src="..&#x2F;assets/js/api-filter.js"></script>
-<script src="..&#x2F;assets/js/api-list.js"></script>
-<script src="..&#x2F;assets/js/api-search.js"></script>
-<script src="..&#x2F;assets/js/apidocs.js"></script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
 </body>
 </html>

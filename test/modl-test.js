@@ -19,7 +19,8 @@
 
             setUp : function() {
                 modl.setup({
-                    "root" : root + "test-runner"
+                    "root" : root + "test-runner",
+                    "debug": true
                 });
             },
 
@@ -38,6 +39,7 @@
                     Assert.isObject(modl.exports);
                     Assert.isObject(imports);
                     Assert.areSame(modl.imports, imports);
+                    console.log(1);
                 }));
 
                 test.wait();
@@ -58,16 +60,6 @@
                 require("mod-a").
                 exports(resume(function(modl, imports) {
                     Assert.isObject(imports["mod-a"]);
-                }));
-
-                test.wait();
-            },
-
-            "should load a file within module" : function() {
-                modl.
-                require("mod-a/AssetA").
-                exports(resume(function(modl, imports) {
-                    Assert.isObject(imports["AssetA"]);
                 }));
 
                 test.wait();

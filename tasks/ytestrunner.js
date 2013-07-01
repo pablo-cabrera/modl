@@ -1,7 +1,6 @@
 module.exports = function(grunt) {
 
     var path = require("path"),
-        http = require("http"),
         ytestrunner = require("ytestrunner"),
         YUITest = require("yuitest"),
 

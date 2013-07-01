@@ -9,7 +9,7 @@
 
     var checkResults = function() {
         var results = YUITest.TestRunner.getResults(),
-            result, message;
+            result;
 
         if (YUITest.TestRunner.isRunning() || results === null) {
             return setTimeout(checkResults, 100);
@@ -46,7 +46,7 @@
                         continue;
                     }
 
-                    console.warn(message = "[" + test.result + "] " + b + " (" + test.message + ")");
+                    console.warn("[" + test.result + "] " + b + " (" + test.message + ")");
                 }
 
                 console.groupEnd();
