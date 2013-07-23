@@ -17,22 +17,22 @@
 
         test = new YUITest.TestCase({
 
-            setUp : function() {
+            setUp: function() {
                 modl.setup({
                     "root" : root + "test-runner",
                     "debug": true
                 });
             },
 
-            name : "modl-test",
+            name: "modl-test",
 
-            _should : {
-                error : {
+            _should: {
+                error: {
                     "should break when there are 2 aliases with the same name" : "Alias clash: x"
                 }
             },
 
-            "should have a modl object as first argument and an imports object as second" : function() {
+            "should have a modl object as first argument and an imports object as second": function() {
                 modl.
                 exports(resume(function(modl, imports) {
                     Assert.isObject(modl);
@@ -45,7 +45,7 @@
                 test.wait();
             },
 
-            "should load a local asset" : function() {
+            "should load a local asset": function() {
                 modl.
                 require("/LocalAsset").
                 exports(resume(function(modl, imports) {
@@ -55,7 +55,7 @@
                 test.wait();
             },
 
-            "should load a single module" : function() {
+            "should load a single module": function() {
                 modl.
                 require("mod-a").
                 exports(resume(function(modl, imports) {
@@ -65,7 +65,7 @@
                 test.wait();
             },
 
-            "should load a module that depends on another module" : function() {
+            "should load a module that depends on another module": function() {
                 modl.
                 require("mod-b").
                 exports(resume(function(modl, imports) {
@@ -78,7 +78,7 @@
                 test.wait();
             },
 
-            "should load a module and put into imports using its alias name" : function() {
+            "should load a module and put into imports using its alias name": function() {
                 modl.
                 require("mod-a", "module-a").
                 exports(resume(function(modl, imports) {
@@ -90,7 +90,7 @@
                 test.wait();
             },
 
-            "should load an asset and put into imports using its alias name" : function() {
+            "should load an asset and put into imports using its alias name": function() {
                 modl.
                 require("/LocalAsset", "MyAsset").
                 exports(resume(function(modl, imports) {
@@ -102,13 +102,25 @@
                 test.wait();
             },
 
-            "should break when there are 2 aliases with the same name" : function() {
+            "should break when there are 2 aliases with the same name": function() {
                 modl.
                 require("mod-a", "x").
                 require("mod-b", "x").
                 exports(function() {
                     Assert.fail("Should not have reached here!");
                 });
+            },
+
+            "should load a concatenated modl": function() {
+                modl.require("mod-c", "c").
+                exports(resume(function(modl, imports) {
+                    Assert.isObject(imports.c);
+                    Assert.areSame("mod-c", imports.c.name);
+                    Assert.isObject(imports.c.d);
+                    Assert.areSame("mod-d", imports.c.d.name);
+                }));
+
+                test.wait();
             }
         });
 
