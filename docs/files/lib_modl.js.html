@@ -105,7 +105,7 @@
 
     var
         /**
-         * The defaults asset for a modl
+         * The default asset for a modl
          *
          * @property MODL_ASSET
          * @for modl
@@ -115,6 +115,30 @@
          * @final
          */
         MODL_ASSET = &quot;/modl&quot;,
+
+        /**
+         * The javascript file extension
+         *
+         * @property JS_EXTENSION
+         * @for modl
+         * @type string
+         * @static
+         * @private
+         * @final
+         */
+        JS_EXTENSION = &quot;.js&quot;,
+
+        /**
+         * The node_modules directory path
+         *
+         * @property NODE_MODULES_PATH
+         * @for modl
+         * @type string
+         * @static
+         * @private
+         * @final
+         */
+        NODE_MODULES_PATH = &quot;/node_modules/&quot;,
 
         /**
          * The regex to get the alias from the resource name
@@ -207,9 +231,9 @@
          */
         loadingAsset,
 
-        work = function(f) {
-            return setTimeout(f, 0);
-        },
+        work = node ?
+            function(f) { process.nextTick(f); } :
+            function(f) { setTimeout(f, 0); },
 
         /**
          * Helper function to log messages when the debug flag is enabled
@@ -245,7 +269,7 @@
          */
         ts = function() {
             var d = new Date(),
-                z = function(n) { return n &lt; 10 ? &quot;0&quot; + n : String(n); };
+                z = function(n) { return n &lt; 10 ? &quot;0&quot; + n: String(n); };
 
             return &quot;[&quot; + z(d.getHours()) + &quot;:&quot; + z(d.getMinutes()) + &quot;:&quot; + z(d.getSeconds()) + &quot;.&quot; + String(1000 + d.getMilliseconds()).substr(1) + &quot;]&quot;;
         },
@@ -473,6 +497,26 @@
             };
         }()),
 
+        preloadedResources = {},
+
+        preloadResources = function(path, module) {
+            forEach(module, function(content, resource) {
+                if (resource.indexOf(&quot;/&quot;) === 0) {
+                    preloadedResources[path + resource + JS_EXTENSION] = content;
+                } else {
+                    preloadResources(path + NODE_MODULES_PATH + resource, content);
+                }
+            });
+        },
+
+        loadResource = function(resource) {
+            if (hop(preloadedResources, resource)) {
+                work(function() { preloadedResources[resource].call(global); });
+            } else {
+                loadScript(resource);
+            }
+        },
+
         /**
          * Loads a given script.
          *
@@ -568,27 +612,47 @@
          * @constructor
          * @private
          * @param {string} name It&#x27;s name
-         * @param {string} path It&#x27;s path
          */
-        Asset = Ready.descend(function(name, path) {
-            var script = (path + name + &quot;.js&quot;).replace(PATH_RE, &quot;/&quot;);
+        Asset = (function() {
+            var _name = token();
+
+            return Ready.descend(function(name, path) {
+
+                /**
+                 * The asset&#x27;s name
+                 *
+                 * @property _name
+                 * @for Asset
+                 * @type {string}
+                 * @private
+                 */
+
+                _name.mark(this, name);
+
+                /**
+                 * Holds the asset&#x27;s exports
+                 *
+                 * @property exports
+                 * @for Asset
+                 * @type {mixed}
+                 */
+                this.exports = undef;
+
+                Ready.call(this);
+
+                log(&quot;Asset created: &quot;, this);
+            }).
 
             /**
-             * Holds the asset&#x27;s exports
+             * Retrieves the asset and loads it
              *
-             * @property exports
-             * @for Asset
-             * @type {mixed}
+             * @param {string} path It&#x27;s path
              */
-            this.exports = undef;
-
-            Ready.call(this);
-
-            log(&quot;Asset created: &quot;, this);
-
-            loadingAsset = this;
-            loadScript(script);
-        }),
+            proto(&quot;load&quot;, function(path) {
+                loadingAsset = this;
+                loadResource((path + this[_name] + JS_EXTENSION).replace(PATH_RE, &quot;/&quot;));
+            });
+        }()),
 
         /**
          * The Module class represents a module within the modl tree. It can
@@ -608,7 +672,6 @@
                 _path = token(),
                 modules = token(),
                 assets = token();
-
 
             return Ready.descend(function(name, path) {
                     /**
@@ -665,8 +728,10 @@
 
                     Ready.call(this);
                     log(&quot;module created: &quot;, this);
+
                     this.initialize();
                 }).
+
                 proto({
 
                     /**
@@ -675,7 +740,7 @@
                      * @method initialize
                      * @for Module
                      */
-                    initialize : that(function(that) {
+                    initialize: that(function(that) {
                         if (this[_name] !== &quot;&quot;) {
                             this.asset(MODL_ASSET).
                             when(function(err, asset) {
@@ -703,7 +768,8 @@
                         if (name in this[assets]) {
                             asset = this[assets][name];
                         } else {
-                            asset = new Asset(name, this[_path]);
+                            asset = new Asset(name);
+                            asset.load(this[_path]);
                             this[assets][name] = asset;
                         }
 
@@ -742,7 +808,13 @@
                         });
 
                         return future;
-                    })
+                    }),
+
+                    $modl: function(module) {
+                        preloadResources(this[_path], module);
+                        work(function() { module[MODL_ASSET].call(global); });
+                    }
+
                 });
         }()),
 
@@ -1040,7 +1112,7 @@
                  * @chainable
                  * @return {Loader} The loader instance
                  */
-                require : function(resource, alias) {
+                require: function(resource, alias) {
                     this[requires][resource] = alias;
                     return this;
                 },
@@ -1068,13 +1140,12 @@
                  * @for Loader
                  * @param {function} payload The payload function
                  */
-                exports : function(payload) {
-                    if (loadingAsset) {
+                exports: function(payload) {
+                    this[_payload] = payload;
+                    if (loadingAsset !== undef) {
                         this[attachAsset](loadingAsset);
                         loadingAsset = undef;
                     }
-
-                    this[_payload] = payload;
                     this[dispatch]();
                 }
             });
@@ -1176,6 +1247,11 @@
                 settings = {};
                 merge(settings, options, validSettings);
                 current = new Module(&quot;&quot;, settings.root);
+            },
+
+
+            $modl: function(module) {
+                current.$modl(module);
             },
 
             /**

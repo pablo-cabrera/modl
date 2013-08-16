@@ -20,7 +20,7 @@
             setUp: function() {
                 modl.setup({
                     "root" : root + "test-runner",
-                    "debug": true
+                    "debug": false
                 });
             },
 
@@ -39,7 +39,6 @@
                     Assert.isObject(modl.exports);
                     Assert.isObject(imports);
                     Assert.areSame(modl.imports, imports);
-                    console.log(1);
                 }));
 
                 test.wait();
@@ -122,6 +121,7 @@
 
                 test.wait();
             }
+
         });
 
     YUITest.TestRunner.add(test);

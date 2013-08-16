@@ -49,7 +49,6 @@ module.exports = function(grunt) {
                 browser : true,
                 node : true
             },
-            globals : {},
 
             files : ["Gruntfile.js", "lib/**/*.js", "test/**/*.js"]
         },
