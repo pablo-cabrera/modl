@@ -1,14 +1,19 @@
 YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
     "classes": [
-        "Asset",
-        "Loader",
-        "Module",
-        "Ready",
         "modl",
-        "modl.Util",
-        "modl.Util.Future",
-        "modl.Util.Token"
+        "modl.Asset",
+        "modl.Bilbo",
+        "modl.Bilbo.Bag",
+        "modl.Bilbo.MockingBag",
+        "modl.Loader",
+        "modl.Module",
+        "modl.Promise",
+        "modl.REady",
+        "modl.Ready",
+        "modl.Token",
+        "modl.Type",
+        "modl.Util"
     ],
     "modules": [],
     "allModules": []

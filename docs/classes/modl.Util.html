@@ -41,21 +41,31 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="../classes/Asset.html">Asset</a></li>
-            
-                <li><a href="../classes/Loader.html">Loader</a></li>
-            
                 <li><a href="../classes/modl.html">modl</a></li>
             
+                <li><a href="../classes/modl.Asset.html">modl.Asset</a></li>
+            
+                <li><a href="../classes/modl.Bilbo.html">modl.Bilbo</a></li>
+            
+                <li><a href="../classes/modl.Bilbo.Bag.html">modl.Bilbo.Bag</a></li>
+            
+                <li><a href="../classes/modl.Bilbo.MockingBag.html">modl.Bilbo.MockingBag</a></li>
+            
+                <li><a href="../classes/modl.Loader.html">modl.Loader</a></li>
+            
+                <li><a href="../classes/modl.Module.html">modl.Module</a></li>
+            
+                <li><a href="../classes/modl.Promise.html">modl.Promise</a></li>
+            
+                <li><a href="../classes/modl.Ready.html">modl.Ready</a></li>
+            
+                <li><a href="../classes/modl.REady.html">modl.REady</a></li>
+            
+                <li><a href="../classes/modl.Token.html">modl.Token</a></li>
+            
+                <li><a href="../classes/modl.Type.html">modl.Type</a></li>
+            
                 <li><a href="../classes/modl.Util.html">modl.Util</a></li>
-            
-                <li><a href="../classes/modl.Util.Future.html">modl.Util.Future</a></li>
-            
-                <li><a href="../classes/modl.Util.Token.html">modl.Util.Token</a></li>
-            
-                <li><a href="../classes/Module.html">Module</a></li>
-            
-                <li><a href="../classes/Ready.html">Ready</a></li>
             
             </ul>
 
@@ -104,7 +114,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/lib_modl.js.html#l1155"><code>lib&#x2F;modl.js:1155</code></a>
+            Defined in: <a href="../files/lib_modl.js.html#l2079"><code>lib&#x2F;modl.js:2079</code></a>
         </div>
     
 
@@ -116,7 +126,8 @@
 
 
 <div class="box intro">
-    <p>Util class that provides inner utils to the outside world</p>
+    <p>Exported utilities class from modl module system</p>
+
 </div>
 
 
@@ -146,7 +157,28 @@
                     <ul class="index-list methods">
                         
                             <li class="index-item method">
+                                <a href="#method_args">args</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_bond">bond</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_constant">constant</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_first">first</a>
 
                                 
                                 
@@ -160,6 +192,13 @@
                             </li>
                         
                             <li class="index-item method">
+                                <a href="#method_hop">hop</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_indexOf">indexOf</a>
 
                                 
@@ -167,14 +206,14 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_k">k</a>
+                                <a href="#method_inherits">inherits</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_kin">kin</a>
+                                <a href="#method_k">k</a>
 
                                 
                                 
@@ -216,7 +255,16 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_token">token</a>
+                                <a href="#method_tokens">tokens</a>
+
+                                
+                                    <span class="flag static">static</span>
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_type">type</a>
 
                                 
                                 
@@ -240,7 +288,7 @@
                     <ul class="index-list properties">
                         
                             <li class="index-item property">
-                                <a href="#property_Uode">Uode</a>
+                                <a href="#property_undef">undef</a>
 
                                 
                                 
@@ -260,8 +308,8 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_constant" class="method item">
-    <h3 class="name"><code>constant</code></h3>
+                    <div id="method_args" class="method item">
+    <h3 class="name"><code>args</code></h3>
 
     
         <div class="args">
@@ -269,7 +317,7 @@
             
                 <li class="arg">
                     
-                        <code>v</code>
+                        <code>f</code>
                     
                 </li>
             
@@ -306,7 +354,7 @@
             
         
         
-        <a href="../files/lib_modl.js.html#l1173"><code>lib&#x2F;modl.js:1173</code></a>
+        <a href="../files/lib_modl.js.html#l2106"><code>lib&#x2F;modl.js:2106</code></a>
         
         </p>
 
@@ -317,7 +365,10 @@
     </div>
 
     <div class="description">
-        <p>Returns a function that always returns the same value</p>
+        <p>Returns a function that whe called, passes the arguments
+collection as an array to the passed function as its first
+parameter.</p>
+
     </div>
 
     
@@ -328,14 +379,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">v</code>
-                        <span class="type">Mixed</span>
+                        <code class="param-name">f</code>
+                        <span class="type">Function</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>Returned value</p>
+                         
                     </div>
 
                     
@@ -363,6 +414,369 @@
 </div>
 
                 
+                    <div id="method_bond" class="method item">
+    <h3 class="name"><code>bond</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>constructor</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>superConstructor</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Function</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/lib_modl.js.html#l2314"><code>lib&#x2F;modl.js:2314</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Creates tMODULE_REFERENCEhe prototype bond between a constructor and its
+superConstructor, nothing more.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">constructor</code>
+                        <span class="type">Function</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">superConstructor</code>
+                        <span class="type">Function</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Function</span>:
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_constant" class="method item">
+    <h3 class="name"><code>constant</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>value</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Function</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/lib_modl.js.html#l2087"><code>lib&#x2F;modl.js:2087</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Returns a function that when called returns always the same starting value</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">value</code>
+                        <span class="type">Mixed</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Function</span>:
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_first" class="method item">
+    <h3 class="name"><code>first</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>collection</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[condition]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Mixed</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/lib_modl.js.html#l2178"><code>lib&#x2F;modl.js:2178</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Returns the first ocurrence that satisfies the conditional
+function of a given value within an array or an object.</p>
+<p>The conditional function will be called for each item within
+the collection, it will receive the item as first parameter
+and its index as the second. The function must return a
+boolean indicating whether the condition has been met.</p>
+<p>If the function is ommited, it will return the first item
+within the collection.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">collection</code>
+                        <span class="type">Array | Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[condition]</code>
+                        <span class="type">Function</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Mixed</span>:
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_forEach" class="method item">
     <h3 class="name"><code>forEach</code></h3>
 
@@ -372,7 +786,7 @@
             
                 <li class="arg">
                     
-                        <code>a</code>
+                        <code>collection</code>
                     
                 </li>
             
@@ -411,7 +825,7 @@
             
         
         
-        <a href="../files/lib_modl.js.html#l1232"><code>lib&#x2F;modl.js:1232</code></a>
+        <a href="../files/lib_modl.js.html#l2200"><code>lib&#x2F;modl.js:2200</code></a>
         
         </p>
 
@@ -422,9 +836,10 @@
     </div>
 
     <div class="description">
-        <p>Iterates over an object's properties or an array's values calling the
-<b>f</b> callback function each time passing the value as it's first
-argument and the index or property name as it's second argument.</p>
+        <p>Executes a function for each item within the collection
+(array or object), passing the item itself as the first
+parameter and it&#39;s index as the second parameter.</p>
+
     </div>
 
     
@@ -435,14 +850,14 @@ argument and the index or property name as it's second argument.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">a</code>
+                        <code class="param-name">collection</code>
                         <span class="type">Array | Object</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The array or object to be iterated</p>
+                         
                     </div>
 
                     
@@ -457,7 +872,7 @@ argument and the index or property name as it's second argument.</p>
                     
 
                     <div class="param-description">
-                        <p>The callback function for each iteration</p>
+                         
                     </div>
 
                     
@@ -473,8 +888,8 @@ argument and the index or property name as it's second argument.</p>
 </div>
 
                 
-                    <div id="method_indexOf" class="method item">
-    <h3 class="name"><code>indexOf</code></h3>
+                    <div id="method_hop" class="method item">
+    <h3 class="name"><code>hop</code></h3>
 
     
         <div class="args">
@@ -482,13 +897,13 @@ argument and the index or property name as it's second argument.</p>
             
                 <li class="arg">
                     
-                        <code>a</code>
+                        <code>object</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>f</code>
+                        <code>property</code>
                     
                 </li>
             
@@ -496,6 +911,10 @@ argument and the index or property name as it's second argument.</p>
         </div>
     
 
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
     
 
     
@@ -521,7 +940,7 @@ argument and the index or property name as it's second argument.</p>
             
         
         
-        <a href="../files/lib_modl.js.html#l1216"><code>lib&#x2F;modl.js:1216</code></a>
+        <a href="../files/lib_modl.js.html#l2130"><code>lib&#x2F;modl.js:2130</code></a>
         
         </p>
 
@@ -532,13 +951,8 @@ argument and the index or property name as it's second argument.</p>
     </div>
 
     <div class="description">
-        <p>Iterates over an object's properties or an array's values calling the
-<b>f</b> callback function each time passing the value as it's first
-argument and the index or property name as it's second argument. The
-callback function must return either <code>true</code> or
-<code>false</code>. If for a given property or index the function
-returns <code>true</code> then the indexOf function will return the
-current property name or index.</p>
+        <p>Short for object.hasOwnProperty(property)</p>
+
     </div>
 
     
@@ -549,14 +963,14 @@ current property name or index.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">a</code>
-                        <span class="type">Array | Object</span>
+                        <code class="param-name">object</code>
+                        <span class="type">Object</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The array or object to be iterated</p>
+                         
                     </div>
 
                     
@@ -564,14 +978,14 @@ current property name or index.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">f</code>
-                        <span class="type">Function</span>
+                        <code class="param-name">property</code>
+                        <span class="type">String</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The callback function for each iteration</p>
+                         
                     </div>
 
                     
@@ -581,6 +995,281 @@ current property name or index.</p>
         </div>
     
 
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_indexOf" class="method item">
+    <h3 class="name"><code>indexOf</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>collection</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>condition</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Number | String</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/lib_modl.js.html#l2158"><code>lib&#x2F;modl.js:2158</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Looks for the first ocurrence that satisfies the conditional
+function of a given value within an array or an object,
+returning its index or property.</p>
+<p>The conditional function will be called for each item within
+the collection, it will receive the item as first parameter
+and its index as the second. The function must return a
+boolean indicating whether the condition has been met.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">collection</code>
+                        <span class="type">Array | Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">condition</code>
+                        <span class="type">Function</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Number | String</span>:
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_inherits" class="method item">
+    <h3 class="name"><code>inherits</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>constructor</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>superConstructor</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Function</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/lib_modl.js.html#l2292"><code>lib&#x2F;modl.js:2292</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Inherit the prototype methods from one constructor into
+another. The prototype of constructor will be set to a new
+object created from superConstructor.</p>
+<p>As an additional convenience, superConstructor.prototype will
+be accessible through the constructor.ancestor property,
+along with other facilities within the modl&#39;s type
+suggar.</p>
+<p>The method returns the constructor reference.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">constructor</code>
+                        <span class="type">Function</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">superConstructor</code>
+                        <span class="type">Function</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Function</span>:
+                    
+                
+            </div>
+        </div>
     
 
     
@@ -619,7 +1308,7 @@ current property name or index.</p>
             
         
         
-        <a href="../files/lib_modl.js.html#l1307"><code>lib&#x2F;modl.js:1307</code></a>
+        <a href="../files/lib_modl.js.html#l2098"><code>lib&#x2F;modl.js:2098</code></a>
         
         </p>
 
@@ -630,115 +1319,12 @@ current property name or index.</p>
     </div>
 
     <div class="description">
-        <p>A noop function</p>
+        <p>A function that does nothing and returns undefined. Useful when you need a noop function</p>
+
     </div>
 
     
 
-    
-
-    
-</div>
-
-                
-                    <div id="method_kin" class="method item">
-    <h3 class="name"><code>kin</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>constructor</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Function</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/lib_modl.js.html#l1297"><code>lib&#x2F;modl.js:1297</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Creates new classes of things</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">constructor</code>
-                        <span class="type">Function</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Function</span>:
-                    
-                    A new kin, or class if you may
-                
-            </div>
-        </div>
     
 
     
@@ -754,7 +1340,7 @@ current property name or index.</p>
             
                 <li class="arg">
                     
-                        <code>a</code>
+                        <code>collection</code>
                     
                 </li>
             
@@ -797,7 +1383,7 @@ current property name or index.</p>
             
         
         
-        <a href="../files/lib_modl.js.html#l1253"><code>lib&#x2F;modl.js:1253</code></a>
+        <a href="../files/lib_modl.js.html#l2213"><code>lib&#x2F;modl.js:2213</code></a>
         
         </p>
 
@@ -808,11 +1394,12 @@ current property name or index.</p>
     </div>
 
     <div class="description">
-        <p>Iterates over an object's properties or an array's values
-calling the <b>f</b> callback function each time passing the
-value as it's first argument and the index or property name
-as it's second argument. The returned value of each function
-call is stored in a new array that is returned in the end.</p>
+        <p>Iterates through the items of a collection, calling the map
+function for each of those items, passing the item itself as
+first parameter and it&#39;s index as the second parameter. The
+function&#39;s return will be pushed to a new array that will be
+returned in the end.</p>
+
     </div>
 
     
@@ -823,14 +1410,14 @@ call is stored in a new array that is returned in the end.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">a</code>
+                        <code class="param-name">collection</code>
                         <span class="type">Array | Object</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The array or object to be iterated</p>
+                         
                     </div>
 
                     
@@ -845,7 +1432,7 @@ call is stored in a new array that is returned in the end.</p>
                     
 
                     <div class="param-description">
-                        <p>The callback function for each iteration</p>
+                         
                     </div>
 
                     
@@ -882,19 +1469,19 @@ call is stored in a new array that is returned in the end.</p>
             
                 <li class="arg">
                     
-                        <code>a</code>
+                        <code>target</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>b</code>
+                        <code>source</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code class="optional">[list]</code>
+                        <code class="optional">[propertyList]</code>
                     
                 </li>
             
@@ -927,7 +1514,7 @@ call is stored in a new array that is returned in the end.</p>
             
         
         
-        <a href="../files/lib_modl.js.html#l1204"><code>lib&#x2F;modl.js:1204</code></a>
+        <a href="../files/lib_modl.js.html#l2143"><code>lib&#x2F;modl.js:2143</code></a>
         
         </p>
 
@@ -938,8 +1525,11 @@ call is stored in a new array that is returned in the end.</p>
     </div>
 
     <div class="description">
-        <p>Merges all properties from <b>b</b> into <b>a</b>. Optionally it
-can be passes a property whitelist</p>
+        <p>Copy the properties from the &quot;source&quot; object onto the
+&quot;target&quot; object. Optionally it can be passed an array
+containing the property-list to be copied, if ommited, all
+own properties should be copied.</p>
+
     </div>
 
     
@@ -950,14 +1540,14 @@ can be passes a property whitelist</p>
             
                 <li class="param">
                     
-                        <code class="param-name">a</code>
+                        <code class="param-name">target</code>
                         <span class="type">Object</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The target object</p>
+                         
                     </div>
 
                     
@@ -965,14 +1555,14 @@ can be passes a property whitelist</p>
             
                 <li class="param">
                     
-                        <code class="param-name">b</code>
+                        <code class="param-name">source</code>
                         <span class="type">Object</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The source object</p>
+                         
                     </div>
 
                     
@@ -980,7 +1570,7 @@ can be passes a property whitelist</p>
             
                 <li class="param">
                     
-                        <code class="param-name optional">[list]</code>
+                        <code class="param-name optional">[propertyList]</code>
                         <span class="type">Array</span>
                         <span class="flag optional" title="This parameter is optional.">optional</span>
                     
@@ -988,7 +1578,7 @@ can be passes a property whitelist</p>
                     
 
                     <div class="param-description">
-                        <p>Properties whitelist</p>
+                         
                     </div>
 
                     
@@ -1050,7 +1640,7 @@ can be passes a property whitelist</p>
             
         
         
-        <a href="../files/lib_modl.js.html#l1268"><code>lib&#x2F;modl.js:1268</code></a>
+        <a href="../files/lib_modl.js.html#l2246"><code>lib&#x2F;modl.js:2246</code></a>
         
         </p>
 
@@ -1061,7 +1651,14 @@ can be passes a property whitelist</p>
     </div>
 
     <div class="description">
-        <p>Returns a function that decides which function to call based on the number of arguments passed.</p>
+        <p>Kind of a method overloading. It should be called passing
+various functions, each with a different number of declared
+parameters.</p>
+<p>It will return a function that depending of the number of
+arguments passed, will call the respective function. If there
+is no respective function for a given number of arguments,
+the latter function will be used as default.</p>
+
     </div>
 
     
@@ -1113,7 +1710,29 @@ can be passes a property whitelist</p>
     <h3 class="name"><code>slice</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>collection</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[begin=0]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[end]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -1145,7 +1764,7 @@ can be passes a property whitelist</p>
             
         
         
-        <a href="../files/lib_modl.js.html#l1244"><code>lib&#x2F;modl.js:1244</code></a>
+        <a href="../files/lib_modl.js.html#l2230"><code>lib&#x2F;modl.js:2230</code></a>
         
         </p>
 
@@ -1156,9 +1775,67 @@ can be passes a property whitelist</p>
     </div>
 
     <div class="description">
-        <p>Short for Array.prototype.slice.apply(arguments[0], arguments[1...n])</p>
+        <p>Short for:
+var args = Array.prototype.slice.call(arguments);
+return Array.prototype.slice.apply(args.shift(), args);</p>
+
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">collection</code>
+                        <span class="type">Mixed</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[begin=0]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[end]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -1188,7 +1865,7 @@ can be passes a property whitelist</p>
             
                 <li class="arg">
                     
-                        <code>f</code>
+                        <code>thatFunction</code>
                     
                 </li>
             
@@ -1225,7 +1902,7 @@ can be passes a property whitelist</p>
             
         
         
-        <a href="../files/lib_modl.js.html#l1278"><code>lib&#x2F;modl.js:1278</code></a>
+        <a href="../files/lib_modl.js.html#l2265"><code>lib&#x2F;modl.js:2265</code></a>
         
         </p>
 
@@ -1236,7 +1913,10 @@ can be passes a property whitelist</p>
     </div>
 
     <div class="description">
-        <p>Returns another function that passes the this arguments as first argument to the other function</p>
+        <p>Returns a function that when called, it will pass the <em>this</em>
+object as first parameter, along with the remaining
+parameters if any.</p>
+
     </div>
 
     
@@ -1247,14 +1927,14 @@ can be passes a property whitelist</p>
             
                 <li class="param">
                     
-                        <code class="param-name">f</code>
+                        <code class="param-name">thatFunction</code>
                         <span class="type">Function</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>Function that receives "this" as "that"</p>
+                         
                     </div>
 
                     
@@ -1282,8 +1962,8 @@ can be passes a property whitelist</p>
 </div>
 
                 
-                    <div id="method_token" class="method item">
-    <h3 class="name"><code>token</code></h3>
+                    <div id="method_tokens" class="method item">
+    <h3 class="name"><code>tokens</code></h3>
 
     
         <span class="paren">()</span>
@@ -1291,7 +1971,90 @@ can be passes a property whitelist</p>
 
     
         <span class="returns-inline">
-            <span class="type"><a href="../classes/modl.Util.Token.html" class="crosslink">modl.Util.Token</a></span>
+            <span class="type">Mixed</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag static">static</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/lib_modl.js.html#l2338"><code>lib&#x2F;modl.js:2338</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Shortcut for <a href="../classes/modl.Token.html#method_tokens" class="crosslink">tokens</a>&#39;s method</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Mixed</span>:
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_type" class="method item">
+    <h3 class="name"><code>type</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>constructor</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Function</span>
         </span>
     
 
@@ -1318,7 +2081,7 @@ can be passes a property whitelist</p>
             
         
         
-        <a href="../files/lib_modl.js.html#l1288"><code>lib&#x2F;modl.js:1288</code></a>
+        <a href="../files/lib_modl.js.html#l2279"><code>lib&#x2F;modl.js:2279</code></a>
         
         </p>
 
@@ -1329,9 +2092,34 @@ can be passes a property whitelist</p>
     </div>
 
     <div class="description">
-        <p>Creates a unique token</p>
+        <p>Method used to create a new class using the functionality
+described in the pseudo <a href="../classes/modl.Type.html" class="crosslink">modl.Type</a> class</p>
+
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">constructor</code>
+                        <span class="type">Function</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -1341,7 +2129,7 @@ can be passes a property whitelist</p>
             <div class="returns-description">
                 
                     
-                        <span class="type"><a href="../classes/modl.Util.Token.html" class="crosslink">modl.Util.Token</a></span>:
+                        <span class="type">Function</span>:
                     
                 
             </div>
@@ -1370,10 +2158,6 @@ can be passes a property whitelist</p>
     
 
     
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
-    
 
     
 
@@ -1398,7 +2182,7 @@ can be passes a property whitelist</p>
             
         
         
-        <a href="../files/lib_modl.js.html#l1183"><code>lib&#x2F;modl.js:1183</code></a>
+        <a href="../files/lib_modl.js.html#l2120"><code>lib&#x2F;modl.js:2120</code></a>
         
         </p>
 
@@ -1409,7 +2193,8 @@ can be passes a property whitelist</p>
     </div>
 
     <div class="description">
-        <p>Short for setTimeout(f, 0);</p>
+        <p>Processes the function on the next tick</p>
+
     </div>
 
     
@@ -1427,7 +2212,7 @@ can be passes a property whitelist</p>
                     
 
                     <div class="param-description">
-                        <p>Work function</p>
+                         
                     </div>
 
                     
@@ -1437,19 +2222,6 @@ can be passes a property whitelist</p>
         </div>
     
 
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                    timeout id
-                
-            </div>
-        </div>
     
 
     
@@ -1464,9 +2236,9 @@ can be passes a property whitelist</p>
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property_Uode" class="property item">
-    <h3 class="name"><code>Uode</code></h3>
-    <span class="type">Boolean</span>
+                    <div id="property_undef" class="property item">
+    <h3 class="name"><code>undef</code></h3>
+    <span class="type">Undefined</span>
 
     
 
@@ -1489,7 +2261,7 @@ can be passes a property whitelist</p>
             
         
         
-        <a href="../files/lib_modl.js.html#l1163"><code>lib&#x2F;modl.js:1163</code></a>
+        <a href="../files/lib_modl.js.html#l2328"><code>lib&#x2F;modl.js:2328</code></a>
         
         </p>
 
@@ -1499,7 +2271,8 @@ can be passes a property whitelist</p>
     </div>
 
     <div class="description">
-        <p>Flag that indicates if we are running under nodejs environment</p>
+        <p>A reference to the undefined value</p>
+
     </div>
 
     

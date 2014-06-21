@@ -10,23 +10,31 @@
             "name": "lib/modl.js",
             "modules": {},
             "classes": {
-                "modl": 1,
-                "modl.Util.Token": 1,
-                "Ready": 1,
-                "Asset": 1,
-                "Module": 1,
-                "modl.Util.Future": 1,
-                "Loader": 1,
+                "modl.Token": 1,
+                "modl.Type": 1,
+                "modl.Promise": 1,
+                "modl.Ready": 1,
+                "modl.Asset": 1,
+                "modl.Module": 1,
+                "modl.Loader": 1,
+                "modl.Bilbo.Bag": 1,
+                "modl.Bilbo.MockingBag": 1,
+                "modl.Bilbo": 1,
                 "modl.Util": 1
             },
             "fors": {
                 "modl": 1,
-                "modl.Util.Token": 1,
-                "Ready": 1,
-                "Asset": 1,
-                "Module": 1,
-                "modl.Util.Future": 1,
-                "Loader": 1,
+                "modl.Token": 1,
+                "modl.Type": 1,
+                "modl.Promise": 1,
+                "modl.Ready": 1,
+                "modl.REady": 1,
+                "modl.Asset": 1,
+                "modl.Module": 1,
+                "modl.Loader": 1,
+                "modl.Bilbo.Bag": 1,
+                "modl.Bilbo.MockingBag": 1,
+                "modl.Bilbo": 1,
                 "modl.Util": 1
             },
             "namespaces": {}
@@ -41,59 +49,105 @@
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
-            "extension_for": [],
-            "file": "lib/modl.js",
-            "line": 1052,
-            "description": "The modl loader",
-            "static": 1
+            "extension_for": []
         },
-        "modl.Util.Token": {
-            "name": "modl.Util.Token",
-            "shortname": "modl.Util.Token",
+        "modl.Token": {
+            "name": "modl.Token",
+            "shortname": "modl.Token",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
             "file": "lib/modl.js",
-            "line": 1315,
-            "description": "Token class",
+            "line": 242,
+            "description": "The token constructor",
             "is_constructor": 1,
             "params": [
                 {
                     "name": "token",
-                    "description": "Token value",
+                    "description": "",
                     "type": "String"
                 }
             ]
         },
-        "Ready": {
-            "name": "Ready",
-            "shortname": "Ready",
+        "modl.Type": {
+            "name": "modl.Type",
+            "shortname": "modl.Type",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
             "file": "lib/modl.js",
-            "line": 439,
+            "line": 379,
+            "description": "The pseudo Type class for the modl type system. This class is\nused to describe the available methods within the type system itself.\n\nActually there is no Type class, just the added functionality for the\nclasses created with this type system.\n\nThe type constructor should be called without the new keyword itself,\nit will receive the constructor function, add some features to it and\nthe return the same reference.\n\nThe constant method is also assigned to the constructor's prototype.\nThis way it's instances also benefits from the constant method.\n\nIf the constructor is ommited, an empty constructor is created.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "constructor",
+                    "description": "",
+                    "type": "Function",
+                    "optional": true
+                }
+            ]
+        },
+        "modl.Promise": {
+            "name": "modl.Promise",
+            "shortname": "modl.Promise",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/modl.js",
+            "line": 586,
+            "description": "The Promise class implements a simple promise mechanism.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "synchronous",
+                    "description": "Indicates if the promise can be synchronous",
+                    "type": "Boolean"
+                }
+            ]
+        },
+        "modl.Ready": {
+            "name": "modl.Ready",
+            "shortname": "modl.Ready",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/modl.js",
+            "line": 784,
             "description": "The Ready class provides the functionality of scheduling callbacks\nfor when a given Ready instance is marked as ready",
             "is_constructor": 1,
             "access": "private",
             "tagname": ""
         },
-        "Asset": {
-            "name": "Asset",
-            "shortname": "Asset",
+        "modl.REady": {
+            "name": "modl.REady",
+            "shortname": "modl.REady",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": []
+        },
+        "modl.Asset": {
+            "name": "modl.Asset",
+            "shortname": "modl.Asset",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
             "file": "lib/modl.js",
-            "line": 504,
+            "line": 937,
             "description": "The Asset class represents an script file being loaded within a\nmodule.",
-            "extends": "Ready",
+            "extends": "modl.Ready",
             "is_constructor": 1,
             "access": "private",
             "tagname": "",
@@ -105,18 +159,18 @@
                 }
             ]
         },
-        "Module": {
-            "name": "Module",
-            "shortname": "Module",
+        "modl.Module": {
+            "name": "modl.Module",
+            "shortname": "modl.Module",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
             "file": "lib/modl.js",
-            "line": 555,
-            "description": "The Module class represents a module within the modl tree. It can\nload other <b>modules</b>(dependencies contained within\n<code>node_modules</code> directory) and <b>assets</b> (files\nreferenced within a module).",
-            "extends": "Ready",
+            "line": 1105,
+            "description": "The Module class represents a module within the module tree. It can\nload other <b>modules</b>(dependencies contained within\n<code>node_modules</code> directory) and <b>assets</b> (files\nreferenced within a module).",
+            "extends": "modl.Ready",
             "is_constructor": 1,
             "access": "private",
             "tagname": "",
@@ -130,37 +184,80 @@
                     "name": "path",
                     "description": "The module's path",
                     "type": "String"
+                },
+                {
+                    "name": "parent",
+                    "description": "The parent module for this one",
+                    "type": "modl.Module"
+                },
+                {
+                    "name": "hydrating",
+                    "description": "Indicates that this module is being hydrated and should not be initialized automatically",
+                    "type": "Boolean"
                 }
             ]
         },
-        "modl.Util.Future": {
-            "name": "modl.Util.Future",
-            "shortname": "modl.Util.Future",
+        "modl.Loader": {
+            "name": "modl.Loader",
+            "shortname": "modl.Loader",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
             "file": "lib/modl.js",
-            "line": 1324,
-            "description": "Represents a future promise",
-            "is_constructor": 1
-        },
-        "Loader": {
-            "name": "Loader",
-            "shortname": "Loader",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "file": "lib/modl.js",
-            "line": 814,
+            "line": 1353,
             "description": "The loader class responsible for loading the various dependencies between modules and assets",
-            "extends": "Ready",
+            "extends": "modl.Ready",
             "is_constructor": 1,
             "access": "private",
             "tagname": ""
+        },
+        "modl.Bilbo.Bag": {
+            "name": "modl.Bilbo.Bag",
+            "shortname": "modl.Bilbo.Bag",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/modl.js",
+            "line": 1622,
+            "description": "The standard bilbo's bag.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The bag's name",
+                    "type": "String"
+                }
+            ]
+        },
+        "modl.Bilbo.MockingBag": {
+            "name": "modl.Bilbo.MockingBag",
+            "shortname": "modl.Bilbo.MockingBag",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/modl.js",
+            "line": 1860,
+            "description": "The MockingBag is a bag creates and stores empty objects when things\nare not found within. It's intended for <b>testing</b> usage.\n\nWhen the bag creates objects it will store them with the \"stuff\"\nstorage method. Like so, modifying objects will modify created\nreferences within.",
+            "extends": "modl.Bilbo.Bag"
+        },
+        "modl.Bilbo": {
+            "name": "modl.Bilbo",
+            "shortname": "modl.Bilbo",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/modl.js",
+            "line": 1893,
+            "description": "Bilbo baggins!",
+            "static": 1
         },
         "modl.Util": {
             "name": "modl.Util",
@@ -171,18 +268,18 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "lib/modl.js",
-            "line": 1155,
-            "description": "Util class that provides inner utils to the outside world",
+            "line": 2079,
+            "description": "Exported utilities class from modl module system",
             "static": 1
         }
     },
     "classitems": [
         {
             "file": "lib/modl.js",
-            "line": 5,
-            "description": "The default asset for a modl",
+            "line": 8,
+            "description": "The defaults asset for a module",
             "itemtype": "property",
-            "name": "MODL_ASSET",
+            "name": "MODULE_ASSET",
             "type": "string",
             "static": 1,
             "access": "private",
@@ -192,33 +289,7 @@
         },
         {
             "file": "lib/modl.js",
-            "line": 17,
-            "description": "The javascript file extension",
-            "itemtype": "property",
-            "name": "JS_EXTENSION",
-            "type": "string",
-            "static": 1,
-            "access": "private",
-            "tagname": "",
-            "final": 1,
-            "class": "modl"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 29,
-            "description": "The node_modules directory path",
-            "itemtype": "property",
-            "name": "NODE_MODULES_PATH",
-            "type": "string",
-            "static": 1,
-            "access": "private",
-            "tagname": "",
-            "final": 1,
-            "class": "modl"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 41,
+            "line": 20,
             "description": "The regex to get the alias from the resource name",
             "itemtype": "property",
             "name": "ALIAS_RE",
@@ -231,7 +302,7 @@
         },
         {
             "file": "lib/modl.js",
-            "line": 53,
+            "line": 32,
             "description": "The regex used to remove double (or more) slashes from a path",
             "itemtype": "property",
             "name": "PATH_RE",
@@ -244,7 +315,7 @@
         },
         {
             "file": "lib/modl.js",
-            "line": 65,
+            "line": 44,
             "description": "A reference to the undefined value used internally",
             "itemtype": "property",
             "name": "undef",
@@ -257,7 +328,7 @@
         },
         {
             "file": "lib/modl.js",
-            "line": 87,
+            "line": 58,
             "description": "Array containing all",
             "itemtype": "property",
             "name": "node",
@@ -270,7 +341,7 @@
         },
         {
             "file": "lib/modl.js",
-            "line": 99,
+            "line": 70,
             "description": "Contains current settings for the modl loader",
             "itemtype": "property",
             "name": "settings",
@@ -282,11 +353,11 @@
         },
         {
             "file": "lib/modl.js",
-            "line": 110,
+            "line": 81,
             "description": "Points to the current module being loaded",
             "itemtype": "property",
-            "name": "current",
-            "type": "Module",
+            "name": "currentModule",
+            "type": "modl.Module",
             "static": 1,
             "access": "private",
             "tagname": "",
@@ -294,7 +365,19 @@
         },
         {
             "file": "lib/modl.js",
-            "line": 121,
+            "line": 92,
+            "description": "Points to the root module",
+            "itemtype": "property",
+            "name": "rootModule",
+            "type": "modl.Module",
+            "static": 1,
+            "access": "private",
+            "tagname": "",
+            "class": "modl"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 103,
             "description": "Points to the asset being loaded at the moment",
             "itemtype": "property",
             "name": "loadingAsset",
@@ -306,41 +389,7 @@
         },
         {
             "file": "lib/modl.js",
-            "line": 136,
-            "description": "Helper function to log messages when the debug flag is enabled",
-            "itemtype": "method",
-            "name": "log",
-            "params": [
-                {
-                    "name": "args",
-                    "description": "Arguments to be logged",
-                    "type": "Mixed",
-                    "multiple": true
-                }
-            ],
-            "access": "private",
-            "tagname": "",
-            "static": 1,
-            "class": "modl"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 159,
-            "description": "Returns a formatted current timestamp with <code>hh:mm:ss</code> to be used for logging purposes",
-            "itemtype": "method",
-            "name": "ts",
-            "access": "private",
-            "tagname": "",
-            "static": 1,
-            "return": {
-                "description": "The formatted timestamp",
-                "type": "String"
-            },
-            "class": "modl"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 262,
+            "line": 252,
             "description": "Token's toString",
             "itemtype": "method",
             "name": "toString",
@@ -348,11 +397,11 @@
                 "description": "",
                 "type": "String"
             },
-            "class": "modl.Util.Token"
+            "class": "modl.Token"
         },
         {
             "file": "lib/modl.js",
-            "line": 271,
+            "line": 262,
             "description": "Token's valueOf",
             "itemtype": "method",
             "name": "valueOf",
@@ -360,11 +409,11 @@
                 "description": "",
                 "type": "String"
             },
-            "class": "modl.Util.Token"
+            "class": "modl.Token"
         },
         {
             "file": "lib/modl.js",
-            "line": 280,
+            "line": 272,
             "description": "Defines the token as a property for the given object",
             "itemtype": "method",
             "name": "mark",
@@ -381,11 +430,484 @@
                     "optional": true
                 }
             ],
-            "class": "modl.Util.Token"
+            "class": "modl.Token"
         },
         {
             "file": "lib/modl.js",
-            "line": 418,
+            "line": 286,
+            "description": "Creates a new token with a random name",
+            "itemtype": "method",
+            "name": "create",
+            "static": 1,
+            "return": {
+                "description": "",
+                "type": "modl.Token"
+            },
+            "class": "modl.Token"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 329,
+            "description": "Passes created tokens to a given function. The number of created\ntokens are the same of the number of arguments that the function\nexpects.\n\nReturns the returned value from the given function.",
+            "itemtype": "method",
+            "name": "tokens",
+            "static": 1,
+            "return": {
+                "description": "",
+                "type": "Mixed"
+            },
+            "class": "modl.Token"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 356,
+            "description": "The module reference put within the hydrated modules during module\npreloading",
+            "itemtype": "property",
+            "name": "MODULE_REFERENCE",
+            "type": "modl.Module",
+            "static": 1,
+            "access": "private",
+            "tagname": "",
+            "final": 1,
+            "class": "modl"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 414,
+            "description": "Assigns the values from the object to the constructor's prototype instance",
+            "itemtype": "method",
+            "name": "proto",
+            "static": 1,
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "values",
+                    "description": "Various key/value pairs to be assigned to it's prototype",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "returns the constructor itself",
+                "type": "modl.Type"
+            },
+            "class": "modl.Type"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 431,
+            "description": "Assigns a simgle value to a specific name to the constructor's prototype instance",
+            "itemtype": "method",
+            "name": "proto",
+            "static": 1,
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "name",
+                    "description": "",
+                    "type": "string|modl.Token"
+                },
+                {
+                    "name": "value",
+                    "description": "",
+                    "type": "Mixed"
+                }
+            ],
+            "return": {
+                "description": "returns the constructor itself",
+                "type": "modl.Type"
+            },
+            "class": "modl.Type"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 449,
+            "description": "Resolves a constant value within the constructor itself.\nIf it doens't have the constant directly, it walks up the\ninheritance tree looking for it.",
+            "itemtype": "method",
+            "name": "constant",
+            "static": 1,
+            "params": [
+                {
+                    "name": "name",
+                    "description": "",
+                    "type": "string|modl.Token"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Mixed"
+            },
+            "class": "modl.Type"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 473,
+            "description": "Defines a set of constant within the constructor\nitself. Uses the values object as key/value pairs to\ndefine the constants.",
+            "itemtype": "method",
+            "name": "defConstant",
+            "static": 1,
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "values",
+                    "description": "Various key/value pairs to be assigned as constants",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "returns the constructor itself",
+                "type": "modl.Type"
+            },
+            "class": "modl.Type"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 492,
+            "description": "Defines a single constant within the constructor.",
+            "itemtype": "method",
+            "name": "defConstant",
+            "static": 1,
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The constant name",
+                    "type": "string|modl.Token"
+                },
+                {
+                    "name": "value",
+                    "description": "The constant value",
+                    "type": "Mixed"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "modl.Type"
+            },
+            "class": "modl.Type"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 517,
+            "description": "Stores the shared tokens within the constructor's\nclosure, so whenever a descendant asks for the ancestors\ntokens, it will receive a copy of them within the merged\nshared object.",
+            "itemtype": "method",
+            "name": "shared",
+            "params": [
+                {
+                    "name": "shared",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "modl.Type"
+            },
+            "class": "modl.Type"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 535,
+            "description": "Creates a new type descendant from this one. It applies\nthe same syntatic suggar as it's parent and does the\ninherintance linking.\n\nIf ommited, a constructor that calls the superclass is\ncreated and returned.",
+            "itemtype": "method",
+            "name": "descend",
+            "params": [
+                {
+                    "name": "constructor",
+                    "description": "The descendant's constructor",
+                    "type": "Function",
+                    "optional": true
+                },
+                {
+                    "name": "shared",
+                    "description": "The descendant's shared tokens",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "The descendant's constructor",
+                "type": "modl.Type"
+            },
+            "class": "modl.Type"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 604,
+            "description": "Holds the callback function to be called when the promise is\nfulfilled",
+            "itemtype": "property",
+            "name": "then",
+            "type": "{function}",
+            "access": "private",
+            "tagname": "",
+            "class": "modl.Promise"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 615,
+            "description": "Holds the callback function to be called when the promise has\nfailed",
+            "itemtype": "property",
+            "name": "fail",
+            "type": "{function}",
+            "access": "private",
+            "tagname": "",
+            "class": "modl.Promise"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 626,
+            "description": "Holds the next promise to be passed along the call chain",
+            "itemtype": "property",
+            "name": "next",
+            "type": "{function}",
+            "access": "private",
+            "tagname": "",
+            "class": "modl.Promise"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 636,
+            "description": "Indicates whether this promise can be synchronous or not",
+            "itemtype": "property",
+            "name": "sync",
+            "type": "{boolean}",
+            "access": "private",
+            "tagname": "",
+            "class": "modl.Promise"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 660,
+            "description": "Schedules a new action when the promise has fulfilled",
+            "itemtype": "method",
+            "name": "then",
+            "params": [
+                {
+                    "name": "thenHandler",
+                    "description": "The promise continuation handler, called when fulfilled.",
+                    "type": "Function"
+                },
+                {
+                    "name": "failHandler",
+                    "description": "The promise error handler, called when the promise fails.",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "The next chained promise",
+                "type": "modl.Promise"
+            },
+            "class": "modl.Promise"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 681,
+            "description": "Calls the function asynchronously, passing the promise itself as first parameter",
+            "itemtype": "method",
+            "name": "when",
+            "params": [
+                {
+                    "name": "f",
+                    "description": "",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "modl.Promise"
+            },
+            "class": "modl.Promise"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 700,
+            "description": "Fulfills a given promise with the passed value.",
+            "itemtype": "method",
+            "name": "fulfill",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "Mixed"
+                }
+            ],
+            "class": "modl.Promise"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 725,
+            "description": "Continues the promise action. This method must be called for error handling purposes.",
+            "itemtype": "method",
+            "name": "resume",
+            "params": [
+                {
+                    "name": "f",
+                    "description": "",
+                    "type": "Function"
+                }
+            ],
+            "class": "modl.Promise"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 741,
+            "description": "Explicitly fails the promise, throwing a given error (if any).",
+            "itemtype": "method",
+            "name": "fail",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "",
+                    "type": "String|Error",
+                    "optional": true
+                }
+            ],
+            "class": "modl.Promise"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 803,
+            "description": "Indicates whether the instance is ready or not",
+            "itemtype": "property",
+            "name": "readyStatus",
+            "access": "private",
+            "tagname": "",
+            "type": "{boolean}",
+            "class": "modl.Ready"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 813,
+            "description": "Ready callback functions are stored within this guy",
+            "itemtype": "property",
+            "name": "readyCallbacks",
+            "access": "private",
+            "tagname": "",
+            "type": "{array}",
+            "class": "modl.Ready"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 823,
+            "description": "Indicates whether the instance has failed or not",
+            "itemtype": "property",
+            "name": "failStatus",
+            "access": "private",
+            "tagname": "",
+            "type": "{boolean}",
+            "class": "modl.Ready"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 833,
+            "description": "Fail callback functions are stored within this guy",
+            "itemtype": "property",
+            "name": "failCallbacks",
+            "access": "private",
+            "tagname": "",
+            "type": "{array}",
+            "class": "modl.Ready"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 843,
+            "description": "Holds the failure reason",
+            "itemtype": "property",
+            "name": "failure",
+            "access": "private",
+            "tagname": "",
+            "type": "{mixed}",
+            "class": "modl.REady"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 859,
+            "description": "Schedules an <b>f</b> callback to be executed once the\ninstance is marked as <b>ready</b>",
+            "itemtype": "method",
+            "name": "whenReady",
+            "params": [
+                {
+                    "name": "f",
+                    "description": "The callback function to be scheduled",
+                    "type": "Function"
+                }
+            ],
+            "class": "modl.Ready"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 877,
+            "description": "Schedules an <b>f</b> callback to be executed once the\ninstance is marked as <b>failed</b>",
+            "itemtype": "method",
+            "name": "whenFail",
+            "params": [
+                {
+                    "name": "f",
+                    "description": "The callback function to be scheduled",
+                    "type": "Function"
+                }
+            ],
+            "class": "modl.Ready"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 895,
+            "description": "Marks the instance as <b>ready</b> and runs all it's callbacks",
+            "itemtype": "method",
+            "name": "ready",
+            "class": "modl.Ready"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 910,
+            "description": "Marks the instance as <b>ready</b> and runs all it's callbacks",
+            "itemtype": "method",
+            "name": "fail",
+            "params": [
+                {
+                    "name": "reason",
+                    "description": "",
+                    "type": "Mixed"
+                }
+            ],
+            "class": "modl.Ready"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 950,
+            "description": "The asset's name",
+            "itemtype": "property",
+            "name": "myName",
+            "type": "{string}",
+            "access": "private",
+            "tagname": "",
+            "class": "modl.Asset"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 960,
+            "description": "Holds the asset's exports",
+            "itemtype": "property",
+            "name": "exports",
+            "type": "{mixed}",
+            "class": "modl.Asset"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 972,
+            "description": "Retrieves the asset and loads it",
+            "params": [
+                {
+                    "name": "path",
+                    "description": "It's path",
+                    "type": "String"
+                }
+            ],
+            "class": "modl.Asset"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 999,
             "description": "Loads a given script.",
             "itemtype": "method",
             "name": "loadScript",
@@ -403,146 +925,96 @@
         },
         {
             "file": "lib/modl.js",
-            "line": 453,
-            "description": "Indicates whether the instance is ready or not",
-            "itemtype": "property",
-            "name": "readyStatus",
-            "access": "private",
-            "tagname": "",
-            "type": "{boolean}",
-            "class": "Ready"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 463,
-            "description": "Callback functions are stored within this guy",
-            "itemtype": "property",
-            "name": "callbacks",
-            "access": "private",
-            "tagname": "",
-            "type": "{array}",
-            "class": "Ready"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 475,
-            "description": "Schedules an <b>f</b> callback to be executed once the\ninstance is marked as <b>ready</b>",
-            "itemtype": "method",
-            "name": "whenReady",
+            "line": 1018,
+            "description": "Tracks the loading of a script element. When the script is loaded and\nrun, first the \"success\" callback",
             "params": [
                 {
-                    "name": "f",
-                    "description": "The callback function to be scheduled",
-                    "type": "Function"
+                    "name": "node",
+                    "description": "the \"script\" node",
+                    "type": "HTMLScriptElement"
                 }
             ],
-            "class": "Ready"
+            "return": {
+                "description": "success the success callback function",
+                "type": "modl.Promise"
+            },
+            "class": "modl"
         },
         {
             "file": "lib/modl.js",
-            "line": 491,
-            "description": "Marks the instance as <b>ready</b> and runs all it's callbacks",
-            "itemtype": "method",
-            "name": "ready",
-            "class": "Ready"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 519,
-            "description": "The asset's name",
-            "itemtype": "property",
-            "name": "_name",
-            "type": "{string}",
-            "access": "private",
-            "tagname": "",
-            "class": "Asset"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 530,
-            "description": "Holds the asset's exports",
-            "itemtype": "property",
-            "name": "exports",
-            "type": "{mixed}",
-            "class": "Asset"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 544,
-            "description": "Retrieves the asset and loads it",
-            "params": [
-                {
-                    "name": "path",
-                    "description": "It's path",
-                    "type": "String"
-                }
-            ],
-            "class": "Asset"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 575,
+            "line": 1134,
             "description": "It's name",
             "itemtype": "property",
-            "name": "_name",
+            "name": "myName",
             "access": "private",
             "tagname": "",
             "type": "{string}",
-            "class": "Module"
+            "class": "modl.Module"
         },
         {
             "file": "lib/modl.js",
-            "line": 585,
+            "line": 1144,
             "description": "It's path",
             "itemtype": "property",
-            "name": "_path",
+            "name": "myPath",
             "access": "private",
             "tagname": "",
             "type": "{string}",
-            "class": "Module"
+            "class": "modl.Module"
         },
         {
             "file": "lib/modl.js",
-            "line": 595,
+            "line": 1154,
+            "description": "It's parent module",
+            "itemtype": "property",
+            "name": "myParent",
+            "access": "private",
+            "tagname": "",
+            "type": "{Module}",
+            "class": "modl.Module"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1164,
             "description": "It's inner modules. This will contain the references for\nthe children modules currently loaded for this module.",
             "itemtype": "property",
-            "name": "_modules",
+            "name": "modules",
             "access": "private",
             "tagname": "",
             "type": "{object}",
-            "class": "Module"
+            "class": "modl.Module"
         },
         {
             "file": "lib/modl.js",
-            "line": 606,
+            "line": 1175,
             "description": "It's assets. This will contain the references for all\nassets currently loaded within this module.",
             "itemtype": "property",
-            "name": "_assets",
+            "name": "assets",
             "access": "private",
             "tagname": "",
             "type": "{object}",
-            "class": "Module"
+            "class": "modl.Module"
         },
         {
             "file": "lib/modl.js",
-            "line": 617,
-            "description": "Holds the asset's exports",
+            "line": 1186,
+            "description": "Holds the module's exports",
             "itemtype": "property",
             "name": "exports",
             "type": "{mixed}",
-            "class": "Module"
+            "class": "modl.Module"
         },
         {
             "file": "lib/modl.js",
-            "line": 635,
-            "description": "Initializes the module loading its <code>/modl</code> asset",
+            "line": 1231,
+            "description": "Initializes the module loading its <code>/module</code> asset",
             "itemtype": "method",
             "name": "initialize",
-            "class": "Module"
+            "class": "modl.Module"
         },
         {
             "file": "lib/modl.js",
-            "line": 653,
+            "line": 1255,
             "description": "Loads an asset within the module.",
             "itemtype": "method",
             "name": "asset",
@@ -554,14 +1026,14 @@
                 }
             ],
             "return": {
-                "description": "The future representing when the asset will\n        be loaded",
-                "type": "modl.Util.Future"
+                "description": "The promise representing when the asset will be loaded",
+                "type": "modl.Promise"
             },
-            "class": "Module"
+            "class": "modl.Module"
         },
         {
             "file": "lib/modl.js",
-            "line": 681,
+            "line": 1278,
             "description": "Loads child module within the module <i>(Yo dawg! I heard you like modules...)</i>.",
             "itemtype": "method",
             "name": "module",
@@ -573,128 +1045,58 @@
                 }
             ],
             "return": {
-                "description": "The future representing when the module will\n        be loaded",
-                "type": "modl.Util.Future"
+                "description": "The promise representing when the module will be loaded",
+                "type": "modl.Promise"
             },
-            "class": "Module"
+            "class": "modl.Module"
         },
         {
             "file": "lib/modl.js",
-            "line": 728,
-            "description": "Holds the sent error",
+            "line": 1375,
+            "description": "The uses collection containing the various uses data",
             "itemtype": "property",
-            "name": "_err",
-            "access": "private",
-            "tagname": "",
-            "type": "{mixed}",
-            "class": "modl.Util.Future"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 738,
-            "description": "Holds the sent data",
-            "itemtype": "property",
-            "name": "_data",
-            "access": "private",
-            "tagname": "",
-            "type": "{mixed}",
-            "class": "modl.Util.Future"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 748,
-            "description": "Indicates whether the promise has been fulfilled",
-            "itemtype": "property",
-            "name": "fulfilled",
-            "access": "private",
-            "tagname": "",
-            "type": "{boolean}",
-            "class": "modl.Util.Future"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 758,
-            "description": "Holds the callback to be executed whenever the promise is fulfilled",
-            "itemtype": "property",
-            "name": "when",
-            "access": "private",
-            "tagname": "",
-            "type": "{function}",
-            "class": "modl.Util.Future"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 776,
-            "description": "Fulfills the promise",
-            "itemtype": "method",
-            "name": "fulfill",
-            "params": [
-                {
-                    "name": "err",
-                    "description": "The error to be sent",
-                    "type": "Mixed",
-                    "optional": true
-                },
-                {
-                    "name": "data",
-                    "description": "The data to be sent",
-                    "type": "Mixed",
-                    "optional": true
-                }
-            ],
-            "class": "modl.Util.Future"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 795,
-            "description": "Register the callback if the promise is to be fulfilled,\notherwise just runs it passing along the error/data\nassociated with the future",
-            "itemtype": "method",
-            "name": "when",
-            "params": [
-                {
-                    "name": "f",
-                    "description": "The callback function",
-                    "type": "Function"
-                }
-            ],
-            "class": "modl.Util.Future"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 832,
-            "description": "The requires collection containing the various required\ndata",
-            "itemtype": "property",
-            "name": "requires",
+            "name": "uses",
             "access": "private",
             "tagname": "",
             "type": "{object}",
-            "class": "Loader"
+            "class": "modl.Loader"
         },
         {
             "file": "lib/modl.js",
-            "line": 843,
-            "description": "The modl instance to be passed along to the exports\ncallback function when called",
+            "line": 1385,
+            "description": "The uses order containing the order of uses declaration",
             "itemtype": "property",
-            "name": "modl",
+            "name": "usesOrder",
+            "access": "private",
+            "tagname": "",
+            "type": "{array}",
+            "class": "modl.Loader"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1395,
+            "description": "The module instance to be passed along to the exports\ncallback function when called",
+            "itemtype": "property",
+            "name": "module",
             "access": "private",
             "tagname": "",
             "type": "{object}",
-            "class": "Loader"
+            "class": "modl.Loader"
         },
         {
             "file": "lib/modl.js",
-            "line": 857,
+            "line": 1409,
             "description": "The callback function to be executed when all the\nrequires are ready",
             "itemtype": "property",
-            "name": "_payload",
+            "name": "myPayload",
             "access": "private",
             "tagname": "",
             "type": "{function}",
-            "class": "Loader"
+            "class": "modl.Loader"
         },
         {
             "file": "lib/modl.js",
-            "line": 873,
+            "line": 1423,
             "description": "Attach a given asset to this Loader. When the loader is\nready, the asset will also be market as ready",
             "itemtype": "method",
             "name": "attachAsset",
@@ -707,98 +1109,61 @@
                     "type": "Asset"
                 }
             ],
-            "class": "Loader"
+            "class": "modl.Loader"
         },
         {
             "file": "lib/modl.js",
-            "line": 890,
+            "line": 1442,
             "description": "Dispatches the loader processing. It will start loading all\nits requires and finally will run the payload function.",
             "itemtype": "method",
             "name": "dispatch",
             "access": "private",
             "tagname": "",
-            "class": "Loader"
+            "class": "modl.Loader"
         },
         {
             "file": "lib/modl.js",
-            "line": 921,
+            "line": 1484,
             "description": "Loads all requires for the loader.",
             "itemtype": "method",
-            "name": "loadRequires",
+            "name": "loadUses",
             "access": "private",
             "tagname": "",
             "return": {
                 "description": "A promise for when all the requires are ready.",
-                "type": "modl.Util.Future"
+                "type": "modl.Promise"
             },
-            "class": "Loader"
+            "class": "modl.Loader"
         },
         {
             "file": "lib/modl.js",
-            "line": 948,
+            "line": 1513,
             "description": "Loads a given require",
             "itemtype": "method",
-            "name": "loadRequire",
+            "name": "loadUse",
             "access": "private",
             "tagname": "",
             "params": [
                 {
-                    "name": "require",
-                    "description": "The require name",
+                    "name": "name",
+                    "description": "The use's name",
                     "type": "String"
                 }
             ],
             "return": {
-                "description": "The promise for when the require is done",
-                "type": "modl.Util.Future"
+                "description": "The promise for when the use is done",
+                "type": "modl.Promise"
             },
-            "class": "Loader"
+            "class": "modl.Loader"
         },
         {
             "file": "lib/modl.js",
-            "line": 983,
-            "description": "Requires an asset from it. The <b>resource</b> string may\nhave the following formats:\n\n - <code>\"/path/to/asset</code>: in this case the asset\nwithin the current module will be loaded\n\n - <code>\"module\"</code>: in this case the \"module\" within\n<code>node_modules</code> folder will be required, and\nafterwards the <code>/modl</code> asset within the module\nwill be loaded.\n\n - <code>\"module/path/to/asset\"</code>: in this case the\n\"module\" within <code>node_modules</code> folder will be\nrequired, and afterwards the indicated asset within the\nmodule will be loaded.\n\nOptionally an <b>alias</b> property may be passed to name\nthe required asset within the <b>imports</b> object. If\nommited, the alias will be automatically generated based the\n<b>resource</b> value.",
-            "params": [
-                {
-                    "name": "resource",
-                    "description": "A given resource to be required",
-                    "type": "String"
-                },
-                {
-                    "name": "alias",
-                    "description": "An optional alias which to be named\n             within the <b>imports</b> object.",
-                    "type": "String",
-                    "optional": true
-                }
-            ],
+            "line": 1545,
+            "description": "Requires an asset from it. The\n<b>resource</b> string may have the following formats:\n\n - <code>\"/path/to/asset</code>: in this case the asset within\nthe current module will be loaded\n\n - <code>\"module\"</code>: in this case the \"module\" within\n<code>node_modules</code> folder will be required, and\nafterwards the <code>/module</code> asset within the module will\nbe loaded.\n\nOptionally an <b>alias</b> property may be passed to name the\nrequired asset within the <b>imports</b> object. If\nommited, the alias will be automatically generated based the\n<b>resource</b> value.",
             "itemtype": "method",
-            "name": "require",
+            "name": "uses",
+            "static": 1,
             "chainable": 1,
-            "return": {
-                "description": "The loader instance",
-                "type": "Loader"
-            },
-            "class": "Loader"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 1018,
-            "description": "Schedules a given <b>payload</b>\nfunction export the <i>asset</i>. The <b>payload</b> will only\nrun when all the requires are loaded and ready for prime time.\n\nWhen called, the <b>payload</b> function will receive the\n<b>module</b> struct as its first argument and as second\nargument, the <b>imports</b> object containing all required\nresources within will be passed.\n\nThe <b>module</b> object will have an <code>exports</code>\nproperty which will be published for this asset. This property\ncan be overwritten with any value this asset may want to publish (<i>a\nla</i> nodejs module system).\n\nThe <b>module</b> object will also have an <code>imports</code>\nobject containing all required resources which will be also\npassed as a second argument to the <b>payload</b> function",
-            "itemtype": "method",
-            "name": "exports",
-            "params": [
-                {
-                    "name": "payload",
-                    "description": "The payload function",
-                    "type": "Function"
-                }
-            ],
-            "class": "Loader"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 1060,
-            "description": "Creates a <b>Loader</b> and requires an asset from it. The\n<b>resource</b> string may have the following formats:\n\n - <code>\"/path/to/asset</code>: in this case the asset within\nthe current module will be loaded\n\n - <code>\"module\"</code>: in this case the \"module\" within\n<code>node_modules</code> folder will be required, and\nafterwards the <code>/modl</code> asset within the module will\nbe loaded.\n\n - <code>\"module/path/to/asset\"</code>: in this case the\n\"module\" within <code>node_modules</code> folder will be\nrequired, and afterwards the indicated asset within the module\nwill be loaded.\n\nOptionally an <b>alias</b> property may be passed to name the\nrequired asset within the <b>imports</b> object. If\nommited, the alias will be automatically generated based the\n<b>resource</b> value.",
             "params": [
                 {
                     "name": "resource",
@@ -812,22 +1177,345 @@
                     "optional": true
                 }
             ],
-            "itemtype": "method",
-            "name": "require",
-            "static": 1,
-            "chainable": 1,
             "return": {
                 "description": "The loader instance",
-                "type": "Loader"
+                "type": "modl.Loader"
+            },
+            "class": "modl.Loader"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1579,
+            "description": "Schedules a given <b>payload</b>\nfunction export the <i>asset</i>. The <b>payload</b> will only\nrun when all the requires are loaded and ready for prime time.\n\nWhen called, the <b>payload</b> function will receive the\n<b>module</b> struct as its first argument. The imports will be\npassed as subsequent arguments in order.\n\nThe <b>module</b> object will have an <code>exports</code>\nproperty which will be published for this asset. This property\ncan be overwritten with any value this asset may want to publish (<i>a\nla</i> nodejs module system).\n\nThe <b>module</b> object will also have an <code>imports</code>\nobject containing all required resources.\n\nEvery imports will be passed along as parameters to the payload\nfunction",
+            "itemtype": "method",
+            "name": "unit",
+            "static": 1,
+            "params": [
+                {
+                    "name": "payload",
+                    "description": "The payload function",
+                    "type": "Function"
+                }
+            ],
+            "class": "modl.Loader"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1657,
+            "description": "Return the bag's name",
+            "itemtype": "method",
+            "name": "name",
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "class": "modl.Bilbo.Bag"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1669,
+            "description": "Empties the bag, and vanishes it removing it from bilbo\naltogether.",
+            "itemtype": "method",
+            "name": "vanish",
+            "class": "modl.Bilbo.Bag"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1681,
+            "description": "Empties the bag, removing all stored stuff from within",
+            "itemtype": "method",
+            "name": "empty",
+            "class": "modl.Bilbo.Bag"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1691,
+            "description": "Tries to grab a stored stuff. If a given thing can't be found\nwithin the bag, it throws an error.\n\nIt may also receive aditional arguments if the storage method\nsupports varargs.",
+            "itemtype": "method",
+            "name": "grab",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The thing's name",
+                    "type": "String"
+                },
+                {
+                    "name": "args*",
+                    "description": "Optional arguments passed to stored thing if supported",
+                    "type": "Mixed",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Mixed"
+            },
+            "class": "modl.Bilbo.Bag"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1712,
+            "description": "Stores an object within this bag under a given name. When\n<code>grab</code> is called, it will give a new object\nhaving the previous object as prototype.",
+            "itemtype": "method",
+            "name": "prototype",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The given name",
+                    "type": "String"
+                },
+                {
+                    "name": "proto",
+                    "description": "The object to be used as prototype",
+                    "type": "Object"
+                }
+            ],
+            "class": "modl.Bilbo.Bag"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1730,
+            "description": "Stores something within the bag itself. When\n<code>grab</code> is called, it will give it back as is.",
+            "itemtype": "method",
+            "name": "stuff",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The given name",
+                    "type": "String"
+                },
+                {
+                    "name": "thing",
+                    "description": "The thing to be stored",
+                    "type": "Mixed"
+                }
+            ],
+            "class": "modl.Bilbo.Bag"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1745,
+            "description": "Stores a lazy initializer. When <code>grab</code> is\ncalled, it will call the lazy function and return it's value.\nSubsequent calls will always receive the same value.\n\nThe lazy function may receive aditional arguments upon\ncalling <code>grab</code> as varargs",
+            "itemtype": "method",
+            "name": "lazy",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The given name",
+                    "type": "String"
+                },
+                {
+                    "name": "lazy",
+                    "description": "The lazy function",
+                    "type": "Function"
+                }
+            ],
+            "class": "modl.Bilbo.Bag"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1770,
+            "description": "Stores a factory function. When <code>grab</code> is\ncalled, it will call the factory function and return it's\nvalue.\n\nThe factory function may receive aditional arguments upon\ncalling <code>grab</code> as varargs",
+            "itemtype": "method",
+            "name": "factory",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The given name",
+                    "type": "String"
+                },
+                {
+                    "name": "factory",
+                    "description": "The factory function",
+                    "type": "Function"
+                }
+            ],
+            "class": "modl.Bilbo.Bag"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1789,
+            "description": "Stores a constructor to be used as a singleton. When\n<code>grab</code> is called, it will instantiate the object\nusing the <code>type</code> as a constructor for it.\nSubsequent calls will always receive the same instance.\n\nThe constructor may receive aditional arguments upon calling\n<code>grab</code> as varargs",
+            "itemtype": "method",
+            "name": "singleton",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The given name",
+                    "type": "String"
+                },
+                {
+                    "name": "type",
+                    "description": "The singleton constructor",
+                    "type": "Function"
+                }
+            ],
+            "class": "modl.Bilbo.Bag"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1810,
+            "description": "Stores a constructor to be used as a type constructor. When\n<code>grab</code> is called, it will instantiate the object\nusing the <code>type</code> as a constructor for it.\n\nThe constructor may receive aditional arguments upon calling\n<code>grab</code> as varargs",
+            "itemtype": "method",
+            "name": "type",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The given name",
+                    "type": "String"
+                },
+                {
+                    "name": "type",
+                    "description": "The type constructor",
+                    "type": "Function"
+                }
+            ],
+            "class": "modl.Bilbo.Bag"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1830,
+            "description": "Registers a thing within the bag itself with a\nspecific storage method. The bag looks for a property\nnamed \"precious\" or \"〇\" (Unicode Character\n'IDEOGRAPHIC NUMBER ZERO' (U+3007)) within the thing.\nThe property may have the following values as hints:\n<b>\"prototype\"</b>, <b>\"lazy\"</b>, <b>\"singleton\"</b>,\n<b>\"factory\"</b>, <b>\"type\"</b>, and <b>\"stuff\"</b>.\nThe default storage method is <b>\"singleton\"</b> for\nfunctions or <b>\"stuff\"</b> for objects.",
+            "itemtype": "method",
+            "name": "register",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The thing's name",
+                    "type": "String"
+                },
+                {
+                    "name": "stuff",
+                    "description": "The stuff to be registered",
+                    "type": "Mixed"
+                }
+            ],
+            "class": "modl.Bilbo.Bag"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1873,
+            "description": "Just like {{#crossLink \"modl.Bilbo.Bag\"}}{{/crossLink}}'s\ngrab method but when it cannot find stuff within, it creates a\nnew object and stores within itself.",
+            "itemtype": "method",
+            "name": "grab",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The thing's name",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Mixed"
+            },
+            "class": "modl.Bilbo.MockingBag"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1901,
+            "description": "Retrieves or creates a new bag",
+            "itemtype": "method",
+            "name": "bag",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The bag's name",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "modl.Bilbo.Bag"
+            },
+            "class": "modl.Bilbo"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1917,
+            "description": "Creates and returns a <code>bilbo.MockingBag</code>",
+            "itemtype": "method",
+            "name": "mockingBag",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The bag's name",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "modl.bilbo.MockingBag"
+            },
+            "class": "modl.Bilbo"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1932,
+            "description": "Gives a bag for bilbo to keep",
+            "params": [
+                {
+                    "name": "ba",
+                    "description": "",
+                    "type": "modl.Bilbo.Bag"
+                }
+            ],
+            "class": "modl.Bilbo"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1941,
+            "description": "Vanishes all bags reseting bilbo to it's initial state. All bags\nwill be emptied, existing references will still be valid, but all\nbags will have nothing inside.",
+            "itemtype": "method",
+            "name": "vanish",
+            "class": "modl.Bilbo"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 1960,
+            "description": "Simply creates <b>Loader</b> and returns it.\n\nGood for instrumenting purposes, in case you need a reference\nwithout calling {{#crossLink \"modl/uses:method\"}}{{/crossLink}}\nor {{#crossLink \"modl/unit:method\"}}{{/crossLink}} methods",
+            "itemtype": "method",
+            "name": "loader",
+            "static": 1,
+            "return": {
+                "description": "",
+                "type": "modl.Loader"
             },
             "class": "modl"
         },
         {
             "file": "lib/modl.js",
-            "line": 1097,
-            "description": "Creates a <b>Loader</b> and schedules a given <b>payload</b>\nfunction export the <i>asset</i>. The <b>payload</b> will only\nrun when all the requires are loaded and ready for prime time.\n\nWhen called, the <b>payload</b> function will receive the\n<b>module</b> struct as its first argument and as second\nargument, the <b>imports</b> object containing all required\nresources within will be passed.\n\nThe <b>module</b> object will have an <code>exports</code>\nproperty which will be published for this asset. This property\ncan be overwritten with any value this asset may want to publish (<i>a\nla</i> nodejs module system).\n\nThe <b>module</b> object will also have an <code>imports</code>\nobject containing all required resources which will be also\npassed as a second argument to the <b>payload</b> function",
+            "line": 1977,
+            "description": "Creates a <b>Loader</b> and requires an asset from it. The\n<b>resource</b> string may have the following formats:\n\n - <code>\"/path/to/asset</code>: in this case the asset within\nthe current module will be loaded\n\n - <code>\"module\"</code>: in this case the \"module\" within\n<code>node_modules</code> folder will be required, and\nafterwards the <code>/module</code> asset within the module will\nbe loaded.\n\nOptionally an <b>alias</b> property may be passed to name the\nrequired asset within the <b>imports</b> object. If\nommited, the alias will be automatically generated based the\n<b>resource</b> value.",
             "itemtype": "method",
-            "name": "exports",
+            "name": "uses",
+            "static": 1,
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "resource",
+                    "description": "A given resource to be required",
+                    "type": "String"
+                },
+                {
+                    "name": "alias",
+                    "description": "An optional alias which to be named within the\n           <b>imports</b> object.",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "The loader instance",
+                "type": "modl.Loader"
+            },
+            "class": "modl"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 2009,
+            "description": "Creates a <b>Loader</b> and schedules a given <b>payload</b>\nfunction export the <i>asset</i>. The <b>payload</b> will only\nrun when all the requires are loaded and ready for prime time.\n\nWhen called, the <b>payload</b> function will receive the\n<b>module</b> struct as its first argument. The imports will be\npassed as subsequent arguments in order.\n\nThe <b>module</b> object will have an <code>exports</code>\nproperty which will be published for this asset. This property\ncan be overwritten with any value this asset may want to publish (<i>a\nla</i> nodejs module system).\n\nThe <b>module</b> object will also have an <code>imports</code>\nobject containing all required resources.\n\nEvery imports will be passed along as parameters to the payload\nfunction",
+            "itemtype": "method",
+            "name": "unit",
             "static": 1,
             "params": [
                 {
@@ -840,8 +1528,8 @@
         },
         {
             "file": "lib/modl.js",
-            "line": 1127,
-            "description": "Sets up the modl environment. It will reset all loaded modules\nand will set up the settings object along with the values passed\nalong with the <b>options</b> parameter.\n\nThis function <b>MUST</b> be called before any require/exports\ncan be actually made.",
+            "line": 2039,
+            "description": "Sets up the modl module environment. It will reset all loaded\nmodules and will set up the settings object along with the values\npassed along with the <b>options</b> parameter.\n\nThis function <b>MUST</b> be called before any require/exports\ncan be actually made.",
             "itemtype": "method",
             "name": "setup",
             "static": 1,
@@ -853,14 +1541,8 @@
                     "props": [
                         {
                             "name": "root",
-                            "description": "The root directory form which to load all\n           assets and modules",
+                            "description": "The root directory form which to\n           load all assets and modules",
                             "type": "String"
-                        },
-                        {
-                            "name": "debug",
-                            "description": "If this flag is on, it will emit debug\n           messages to a console if available",
-                            "type": "Boolean",
-                            "optional": true
                         }
                     ]
                 }
@@ -869,24 +1551,32 @@
         },
         {
             "file": "lib/modl.js",
-            "line": 1163,
-            "description": "Flag that indicates if we are running under nodejs environment",
-            "itemtype": "property",
-            "name": "Uode",
-            "type": "boolean",
-            "final": 1,
-            "class": "modl.Util"
+            "line": 2062,
+            "description": "Dispatches the loading of a concatenated module. This method\nshould be called only by machine generated code.",
+            "itemtype": "method",
+            "name": "$module",
+            "static": 1,
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "module",
+                    "description": "The concantenated module",
+                    "type": "Object"
+                }
+            ],
+            "class": "modl"
         },
         {
             "file": "lib/modl.js",
-            "line": 1173,
-            "description": "Returns a function that always returns the same value",
+            "line": 2087,
+            "description": "Returns a function that when called returns always the same starting value",
             "itemtype": "method",
             "name": "constant",
             "params": [
                 {
-                    "name": "v",
-                    "description": "Returned value",
+                    "name": "value",
+                    "description": "",
                     "type": "Mixed"
                 }
             ],
@@ -898,67 +1588,90 @@
         },
         {
             "file": "lib/modl.js",
-            "line": 1183,
-            "description": "Short for setTimeout(f, 0);",
+            "line": 2098,
+            "description": "A function that does nothing and returns undefined. Useful when you need a noop function",
             "itemtype": "method",
-            "name": "work",
+            "name": "k",
+            "class": "modl.Util"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 2106,
+            "description": "Returns a function that whe called, passes the arguments\ncollection as an array to the passed function as its first\nparameter.",
+            "itemtype": "method",
+            "name": "args",
             "params": [
                 {
                     "name": "f",
-                    "description": "Work function",
+                    "description": "",
                     "type": "Function"
                 }
             ],
             "return": {
-                "description": "timeout id",
-                "type": "Number"
+                "description": "",
+                "type": "Function"
             },
             "class": "modl.Util"
         },
         {
             "file": "lib/modl.js",
-            "line": 1193,
-            "description": "Short for Object.prototype.hasOwnProperty",
+            "line": 2120,
+            "description": "Processes the function on the next tick",
+            "itemtype": "method",
+            "name": "work",
+            "params": [
+                {
+                    "name": "f",
+                    "description": "",
+                    "type": "Function"
+                }
+            ],
+            "class": "modl.Util"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 2130,
+            "description": "Short for object.hasOwnProperty(property)",
             "itemtype": "method",
             "name": "hop",
             "params": [
                 {
-                    "name": "o",
-                    "description": "Object to check its property",
+                    "name": "object",
+                    "description": "",
                     "type": "Object"
                 },
                 {
-                    "name": "p",
-                    "description": "Property name",
+                    "name": "property",
+                    "description": "",
                     "type": "String"
                 }
             ],
             "return": {
-                "description": "whether a property exists within the object or not",
+                "description": "",
                 "type": "Boolean"
             },
-            "class": "modl"
+            "class": "modl.Util"
         },
         {
             "file": "lib/modl.js",
-            "line": 1204,
-            "description": "Merges all properties from <b>b</b> into <b>a</b>. Optionally it\ncan be passes a property whitelist",
+            "line": 2143,
+            "description": "Copy the properties from the \"source\" object onto the\n\"target\" object. Optionally it can be passed an array\ncontaining the property-list to be copied, if ommited, all\nown properties should be copied.",
             "itemtype": "method",
             "name": "merge",
             "params": [
                 {
-                    "name": "a",
-                    "description": "The target object",
+                    "name": "target",
+                    "description": "",
                     "type": "Object"
                 },
                 {
-                    "name": "b",
-                    "description": "The source object",
+                    "name": "source",
+                    "description": "",
                     "type": "Object"
                 },
                 {
-                    "name": "list",
-                    "description": "Properties whitelist",
+                    "name": "propertyList",
+                    "description": "",
                     "type": "Array",
                     "optional": true
                 }
@@ -967,39 +1680,68 @@
         },
         {
             "file": "lib/modl.js",
-            "line": 1216,
-            "description": "Iterates over an object's properties or an array's values calling the\n<b>f</b> callback function each time passing the value as it's first\nargument and the index or property name as it's second argument. The\ncallback function must return either <code>true</code> or\n<code>false</code>. If for a given property or index the function\nreturns <code>true</code> then the indexOf function will return the\ncurrent property name or index.",
+            "line": 2158,
+            "description": "Looks for the first ocurrence that satisfies the conditional\nfunction of a given value within an array or an object,\nreturning its index or property.\n\nThe conditional function will be called for each item within\nthe collection, it will receive the item as first parameter\nand its index as the second. The function must return a\nboolean indicating whether the condition has been met.",
             "itemtype": "method",
             "name": "indexOf",
             "params": [
                 {
-                    "name": "a",
-                    "description": "The array or object to be iterated",
+                    "name": "collection",
+                    "description": "",
                     "type": "Array|object"
                 },
                 {
-                    "name": "f",
-                    "description": "The callback function for each iteration",
+                    "name": "condition",
+                    "description": "",
                     "type": "Function"
                 }
             ],
+            "return": {
+                "description": "",
+                "type": "Number|string"
+            },
             "class": "modl.Util"
         },
         {
             "file": "lib/modl.js",
-            "line": 1232,
-            "description": "Iterates over an object's properties or an array's values calling the\n<b>f</b> callback function each time passing the value as it's first\nargument and the index or property name as it's second argument.",
+            "line": 2178,
+            "description": "Returns the first ocurrence that satisfies the conditional\nfunction of a given value within an array or an object.\n\nThe conditional function will be called for each item within\nthe collection, it will receive the item as first parameter\nand its index as the second. The function must return a\nboolean indicating whether the condition has been met.\n\nIf the function is ommited, it will return the first item\nwithin the collection.",
+            "itemtype": "method",
+            "name": "first",
+            "params": [
+                {
+                    "name": "collection",
+                    "description": "",
+                    "type": "Array|object"
+                },
+                {
+                    "name": "condition",
+                    "description": "",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Mixed"
+            },
+            "class": "modl.Util"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 2200,
+            "description": "Executes a function for each item within the collection\n(array or object), passing the item itself as the first\nparameter and it's index as the second parameter.",
             "itemtype": "method",
             "name": "forEach",
             "params": [
                 {
-                    "name": "a",
-                    "description": "The array or object to be iterated",
+                    "name": "collection",
+                    "description": "",
                     "type": "Array|object"
                 },
                 {
                     "name": "f",
-                    "description": "The callback function for each iteration",
+                    "description": "",
                     "type": "Function"
                 }
             ],
@@ -1007,31 +1749,19 @@
         },
         {
             "file": "lib/modl.js",
-            "line": 1244,
-            "description": "Short for Array.prototype.slice.apply(arguments[0], arguments[1...n])",
-            "itemtype": "method",
-            "name": "slice",
-            "return": {
-                "description": "",
-                "type": "Array"
-            },
-            "class": "modl.Util"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 1253,
-            "description": "Iterates over an object's properties or an array's values\ncalling the <b>f</b> callback function each time passing the\nvalue as it's first argument and the index or property name\nas it's second argument. The returned value of each function\ncall is stored in a new array that is returned in the end.",
+            "line": 2213,
+            "description": "Iterates through the items of a collection, calling the map\nfunction for each of those items, passing the item itself as\nfirst parameter and it's index as the second parameter. The\nfunction's return will be pushed to a new array that will be\nreturned in the end.",
             "itemtype": "method",
             "name": "map",
             "params": [
                 {
-                    "name": "a",
-                    "description": "The array or object to be iterated",
+                    "name": "collection",
+                    "description": "",
                     "type": "Array|object"
                 },
                 {
                     "name": "f",
-                    "description": "The callback function for each iteration",
+                    "description": "",
                     "type": "Function"
                 }
             ],
@@ -1043,8 +1773,40 @@
         },
         {
             "file": "lib/modl.js",
-            "line": 1268,
-            "description": "Returns a function that decides which function to call based on the number of arguments passed.",
+            "line": 2230,
+            "description": "Short for:\nvar args = Array.prototype.slice.call(arguments);\nreturn Array.prototype.slice.apply(args.shift(), args);",
+            "itemtype": "method",
+            "name": "slice",
+            "params": [
+                {
+                    "name": "collection",
+                    "description": "",
+                    "type": "Mixed"
+                },
+                {
+                    "name": "begin",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true,
+                    "optdefault": "0"
+                },
+                {
+                    "name": "end",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Array"
+            },
+            "class": "modl.Util"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 2246,
+            "description": "Kind of a method overloading. It should be called passing\nvarious functions, each with a different number of declared\nparameters.\n\nIt will return a function that depending of the number of\narguments passed, will call the respective function. If there\nis no respective function for a given number of arguments,\nthe latter function will be used as default.",
             "itemtype": "method",
             "name": "overload",
             "params": [
@@ -1063,14 +1825,14 @@
         },
         {
             "file": "lib/modl.js",
-            "line": 1278,
-            "description": "Returns another function that passes the this arguments as first argument to the other function",
+            "line": 2265,
+            "description": "Returns a function that when called, it will pass the _this_\nobject as first parameter, along with the remaining\nparameters if any.",
             "itemtype": "method",
             "name": "that",
             "params": [
                 {
-                    "name": "f",
-                    "description": "Function that receives \"this\" as \"that\"",
+                    "name": "thatFunction",
+                    "description": "",
                     "type": "Function"
                 }
             ],
@@ -1082,22 +1844,10 @@
         },
         {
             "file": "lib/modl.js",
-            "line": 1288,
-            "description": "Creates a unique token",
+            "line": 2279,
+            "description": "Method used to create a new class using the functionality\ndescribed in the pseudo {{#crossLink \"modl.Type\"}}{{/crossLink}} class",
             "itemtype": "method",
-            "name": "token",
-            "return": {
-                "description": "",
-                "type": "modl.Util.Token"
-            },
-            "class": "modl.Util"
-        },
-        {
-            "file": "lib/modl.js",
-            "line": 1297,
-            "description": "Creates new classes of things",
-            "itemtype": "method",
-            "name": "kin",
+            "name": "type",
             "params": [
                 {
                     "name": "constructor",
@@ -1106,24 +1856,95 @@
                 }
             ],
             "return": {
-                "description": "A new kin, or class if you may",
+                "description": "",
                 "type": "Function"
             },
             "class": "modl.Util"
         },
         {
             "file": "lib/modl.js",
-            "line": 1307,
-            "description": "A noop function",
+            "line": 2292,
+            "description": "Inherit the prototype methods from one constructor into\nanother. The prototype of constructor will be set to a new\nobject created from superConstructor.\n\nAs an additional convenience, superConstructor.prototype will\nbe accessible through the constructor.ancestor property,\nalong with other facilities within the modl's type\nsuggar.\n\nThe method returns the constructor reference.",
             "itemtype": "method",
-            "name": "k",
+            "name": "inherits",
+            "params": [
+                {
+                    "name": "constructor",
+                    "description": "",
+                    "type": "Function"
+                },
+                {
+                    "name": "superConstructor",
+                    "description": "",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Function"
+            },
+            "class": "modl.Util"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 2314,
+            "description": "Creates tMODULE_REFERENCEhe prototype bond between a constructor and its\nsuperConstructor, nothing more.",
+            "itemtype": "method",
+            "name": "bond",
+            "params": [
+                {
+                    "name": "constructor",
+                    "description": "",
+                    "type": "Function"
+                },
+                {
+                    "name": "superConstructor",
+                    "description": "",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Function"
+            },
+            "class": "modl.Util"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 2328,
+            "description": "A reference to the undefined value",
+            "itemtype": "property",
+            "name": "undef",
+            "type": "undefined",
+            "final": 1,
+            "class": "modl.Util"
+        },
+        {
+            "file": "lib/modl.js",
+            "line": 2338,
+            "description": "Shortcut for {{#crossLink \"modl.Token/tokens:method\"}}{{/crossLink}}'s method",
+            "itemtype": "method",
+            "name": "tokens",
+            "static": 1,
+            "return": {
+                "description": "",
+                "type": "Mixed"
+            },
             "class": "modl.Util"
         }
     ],
     "warnings": [
         {
             "message": "Missing item type\nRetrieves the asset and loads it",
-            "line": " lib/modl.js:544"
+            "line": " lib/modl.js:972"
+        },
+        {
+            "message": "Missing item type\nTracks the loading of a script element. When the script is loaded and\nrun, first the \"success\" callback",
+            "line": " lib/modl.js:1018"
+        },
+        {
+            "message": "Missing item type\nGives a bag for bilbo to keep",
+            "line": " lib/modl.js:1932"
         }
     ]
 }

@@ -2,5 +2,5 @@ modl.
 unit(function(module) {
     "use strict";
 
-    module.exports.name = "LocalAsset";
+    throw new Error("Fucked up");
 });

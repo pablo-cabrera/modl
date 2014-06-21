@@ -29,12 +29,12 @@
         }
 
         if (failedTestCases.length) {
-            console.warn("Failed tests summary");
+            warn("Failed tests summary");
 
             for (var i = 0; i < failedTestCases.length; i += 1) {
                 result = failedTestCases[i];
 
-                console.group("TestCase: " + result.name + " (P:" + result.passed + ",E:" + result.errors + ",F:" + result.failed + ")");
+                group("TestCase: " + result.name + " (P:" + result.passed + ",E:" + result.errors + ",F:" + result.failed + ")");
 
                 for (var b in result) {
                     if (b.indexOf(" ") === -1 && b.indexOf("test") === -1) {
@@ -46,10 +46,10 @@
                         continue;
                     }
 
-                    console.warn("[" + test.result + "] " + b + " (" + test.message + ")");
+                    warn("[" + test.result + "] " + b + " (" + test.message + ")");
                 }
 
-                console.groupEnd();
+                groupEnd();
             }
         } else {
             console.info("All test passed! =]");
@@ -64,26 +64,59 @@
         YUITest.TestRunner.ERROR_EVENT
     ];
 
+    var group,
+        groupEnd,
+        log,
+        warn,
+        error;
+
+    if (typeof console.group === "function") {
+        group = function(name) { console.group(name); };
+        groupEnd = function() {console.groupEnd(); };
+        log = function(log) { console.log(log); };
+        warn = function(warn) { console.warn(warn); };
+        error = function(error) { console.error(error); };
+    } else {
+        (function() {
+            var ident = "";
+
+            group = function(group) {
+                console.log(group);
+                ident += "  ";
+            };
+
+            log = function(log) { console.log(ident + log); };
+            warn = function(warn) { console.warn(ident + warn); }
+            error = function(error) { console.error(ident + error); };
+
+            groupEnd = function() {
+                ident = ident.substr(0, ident.length - 2);
+            };
+
+        }());
+    }
+
+
     var eventHandler = function(event) {
             switch(event.type){
                 case this.TEST_CASE_BEGIN_EVENT:
-                    console.group("TestCase: " + event.testCase.name);
+                    group("TestCase: " + event.testCase.name);
                     break;
 
                 case this.TEST_FAIL_EVENT:
-                    console.warn("[fail] " + event.testName + ": " + event.error.getMessage());
+                    warn("[fail] " + event.testName + ": " + event.error.getMessage());
                     break;
 
                 case this.ERROR_EVENT:
-                    console.error("[error] " + event.methodName + "() caused an error: " + event.error.message);
+                    error("[error] " + event.methodName + "() caused an error: " + event.error.message);
                     break;
 
                 case this.TEST_PASS_EVENT:
-                    console.debug("[passed] " + event.testName);
+                    log("[passed] " + event.testName);
                     break;
 
                 case this.TEST_CASE_COMPLETE_EVENT:
-                    console.groupEnd();
+                    groupEnd();
                     break;
             }
 

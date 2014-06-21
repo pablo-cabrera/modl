@@ -41,21 +41,31 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="../classes/Asset.html">Asset</a></li>
-            
-                <li><a href="../classes/Loader.html">Loader</a></li>
-            
                 <li><a href="../classes/modl.html">modl</a></li>
             
+                <li><a href="../classes/modl.Asset.html">modl.Asset</a></li>
+            
+                <li><a href="../classes/modl.Bilbo.html">modl.Bilbo</a></li>
+            
+                <li><a href="../classes/modl.Bilbo.Bag.html">modl.Bilbo.Bag</a></li>
+            
+                <li><a href="../classes/modl.Bilbo.MockingBag.html">modl.Bilbo.MockingBag</a></li>
+            
+                <li><a href="../classes/modl.Loader.html">modl.Loader</a></li>
+            
+                <li><a href="../classes/modl.Module.html">modl.Module</a></li>
+            
+                <li><a href="../classes/modl.Promise.html">modl.Promise</a></li>
+            
+                <li><a href="../classes/modl.Ready.html">modl.Ready</a></li>
+            
+                <li><a href="../classes/modl.REady.html">modl.REady</a></li>
+            
+                <li><a href="../classes/modl.Token.html">modl.Token</a></li>
+            
+                <li><a href="../classes/modl.Type.html">modl.Type</a></li>
+            
                 <li><a href="../classes/modl.Util.html">modl.Util</a></li>
-            
-                <li><a href="../classes/modl.Util.Future.html">modl.Util.Future</a></li>
-            
-                <li><a href="../classes/modl.Util.Token.html">modl.Util.Token</a></li>
-            
-                <li><a href="../classes/Module.html">Module</a></li>
-            
-                <li><a href="../classes/Ready.html">Ready</a></li>
             
             </ul>
 
@@ -100,45 +110,24 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-(function(global) {
+(function (node) {
     &quot;use strict&quot;;
 
     var
-        /**
-         * The default asset for a modl
-         *
-         * @property MODL_ASSET
-         * @for modl
-         * @type string
-         * @static
-         * @private
-         * @final
-         */
-        MODL_ASSET = &quot;/modl&quot;,
+
+        main = node? global: window,
 
         /**
-         * The javascript file extension
+         * The defaults asset for a module
          *
-         * @property JS_EXTENSION
+         * @property MODULE_ASSET
          * @for modl
          * @type string
          * @static
          * @private
          * @final
          */
-        JS_EXTENSION = &quot;.js&quot;,
-
-        /**
-         * The node_modules directory path
-         *
-         * @property NODE_MODULES_PATH
-         * @for modl
-         * @type string
-         * @static
-         * @private
-         * @final
-         */
-        NODE_MODULES_PATH = &quot;/node_modules/&quot;,
+        MODULE_ASSET = &quot;/module&quot;,
 
         /**
          * The regex to get the alias from the resource name
@@ -176,15 +165,7 @@
          */
         undef = void 0,
 
-        objectProto = Object.prototype,
-
-        arrayProto = Array.prototype,
-
-        node = typeof exports !== &quot;undefined&quot; &amp;&amp; global.exports !== exports,
-
-        constant = function(v) { return function() { return v; }; },
-
-        k = constant(),
+        hydratedAssets = {},
 
         /**
          * Array containing all
@@ -196,7 +177,7 @@
          * @private
          * @final
          */
-        validSettings = [&quot;debug&quot;, &quot;root&quot;],
+        validSettings = [&quot;root&quot;],
 
         /**
          * Contains current settings for the modl loader
@@ -212,13 +193,24 @@
         /**
          * Points to the current module being loaded
          *
-         * @property current
+         * @property currentModule
          * @for modl
-         * @type Module
+         * @type modl.Module
          * @static
          * @private
          */
-        current,
+        currentModule,
+
+        /**
+         * Points to the root module
+         *
+         * @property rootModule
+         * @for modl
+         * @type modl.Module
+         * @static
+         * @private
+         */
+        rootModule,
 
         /**
          * Points to the asset being loaded at the moment
@@ -231,72 +223,51 @@
          */
         loadingAsset,
 
-        work = node ?
-            function(f) { process.nextTick(f); } :
-            function(f) { setTimeout(f, 0); },
+        objectProto = Object.prototype,
 
-        /**
-         * Helper function to log messages when the debug flag is enabled
-         *
-         * @method log
-         * @for modl
-         * @param args* {mixed} Arguments to be logged
-         * @private
-         * @static
-         */
-        log = function() {
-            var args;
-            if (settings.debug &amp;&amp; console &amp;&amp; typeof console.log === &quot;function&quot;) {
-                args = slice(arguments);
-                args.unshift(ts());
-                if (node) {
-                    forEach(args, function(v, i) {
-                        args[i] = require(&quot;util&quot;).inspect(v, {depth: null});
-                    });
-                }
-                console.log.apply(this, args);
-            }
+        arrayProto = Array.prototype,
+
+        objToStringCall = function (o) {
+            return objectProto.toString.call(o);
         },
 
-        /**
-         * Returns a formatted current timestamp with &lt;code&gt;hh:mm:ss&lt;/code&gt; to be used for logging purposes
-         *
-         * @method ts
-         * @for modl
-         * @private
-         * @static
-         * @return {string} The formatted timestamp
-         */
-        ts = function() {
-            var d = new Date(),
-                z = function(n) { return n &lt; 10 ? &quot;0&quot; + n: String(n); };
+        constant = function (v) { return function () { return v; }; },
 
-            return &quot;[&quot; + z(d.getHours()) + &quot;:&quot; + z(d.getMinutes()) + &quot;:&quot; + z(d.getSeconds()) + &quot;.&quot; + String(1000 + d.getMilliseconds()).substr(1) + &quot;]&quot;;
+        args = function (f) {
+            return function () {
+                return f.call(this, slice(arguments));
+            };
         },
 
-        hop = function(o, p) {
+        k = constant(),
+
+        work = node?
+            function (f) { setImmediate(f); }:
+            function (f) { setTimeout(f, 0); },
+
+        hop = function (o, p) {
             return objectProto.hasOwnProperty.call(o, p);
         },
 
-        merge = function(a, b, list) {
+        merge = function (a, b, list) {
             if (list) {
-                forEach(list, function(p) {
+                forEach(list, function (p) {
                     if (hop(b, p)) {
                         a[p] = b[p];
                     }
                 });
             } else {
-                forEach(b, function(v, p) {
+                forEach(b, function (v, p) {
                     a[p] = v;
                 });
             }
         },
 
-        indexOf = function(a, f) {
+        indexOf = function (a, f) {
             var i = null,
                 l;
 
-            if (objectProto.toString.call(a) === &quot;[object Array]&quot;) {
+            if (objToStringCall(a) === &quot;[object Array]&quot;) {
                 for (i = 0, l = a.length; i &lt; l; i += 1) {
                     if (f(a[i], i)) {
                         return i;
@@ -313,122 +284,234 @@
             }
         },
 
-        forEach = function(a, f) {
-            indexOf(a, function(v, i) {
+        first = function (a, f) {
+            var i = indexOf(a, f || constant(true));
+            if (i !== undefined) {
+                return a[i];
+            }
+        },
+
+        forEach = function (a, f) {
+            indexOf(a, function (v, i) {
                 f(v, i);
                 return false;
             });
         },
 
-        map = function(a, f) {
+        map = function (a, f) {
             var o = [];
-            forEach(a, function(v, i) { o.push(f(v, i)); });
+            forEach(a, function (v, i) { o.push(f(v, i)); });
             return o;
         },
 
-        slice = function() {
+        slice = function () {
             var args = arrayProto.slice.call(arguments);
             return arrayProto.slice.apply(args.shift(), args);
         },
 
-        overload = function() {
-            var functions = {},
-                args = slice(arguments);
+        overload = args(function (args) {
+            var functions = {};
 
-            forEach(args, function(f) { functions[f.length] = f; });
+            forEach(args, function (f) { functions[f.length] = f; });
             functions[&quot;default&quot;] = args[args.length - 1];
 
-            return function() {
+            return function () {
                 var args = slice(arguments),
                     f = functions[args.length] || functions[&quot;default&quot;];
 
                 return f.apply(this, args);
             };
-        },
+        }),
 
-        that = function(f) {
-            return function() {
-                var args = slice(arguments);
+        that = function (f) {
+            return args(function (args) {
                 args.unshift(this);
                 return f.apply(this, args);
-            };
+            });
         },
 
-        Token = (function() {
-            var mark = typeof Object.defineProperty === &quot;function&quot; ?
-                function(t) { return function(o, v) { Object.defineProperty(o, t, {enumerable: false, configurable: true, writable: true, value: v}); }; } :
-                function(t) { return function(o, v) { o[t] = v; }; };
-
-            return function(token) {
-
-                /**
-                 * Token&#x27;s toString
-                 *
-                 * @method toString
-                 * @for modl.Util.Token
-                 * @return {string}
-                 */
-                this.toString = constant(token);
-
-                /**
-                 * Token&#x27;s valueOf
-                 *
-                 * @method valueOf
-                 * @for modl.Util.Token
-                 * @return {string}
-                 */
-                this.valueOf = this.toString;
+        /**
+         * The Token class is used to created private tokens to be used along
+         * with the modl type system.
+         *
+         * It creates a token with a random name that should be used to mark a
+         * given instance with the token&#x27;s name.
+         *
+         * It tries to hide the token property from the outside world using the
+         * built in defineProperty method. Otherwise it just defines the name
+         * as public property anyway.
+         *
+         * @class modl.Token
+         * @constructor
+         *
+         * @param {string} token
+         */
+        Token = (function () {
+            var mark = typeof Object.defineProperty === &quot;function&quot; &amp;&amp; (function () { try { Object.defineProperty({}, &quot;&quot;, {}); return true; } catch (e) {} return false; }())?
+                function (t) { return function (o, v) { Object.defineProperty(o, t, {enumerable: false, configurable: true, writable: true, value: v}); }; } :
+                function (t) { return function (o, v) { o[t] = v; }; },
 
                 /**
-                 * Defines the token as a property for the given object
+                 * The token constructor
                  *
-                 * @method mark
-                 * @for modl.Util.Token
-                 * @param {object} o
-                 * @param {mixed} [v] Optional value
+                 * @class modl.Token
+                 * @constructor
+                 *
+                 * @param {string} token
                  */
-                this.mark = mark(token);
-            };
-        }()),
+                Token = function (token) {
 
-        token = (function() {
-            var
-                chars = &quot;abcdefghijklmnopqrstwxyzABCDEFGHIJKLMNOPQRSTWXYZ&quot;,
-                length = chars.length,
-                lastChar = chars.charAt(chars.length - 1),
-                firstChar = chars.charAt(0),
-                id = [],
-                suffix = [];
+                    /**
+                     * Token&#x27;s toString
+                     *
+                     * @method toString
+                     * @for modl.Token
+                     *
+                     * @return {string}
+                     */
+                    this.toString = constant(token);
 
-            while (suffix.length &lt; 32) {
-                suffix.push(chars.charAt(Math.floor(Math.random() * length)));
-            }
-            suffix = suffix.join(&quot;&quot;);
+                    /**
+                     * Token&#x27;s valueOf
+                     *
+                     * @method valueOf
+                     * @for modl.Token
+                     *
+                     * @return {string}
+                     */
+                    this.valueOf = this.toString;
 
-            return function() {
-                var i, c;
-                for (i = id.length - 1; i &gt; -1; i -= 1) {
-                    c = id[i];
-                    if (c !== lastChar) {
-                        id[i] = chars.charAt(chars.indexOf(c) + 1);
-                        break;
+                    /**
+                     * Defines the token as a property for the given object
+                     *
+                     * @method mark
+                     * @for modl.Token
+                     *
+                     * @param {object} o
+                     * @param {mixed} [v] Optional value
+                     */
+                    this.mark = mark(token);
+                };
+
+            merge(Token, {
+
+                /**
+                 * Creates a new token with a random name
+                 *
+                 * @method create
+                 * @for modl.Token
+                 * @static
+                 *
+                 * @return {modl.Token}
+                 */
+                create: (function () {
+                    var
+                        chars = &quot;abcdefghijklmnopqrstwxyzABCDEFGHIJKLMNOPQRSTWXYZ&quot;,
+                        length = chars.length,
+                        lastChar = chars.charAt(chars.length - 1),
+                        firstChar = chars.charAt(0),
+                        id = [],
+                        suffix = [];
+
+                    while (suffix.length &lt; 32) {
+                        suffix.push(chars.charAt(Math.floor(Math.random() * length)));
+                    }
+                    suffix = suffix.join(&quot;&quot;);
+
+                    return function () {
+                        var i, c;
+                        for (i = id.length - 1; i &gt; -1; i -= 1) {
+                            c = id[i];
+                            if (c !== lastChar) {
+                                id[i] = chars.charAt(chars.indexOf(c) + 1);
+                                break;
+                            }
+
+                            id[i] = firstChar;
+                        }
+
+                        if (i === -1) {
+                            id.unshift(firstChar);
+                        }
+
+                        return new Token(id.join(&quot;&quot;) + suffix);
+                    };
+                }()),
+
+                /**
+                 * Passes created tokens to a given function. The number of created
+                 * tokens are the same of the number of arguments that the function
+                 * expects.
+                 *
+                 * Returns the returned value from the given function.
+                 *
+                 * @method tokens
+                 * @for modl.Token
+                 * @static
+                 *
+                 * @return {mixed}
+                 */
+                tokens: function (f) {
+                    var t = [], i = f.length;
+                    while (i !== 0) {
+                        t.push(Token.create());
+                        i -= 1;
                     }
 
-                    id[i] = firstChar;
+                    return f.apply(this, t);
                 }
+            });
 
-                if (i === -1) {
-                    id.unshift(firstChar);
-                }
-
-                return new Token(id.join(&quot;&quot;) + suffix);
-            };
+            return Token;
         }()),
 
-        kin = (function() {
+        /**
+         * The module reference put within the hydrated modules during module
+         * preloading
+         *
+         * @property MODULE_REFERENCE
+         * @for modl
+         * @type modl.Module
+         * @static
+         * @private
+         * @final
+         */
+        MODULE_REFERENCE = Token.create(),
 
+        inherits,
+
+        bond = function (constructor, superConstructor) {
+            var F = constant();
+            F.prototype = superConstructor.prototype;
+            constructor.prototype = new F();
+            constructor.prototype.constructor = constructor;
+            return constructor;
+        },
+
+        /**
+         * The pseudo Type class for the modl type system. This class is
+         * used to describe the available methods within the type system itself.
+         *
+         * Actually there is no Type class, just the added functionality for the
+         * classes created with this type system.
+         *
+         * The type constructor should be called without the new keyword itself,
+         * it will receive the constructor function, add some features to it and
+         * the return the same reference.
+         *
+         * The constant method is also assigned to the constructor&#x27;s prototype.
+         * This way it&#x27;s instances also benefits from the constant method.
+         *
+         * If the constructor is ommited, an empty constructor is created.
+         *
+         * @class modl.Type
+         * @constructor
+         *
+         * @param {function} [constructor]
+         */
+        type = (function () {
             var
-                define = function(o, p, v) {
+                define = function (o, p, v) {
                     if (p instanceof Token) {
                         p.mark(o, v);
                     } else {
@@ -437,26 +520,58 @@
                 },
 
                 utils = {
+
                     proto: overload(
-                        function(constructor, values) {
-                            forEach(values, function(v, p) { constructor.proto(p, v); });
+
+                        /**
+                         * Assigns the values from the object to the constructor&#x27;s prototype instance
+                         *
+                         * @method proto
+                         * @for modl.Type
+                         * @static
+                         * @chainable
+                         *
+                         * @param {object} values Various key/value pairs to be assigned to it&#x27;s prototype
+                         *
+                         * @return {modl.Type} returns the constructor itself
+                         */
+                        function (constructor, values) {
+                            forEach(values, function (v, p) { constructor.proto(p, v); });
                             return constructor;
                         },
-                        function(constructor, name, value) {
+
+                        /**
+                         * Assigns a simgle value to a specific name to the constructor&#x27;s prototype instance
+                         *
+                         * @method proto
+                         * @for modl.Type
+                         * @static
+                         * @chainable
+                         *
+                         * @param {string|modl.Token} name
+                         * @param {mixed} value
+                         *
+                         * @return {modl.Type} returns the constructor itself
+                         */
+                        function (constructor, name, value) {
                             define(constructor.prototype, name, value);
                             return constructor;
                         }),
 
-                    descend: function(constructor, descendant) {
-                        var F = function() {};
-                        F.prototype = constructor.prototype;
-                        descendant.prototype = new F();
-                        prepare(descendant);
-                        descendant.ancestor = constructor.prototype;
-                        return descendant;
-                    },
-
-                    constant: function(constructor, name) {
+                    /**
+                     * Resolves a constant value within the constructor itself.
+                     * If it doens&#x27;t have the constant directly, it walks up the
+                     * inheritance tree looking for it.
+                     *
+                     * @method constant
+                     * @for modl.Type
+                     * @static
+                     *
+                     * @param {string|modl.Token} name
+                     *
+                     * @return {mixed}
+                     */
+                    constant: function (constructor, name) {
                         if (name in constructor) {
                             return constructor[name];
                         }
@@ -467,55 +582,531 @@
                     },
 
                     defConstant: overload(
-                        function(constructor, values) {
-                            forEach(values, function(v, p) { constructor.defConstant(p, v); });
+                        /**
+                         * Defines a set of constant within the constructor
+                         * itself. Uses the values object as key/value pairs to
+                         * define the constants.
+                         *
+                         * @method defConstant
+                         * @for modl.Type
+                         * @static
+                         * @chainable
+                         *
+                         * @param {object} values Various key/value pairs to be assigned as constants
+                         *
+                         * @return {modl.Type} returns the constructor itself
+                         */
+                        function (constructor, values) {
+                            forEach(values, function (v, p) { constructor.defConstant(p, v); });
                             return constructor;
                         },
 
-                        function(constructor, name, value) {
+                        /**
+                         * Defines a single constant within the constructor.
+                         *
+                         * @method defConstant
+                         * @for modl.Type
+                         * @static
+                         * @chainable
+                         *
+                         * @param {string|modl.Token} name The constant name
+                         * @param {mixed} value The constant value
+                         *
+                         * @return {modl.Type}
+                         */
+                        function (constructor, name, value) {
                             define(constructor, name, value);
                             return constructor;
                         })
 
                 },
 
-                prepare = function(constructor) {
-                    constructor.prototype.constructor = constructor;
+                prepare = function (constructor) {
+                    var tokens;
 
-                    forEach(utils, function(f, p) {
-                        constructor[p] = function() {
-                            var args = slice(arguments);
+                    constructor.prototype.constant = function (name) { return constructor.constant(name); };
+
+                    /**
+                     * Stores the shared tokens within the constructor&#x27;s
+                     * closure, so whenever a descendant asks for the ancestors
+                     * tokens, it will receive a copy of them within the merged
+                     * shared object.
+                     *
+                     * @method shared
+                     * @for modl.Type
+                     *
+                     * @param {object} shared
+                     *
+                     * @return {modl.Type}
+                     */
+                    constructor.shared = function (shared) {
+                        tokens = shared;
+                        return constructor;
+                    };
+
+                    /**
+                     * Creates a new type descendant from this one. It applies
+                     * the same syntatic suggar as it&#x27;s parent and does the
+                     * inherintance linking.
+                     *
+                     * If ommited, a constructor that calls the superclass is
+                     * created and returned.
+                     *
+                     * @method descend
+                     * @for modl.Type
+                     *
+                     * @param {function} [constructor] The descendant&#x27;s constructor
+                     * @param {object} [shared] The descendant&#x27;s shared tokens
+                     *
+                     * @return {modl.Type} The descendant&#x27;s constructor
+                     */
+                    constructor.descend = function (descendant, shared) {
+                        if (!descendant) {
+                            descendant = args(function (args) { constructor.apply(this, args); });
+                        }
+
+                        if (tokens &amp;&amp; shared) { merge(shared, tokens); }
+
+                        return inherits(descendant, constructor).shared(shared || tokens);
+                    };
+
+                    forEach(utils, function (f, p) {
+                        constructor[p] = args(function (args) {
                             args.unshift(this);
                             return f.apply(this, args);
-                        };
+                        });
                     });
                 };
 
-            return function(constructor) {
+            inherits = function (constructor, superConstructor) {
+                bond(constructor, superConstructor);
+                constructor.ancestor = superConstructor.prototype;
+                prepare(constructor);
+                return constructor;
+            };
+
+            return function (constructor) {
+                if (!constructor) {
+                    constructor = constant();
+                }
+
                 prepare(constructor);
                 return constructor;
             };
         }()),
 
-        preloadedResources = {},
+        /**
+         * The Promise class implements a simple promise mechanism.
+         *
+         * @class modl.Promise
+         * @constructor
+         *
+         * @param {boolean} synchronous Indicates if the promise can be synchronous
+         */
+        Promise = Token.tokens(function (
+            when,
+            then,
+            fail,
+            next,
+            sync,
+            callFail
+        ) {
+            return type(that(function (t, synchronous) {
 
-        preloadResources = function(path, module) {
-            forEach(module, function(content, resource) {
-                if (resource.indexOf(&quot;/&quot;) === 0) {
-                    preloadedResources[path + resource + JS_EXTENSION] = content;
-                } else {
-                    preloadResources(path + NODE_MODULES_PATH + resource, content);
+                /**
+                 * Holds the callback function to be called when the promise is
+                 * fulfilled
+                 *
+                 * @property then
+                 * @for modl.Promise
+                 * @type {function}
+                 * @private
+                 */
+                then.mark(t);
+
+                /**
+                 * Holds the callback function to be called when the promise has
+                 * failed
+                 *
+                 * @property fail
+                 * @for modl.Promise
+                 * @type {function}
+                 * @private
+                 */
+                fail.mark(t);
+
+                /**
+                 * Holds the next promise to be passed along the call chain
+                 *
+                 * @property next
+                 * @for modl.Promise
+                 * @type {function}
+                 * @private
+                 */
+                next.mark(t);
+
+                /**
+                 * Indicates whether this promise can be synchronous or not
+                 *
+                 * @property sync
+                 * @for modl.Promise
+                 * @type {boolean}
+                 * @private
+                 */
+                sync.mark(t, Boolean(synchronous));
+
+                when.mark(t, k);
+
+            })).
+
+            proto(callFail, that(function (t, e) {
+                if (t[fail]) {
+                    t[fail].call(null, e);
+                } else if (t[then]) {
+                    throw e;
+                }
+            })).
+
+            proto({
+
+                /**
+                 * Schedules a new action when the promise has fulfilled
+                 *
+                 * @method then
+                 * @for modl.Promise
+                 *
+                 * @param {function} thenHandler The promise continuation handler, called when fulfilled.
+                 * @param {function} [failHandler] The promise error handler, called when the promise fails.
+                 *
+                 * @return {modl.Promise} The next chained promise
+                 */
+                then: that(function (t, thenHandler, failHandler) {
+                    t[next] = new Promise(t[sync]);
+                    t[then] = thenHandler;
+                    t[fail] = failHandler;
+
+                    t[when].call(null);
+
+                    return this[next];
+                }),
+
+                /**
+                 * Calls the function asynchronously, passing the promise itself as first parameter
+                 *
+                 * @method when
+                 *
+                 * @param {function} f
+                 *
+                 * @return {modl.Promise}
+                 */
+                when: that(function (t, f) {
+                    var g = function () { f(t); };
+
+                    t[when] = t[sync]?
+                        function () { t.resume(g); }:
+                        function () { work(t.resuming(g)); };
+
+                    return t;
+                }),
+
+                /**
+                 * Fulfills a given promise with the passed value.
+                 *
+                 * @method fulfill
+                 * @for modl.Promise
+                 *
+                 * @param {mixed} v
+                 */
+                fulfill: that(function (t, v) {
+                    var r, n;
+
+                    try {
+                        r = t[then].call(null, v);
+                    } catch (e) {
+                        t[callFail](e);
+                    }
+
+                    if (r instanceof Promise) {
+                        n = t[next];
+                        r.then(
+                                function (v) { n.fulfill(v); },
+                                function (e) { n.fail(e); });
+                    }
+                }),
+
+                /**
+                 * Continues the promise action. This method must be called for error handling purposes.
+                 *
+                 * @method resume
+                 * @for modl.Promise
+                 *
+                 * @param {function} f
+                 */
+                resume: that(function (t, f) {
+                    try {
+                        f();
+                    } catch (e) {
+                        t[callFail](e);
+                    }
+                }),
+
+                /**
+                 * Explicitly fails the promise, throwing a given error (if any).
+                 *
+                 * @method fail
+                 * @for modl.Promise
+                 *
+                 * @param {string|Error} [e]
+                 */
+                fail: function (e) {
+                    this.resume(function () {
+                        if (!e) {
+                            e = &quot;Promise failed&quot;;
+                        }
+
+                        throw e instanceof Error? e: new Error(e);
+                    });
+                },
+
+                resuming: that(function (t, f) {
+                    return args(function (args) {
+                        return t.resume(function () { f.apply(null, args); });
+                    });
+                })
+            }).
+
+            defConstant({
+                create: function (f, sync) {
+                    var p = new Promise(sync);
+                    p.when(f);
+                    return p;
+                },
+
+                promising: function (f, sync) {
+                    return args(function (args) {
+                        return Promise.create(function (p) {
+                            args.unshift(p);
+                            f.apply(null, args);
+                        }, sync);
+                    });
                 }
             });
-        },
+        }),
 
-        loadResource = function(resource) {
-            if (hop(preloadedResources, resource)) {
-                work(function() { preloadedResources[resource].call(global); });
+        /**
+         * The Ready class provides the functionality of scheduling callbacks
+         * for when a given Ready instance is marked as ready
+         *
+         * @class modl.Ready
+         * @constructor
+         * @private
+         */
+        Ready = Token.tokens(function (
+            readyStatus,
+            readyCallbacks,
+
+            failStatus,
+            failCallbacks,
+            failure
+        ) {
+        	var idCounter = 0;
+
+            return type(that(function (t) {
+                /**
+                 * Indicates whether the instance is ready or not
+                 *
+                 * @property readyStatus
+                 * @for modl.Ready
+                 * @private
+                 * @type {boolean}
+                 */
+                readyStatus.mark(t, false);
+
+                /**
+                 * Ready callback functions are stored within this guy
+                 *
+                 * @property readyCallbacks
+                 * @for modl.Ready
+                 * @private
+                 * @type {array}
+                 */
+                readyCallbacks.mark(t, []);
+
+                /**
+                 * Indicates whether the instance has failed or not
+                 *
+                 * @property failStatus
+                 * @for modl.Ready
+                 * @private
+                 * @type {boolean}
+                 */
+                failStatus.mark(t, false);
+
+                /**
+                 * Fail callback functions are stored within this guy
+                 *
+                 * @property failCallbacks
+                 * @for modl.Ready
+                 * @private
+                 * @type {array}
+                 */
+                failCallbacks.mark(t, []);
+
+                /**
+                 * Holds the failure reason
+                 *
+                 * @property failure
+                 * @for modl.REady
+                 * @private
+                 * @type {mixed}
+                 */
+                failure.mark(t);
+
+                t.id = idCounter;
+                idCounter += 1;
+            })).
+
+            proto({
+
+                /**
+                 * Schedules an &lt;b&gt;f&lt;/b&gt; callback to be executed once the
+                 * instance is marked as &lt;b&gt;ready&lt;/b&gt;
+                 *
+                 * @method whenReady
+                 * @for modl.Ready
+                 * @param {function} f The callback function to be scheduled
+                 */
+                whenReady: that(function (t, f) {
+                    if (!t[failStatus]){
+                        if (t[readyStatus]) {
+                            f();
+                        } else {
+                            t[readyCallbacks].push(f);
+                        }
+                    }
+                }),
+
+                /**
+                 * Schedules an &lt;b&gt;f&lt;/b&gt; callback to be executed once the
+                 * instance is marked as &lt;b&gt;failed&lt;/b&gt;
+                 *
+                 * @method whenFail
+                 * @for modl.Ready
+                 * @param {function} f The callback function to be scheduled
+                 */
+                whenFail: that(function (t, f) {
+                    if (!t[readyStatus]) {
+                        if (t[failStatus]) {
+                            f(t[failure]);
+                        } else {
+                            t[failCallbacks].push(f);
+                        }
+                    }
+                }),
+
+                /**
+                 * Marks the instance as &lt;b&gt;ready&lt;/b&gt; and runs all it&#x27;s callbacks
+                 *
+                 * @method ready
+                 * @for modl.Ready
+                 */
+                ready: that(function (t) {
+                    var callbacks = t[readyCallbacks];
+                    t[readyStatus] = true;
+
+                    t[readyCallbacks] = null;
+                    t[failCallbacks] = null;
+                    forEach(callbacks, function (f) { f(); });
+                }),
+
+                /**
+                 * Marks the instance as &lt;b&gt;ready&lt;/b&gt; and runs all it&#x27;s callbacks
+                 *
+                 * @method fail
+                 * @for modl.Ready
+                 *
+                 * @param {mixed} reason
+                 */
+                fail: that(function (t, reason) {
+                    var callbacks = t[failCallbacks];
+                    t[failStatus] = true;
+                    t[failure] = reason;
+
+                    t[readyCallbacks] = null;
+                    t[failCallbacks] = null;
+                    forEach(callbacks, function (f) {
+                    	try {
+	                    	f(reason);
+                    	} catch (e) {
+                    		work(function() { throw e; });
+                    	}
+                	});
+                })
+
+            });
+        }),
+
+        /**
+         * The Asset class represents an script file being loaded within a
+         * module.
+         *
+         * @class modl.Asset
+         * @extends modl.Ready
+         * @constructor
+         * @private
+         * @param {string} name It&#x27;s name
+         */
+        Asset = Token.tokens(function (myName) {
+            return Ready.descend(that(function (t, name, path) {
+
+                /**
+                 * The asset&#x27;s name
+                 *
+                 * @property myName
+                 * @for modl.Asset
+                 * @type {string}
+                 * @private
+                 */
+                myName.mark(t, name);
+
+                /**
+                 * Holds the asset&#x27;s exports
+                 *
+                 * @property exports
+                 * @for modl.Asset
+                 * @type {mixed}
+                 */
+                t.exports = undef;
+
+                Ready.call(t);
+            })).
+
+            /**
+             * Retrieves the asset and loads it
+             *
+             * @param {string} path It&#x27;s path
+             */
+            proto(&quot;load&quot;, that(function (that, path) {
+                loadingAsset = that;
+                loadAsset(Asset.path(path, that[myName])).
+                then(k, function (e) { that.fail(e); });
+            })).
+
+            defConstant(&quot;path&quot;, function (path, name) {
+                return (path + name + &quot;.js&quot;).replace(PATH_RE, &quot;/&quot;);
+            });
+        }),
+
+        loadAsset = Promise.promising(function (p, src) {
+            if (hop(hydratedAssets, src)) {
+                hydratedAssets[src].call(null);
+                p.fulfill();
             } else {
-                loadScript(resource);
+                loadScript(src).then(
+                        function () { p.fulfill(); },
+                        function (e) { p.fail(e); });
             }
-        },
+        }, true),
 
         /**
          * Loads a given script.
@@ -527,431 +1118,402 @@
          * @param {string} src The script&#x27;s src
          */
         loadScript = node?
-            function(src) {
+            Promise.promising(function (promise, src) {
                 delete require.cache[src];
-                work(function() { require(src); });
-            }:
-            function(src) {
-                var s = document.createElement(&quot;script&quot;),
-                    d = document.documentElement;
-                s.src = src;
-                d.insertBefore(s, d.firstChild);
-            },
+                work(promise.resuming(function () {
+                    require(src);
+                    promise.fulfill();
+                }));
+            }):
+            (function () {
 
-        /**
-         * The Ready class provides the functionality of scheduling callbacks
-         * for when a given Ready instance is marked as ready
-         *
-         * @class Ready
-         * @constructor
-         * @private
-         */
-        Ready = (function() {
-            var
-                readyStatus = token(),
-                callbacks = token();
+                /**
+                 * Tracks the loading of a script element. When the script is loaded and
+                 * run, first the &quot;success&quot; callback
+                 *
+                 * @param {HTMLScriptElement} node the &quot;script&quot; node
+                 * @return {modl.Promise} success the success callback function
+                 */
+                var track = (function () {
+                    if ((function (m) { return m &amp;&amp; m[1]; })(navigator.userAgent.match(/MSIE (8|9).0([^;]*)/))) {
+                        return (function () {
+                            var check = function (readyState, context) {
+                                    if (&quot;loaded&quot; === readyState || &quot;complete&quot; === readyState) {
+                                        if (context.modlCalled) {
+                                            context.success.call(null);
+                                        } else {
+                                            context.error.call(null);
+                                        }
+                                    }
+                                },
 
-            return kin(function() {
-                    /**
-                     * Indicates whether the instance is ready or not
-                     *
-                     * @property readyStatus
-                     * @for Ready
-                     * @private
-                     * @type {boolean}
-                     */
-                    readyStatus.mark(this, false);
+                                hijack = function (name, context) {
+                                    return args(function (args) {
+                                        context.modlCalled = true;
+                                        merge(modl, context.previousMethods);
+                                        return modl[name].apply(this, args);
+                                    });
+                                };
 
-                    /**
-                     * Callback functions are stored within this guy
-                     *
-                     * @property callbacks
-                     * @for Ready
-                     * @private
-                     * @type {array}
-                     */
-                    callbacks.mark(this, []);
-                }).
 
-                proto({
-                    /**
-                     * Schedules an &lt;b&gt;f&lt;/b&gt; callback to be executed once the
-                     * instance is marked as &lt;b&gt;ready&lt;/b&gt;
-                     *
-                     * @method whenReady
-                     * @for Ready
-                     * @param {function} f The callback function to be scheduled
-                     */
-                    whenReady: function(f) {
-                        if (this[readyStatus]) {
-                            f();
-                        } else {
-                            this[callbacks].push(f);
-                        }
-                    },
+                            return function (node, success, error) {
+                                var context = {
+                                    modlCalled: false,
+                                    success: success,
+                                    error: error,
+                                    previousMethods: {
+                                        uses: modl.uses,
+                                        unit: modl.unit,
+                                        $module: modl.$module
+                                    }
+                                };
 
-                    /**
-                     * Marks the instance as &lt;b&gt;ready&lt;/b&gt; and runs all it&#x27;s callbacks
-                     *
-                     * @method ready
-                     * @for Ready
-                     */
-                    ready: function() {
-                        this[readyStatus] = true;
-                        forEach(this[callbacks], function(f) { f(); });
+                                merge(modl, {
+                                    uses: hijack(&quot;uses&quot;, context),
+                                    unit: hijack(&quot;unit&quot;, context),
+                                    $module: hijack(&quot;$module&quot;, context)
+                                });
+
+                                check(node.readyState, context);
+                                node.onreadystatechange = function () { check(node.readyState, context); };
+                            };
+                        }());
                     }
+
+                    if (/KHTML/.test(navigator.userAgent)) {
+                        return function (node, success, error) {
+                            node.addEventListener(&quot;load&quot;, function () { success(); }, false);
+                            node.addEventListener(&quot;error&quot;, function () { error(); }, false);
+                        };
+                    }
+
+                    return function (node, success, error) {
+                        node.onload = function () { success(); };
+                        node.onerror = function () { error(); };
+                    };
+                }());
+
+                return Promise.promising(function (promise, src) {
+                    var s = document.createElement(&quot;script&quot;),
+                        d = document.documentElement;
+
+                    track(
+                        s,
+                        promise.resuming(function () {
+                            promise.fulfill();
+                        }),
+                        promise.resuming(function () {
+                            throw new Error(&quot;Failed to load script: &quot; + src);
+                        })
+                    );
+
+                    work(function () {
+                        s.src = src;
+                        d.insertBefore(s, d.firstChild);
+                    });
                 });
-        }()),
+            }()),
 
         /**
-         * The Asset class represents an script file being loaded within a
-         * module.
-         *
-         * @class Asset
-         * @extends Ready
-         * @constructor
-         * @private
-         * @param {string} name It&#x27;s name
-         */
-        Asset = (function() {
-            var _name = token();
-
-            return Ready.descend(function(name, path) {
-
-                /**
-                 * The asset&#x27;s name
-                 *
-                 * @property _name
-                 * @for Asset
-                 * @type {string}
-                 * @private
-                 */
-
-                _name.mark(this, name);
-
-                /**
-                 * Holds the asset&#x27;s exports
-                 *
-                 * @property exports
-                 * @for Asset
-                 * @type {mixed}
-                 */
-                this.exports = undef;
-
-                Ready.call(this);
-
-                log(&quot;Asset created: &quot;, this);
-            }).
-
-            /**
-             * Retrieves the asset and loads it
-             *
-             * @param {string} path It&#x27;s path
-             */
-            proto(&quot;load&quot;, function(path) {
-                loadingAsset = this;
-                loadResource((path + this[_name] + JS_EXTENSION).replace(PATH_RE, &quot;/&quot;));
-            });
-        }()),
-
-        /**
-         * The Module class represents a module within the modl tree. It can
+         * The Module class represents a module within the module tree. It can
          * load other &lt;b&gt;modules&lt;/b&gt;(dependencies contained within
          * &lt;code&gt;node_modules&lt;/code&gt; directory) and &lt;b&gt;assets&lt;/b&gt; (files
          * referenced within a module).
          *
-         * @class Module
-         * @extends Ready
+         * @class modl.Module
+         * @extends modl.Ready
          * @constructor
          * @private
          * @param {string} name The module&#x27;s name
          * @param {string} path The module&#x27;s path
+         * @param {modl.Module} parent The parent module for this one
+         * @param {boolean} hydrating Indicates that this module is being hydrated and should not be initialized automatically
+         *
          */
-        Module = (function() {
-            var _name = token(),
-                _path = token(),
-                modules = token(),
-                assets = token();
+        Module = Token.tokens(function (
+            myName,
+            myPath,
+            myParent,
+            modules,
+            assets,
+            initialized,
 
-            return Ready.descend(function(name, path) {
-                    /**
-                     * It&#x27;s name
-                     *
-                     * @property _name
-                     * @for Module
-                     * @private
-                     * @type {string}
-                     */
-                    _name.mark(this, name);
+            hydrateAsset,
+            hydrateModule
+        ) {
 
-                    /**
-                     * It&#x27;s path
-                     *
-                     * @property _path
-                     * @for Module
-                     * @private
-                     * @type {string}
-                     */
-                    _path.mark(this, path);
+            return Ready.descend(that(function (t, name, path, parent, hydrating) {
+                /**
+                 * It&#x27;s name
+                 *
+                 * @property myName
+                 * @for modl.Module
+                 * @private
+                 * @type {string}
+                 */
+                myName.mark(t, name);
 
-                    /**
-                     * It&#x27;s inner modules. This will contain the references for
-                     * the children modules currently loaded for this module.
-                     *
-                     * @property _modules
-                     * @for Module
-                     * @private
-                     * @type {object}
-                     */
-                    modules.mark(this, {});
+                /**
+                 * It&#x27;s path
+                 *
+                 * @property myPath
+                 * @for modl.Module
+                 * @private
+                 * @type {string}
+                 */
+                myPath.mark(t, path);
 
-                    /**
-                     * It&#x27;s assets. This will contain the references for all
-                     * assets currently loaded within this module.
-                     *
-                     * @property _assets
-                     * @for Module
-                     * @private
-                     * @type {object}
-                     */
-                    assets.mark(this, {});
+                /**
+                 * It&#x27;s parent module
+                 *
+                 * @property myParent
+                 * @for modl.Module
+                 * @private
+                 * @type {Module}
+                 */
+                myParent.mark(t, parent);
 
-                    /**
-                     * Holds the asset&#x27;s exports
-                     *
-                     * @property exports
-                     * @for Module
-                     * @type {mixed}
-                     */
-                    this.exports = undef;
+                /**
+                 * It&#x27;s inner modules. This will contain the references for
+                 * the children modules currently loaded for this module.
+                 *
+                 * @property modules
+                 * @for modl.Module
+                 * @private
+                 * @type {object}
+                 */
+                modules.mark(t, {});
 
+                /**
+                 * It&#x27;s assets. This will contain the references for all
+                 * assets currently loaded within this module.
+                 *
+                 * @property assets
+                 * @for modl.Module
+                 * @private
+                 * @type {object}
+                 */
+                assets.mark(t, {});
 
-                    Ready.call(this);
-                    log(&quot;module created: &quot;, this);
+                /**
+                 * Holds the module&#x27;s exports
+                 *
+                 * @property exports
+                 * @for modl.Module
+                 * @type {mixed}
+                 */
+                t.exports = undef;
 
-                    this.initialize();
-                }).
+                Ready.call(t);
 
-                proto({
+                if (!hydrating) {
+                    t.initialize();
+                }
+            })).
 
-                    /**
-                     * Initializes the module loading its &lt;code&gt;/modl&lt;/code&gt; asset
-                     *
-                     * @method initialize
-                     * @for Module
-                     */
-                    initialize: that(function(that) {
-                        if (this[_name] !== &quot;&quot;) {
-                            this.asset(MODL_ASSET).
-                            when(function(err, asset) {
-                                that.exports = asset.exports;
-                                that.ready();
-                            });
-                        } else {
-                            this.ready();
-                        }
-                    }),
+            proto(hydrateAsset, that(function (that, name, payload) {
+                hydratedAssets[Asset.path(that[myPath], name)] = payload;
+            })).
 
-                    /**
-                     * Loads an asset within the module.
-                     *
-                     * @method asset
-                     * @for Module
-                     * @param {string} name The asset&#x27;s name
-                     * @return {modl.Util.Future} The future representing when the asset will
-                     *         be loaded
-                     */
-                    asset: function(name) {
-                        var future = new Future(),
-                            asset;
+            proto(hydrateModule, that(function (that, name, value, root) {
+                var module, jsonReference, parts;
 
-                        if (name in this[assets]) {
-                            asset = this[assets][name];
-                        } else {
-                            asset = new Asset(name);
-                            asset.load(this[_path]);
-                            this[assets][name] = asset;
-                        }
-
-                        asset.whenReady(function() {
-                            future.fulfill(null, asset);
+                if (typeof value === &quot;string&quot;) {
+                    jsonReference = root;
+                    parts = value.split(&quot;/&quot;);
+                    if (parts.length === 1 &amp;&amp; parts[0] === &quot;&quot;) {
+                        module = root[MODULE_REFERENCE];
+                    } else {
+                        forEach(parts, function (p) {
+                            jsonReference = jsonReference[p];
                         });
 
-                        return future;
-                    },
-
-                    /**
-                     * Loads child module within the module &lt;i&gt;(Yo dawg! I heard you like modules...)&lt;/i&gt;.
-                     *
-                     * @method module
-                     * @for Module
-                     * @param {string} name The module&#x27;s name
-                     * @return {modl.Util.Future} The future representing when the module will
-                     *         be loaded
-                     */
-                    module: that(function(that, name) {
-                        var future = new Future(),
-                            module;
-
-                        if (name in this[modules]) {
-                            module = this[modules][name];
-                        } else {
-                            module = new Module(name, this[_path] + &quot;/node_modules/&quot; + name);
-                            this[modules][name] = module;
-                        }
-
-                        current = module;
-
-                        module.whenReady(function() {
-                            current = that;
-                            future.fulfill(null, module);
-                        });
-
-                        return future;
-                    }),
-
-                    $modl: function(module) {
-                        preloadResources(this[_path], module);
-                        work(function() { module[MODL_ASSET].call(global); });
+                        module = jsonReference[MODULE_REFERENCE];
+                        that[modules][name] = module;
                     }
-
-                });
-        }()),
-
-        Future = (function() {
-            var _err = token(),
-                _data = token(),
-                fulfilled = token(),
-                when = token(),
-                runWhen = token();
-
-            return kin(function() {
-
-                /**
-                 * Holds the sent error
-                 *
-                 * @property _err
-                 * @for modl.Util.Future
-                 * @private
-                 * @type {mixed}
-                 */
-                _err.mark(this);
-
-                /**
-                 * Holds the sent data
-                 *
-                 * @property _data
-                 * @for modl.Util.Future
-                 * @private
-                 * @type {mixed}
-                 */
-                _data.mark(this);
-
-                /**
-                 * Indicates whether the promise has been fulfilled
-                 *
-                 * @property fulfilled
-                 * @for modl.Util.Future
-                 * @private
-                 * @type {boolean}
-                 */
-                fulfilled.mark(this, false);
-
-                /**
-                 * Holds the callback to be executed whenever the promise is fulfilled
-                 *
-                 * @property when
-                 * @for modl.Util.Future
-                 * @private
-                 * @type {function}
-                 */
-
-                when.mark(this, k);
-            }).
-
-            proto(runWhen, that(function(that, when) {
-                work(function() { when.call(null, that[_err], that[_data]); });
+                } else {
+                    module = new Module(name, Module.path(that[myPath], name), that, true);
+                    MODULE_REFERENCE.mark(value, module);
+                    that[modules][name] = module;
+                    module.hydrate(value, root);
+                }
             })).
 
             proto({
-
                 /**
-                 * Fulfills the promise
+                 * Initializes the module loading its &lt;code&gt;/module&lt;/code&gt; asset
                  *
-                 * @method fulfill
-                 * @for modl.Util.Future
-                 * @param {mixed} [err] The error to be sent
-                 * @param {mixed} [data] The data to be sent
+                 * @method initialize
+                 * @for modl.Module
                  */
-                fulfill: that(function(that, err, data) {
-                    if (this[fulfilled]) {
-                        throw new Error(&quot;Future already fulfilled&quot;);
+                initialize: that(function (t) {
+                    if (!t[initialized]) {
+                        t[initialized] = true;
+                        if (t[myName] !== &quot;&quot;) {
+                            t.asset(MODULE_ASSET).
+                            then(
+                                function (asset) {
+                                    t.exports = asset.exports;
+                                    t.ready();
+                                },
+                                function (e) { t.fail(e); }
+                            );
+                        } else {
+                            t.ready();
+                        }
                     }
-
-                    this[_err] = err;
-                    this[_data] = data;
-                    this[fulfilled] = true;
-                    this[runWhen](this[when]);
                 }),
 
                 /**
-                 * Register the callback if the promise is to be fulfilled,
-                 * otherwise just runs it passing along the error/data
-                 * associated with the future
+                 * Loads an asset within the module.
                  *
-                 * @method when
-                 * @for modl.Util.Future
-                 * @param {function} f The callback function
+                 * @method asset
+                 * @for modl.Module
+                 * @param {string} name The asset&#x27;s name
+                 * @return {modl.Promise} The promise representing when the asset will be loaded
                  */
-                when: function(f) {
-                    if (this[fulfilled]) {
-                        this[runWhen](f);
+                asset: that(Promise.promising(function (promise, that, name) {
+                    var asset;
+
+                    if (name in that[assets]) {
+                        asset = that[assets][name];
                     } else {
-                        this[when] = f;
+                        asset = new Asset(name);
+                        asset.whenFail(promise.resuming(function (e) { throw e; }));
+                        that[assets][name] = asset;
+                        asset.load(that[myPath]);
                     }
-                }
+
+                    asset.whenReady(function () { promise.fulfill(asset); });
+                }, true)),
+
+                /**
+                 * Loads child module within the module &lt;i&gt;(Yo dawg! I heard you like modules...)&lt;/i&gt;.
+                 *
+                 * @method module
+                 * @for modl.Module
+                 * @param {string} name The module&#x27;s name
+                 * @return {modl.Promise} The promise representing when the module will be loaded
+                 */
+                module: that(Promise.promising(function (promise, that, name) {
+                    var path, module;
+
+                    if (name in that[modules]) {
+                        module = that[modules][name];
+
+                        currentModule = module;
+                        module.initialize();
+                        module.whenReady(function () {
+                            currentModule = that;
+                            promise.fulfill(module);
+                        });
+                    } else {
+                        path = Module.path(that[myPath], name);
+
+                        module = new Module(name, path, that);
+
+                        currentModule = module;
+
+                        module.whenReady(promise.resuming(function () {
+                            currentModule = that;
+                            that[modules][name] = module;
+                            promise.fulfill(module);
+                        }));
+
+                        module.whenFail(promise.resuming(function () {
+                            var parent = that[myParent];
+
+                            currentModule = that;
+
+                            if (parent) {
+                                parent.module(name).
+                                then(promise.resuming(function (module) {
+                                    that[modules][name] = module;
+                                    promise.fulfill(module);
+                                }));
+                            } else {
+                                throw new Error(&quot;Failed to load module \&quot;&quot; + name + &quot;\&quot;&quot;);
+                            }
+                        }));
+                    }
+                }, true)),
+
+                hydrate: that(function (t, json, root) {
+                    var moduleReferenceName = MODULE_REFERENCE.toString();
+
+                    if (!root) {
+                        root = json;
+                    }
+
+                    forEach(json, function (value, name) {
+                        if (name !== moduleReferenceName) {
+                            if (name.indexOf(&quot;/&quot;) === 0) {
+                                t[hydrateAsset](name, value);
+                            } else {
+                                t[hydrateModule](name, value, root);
+                            }
+                        }
+                    });
+                })
+            }).
+
+            defConstant(&quot;path&quot;, function (path, name) {
+                return path + &quot;/node_modules/&quot; + name;
             });
-        }()),
+        }),
 
         /**
          * The loader class responsible for loading the various dependencies between modules and assets
          *
-         * @class Loader
-         * @extends Ready
+         * @class modl.Loader
+         * @extends modl.Ready
          * @constructor
          * @private
          */
-        Loader = (function() {
-            var requires = token(),
-                modl = token(),
-                _payload = token(),
-                attachAsset = token(),
-                dispatch = token(),
-                loadRequires = token(),
-                loadRequire = token();
+        Loader = Token.tokens(function (
+            // properties
+            uses,
+            usesOrder,
+            module,
+            myPayload,
 
-            return Ready.descend(function() {
+            // methods
+            attachAsset,
+            dispatch,
+            loadUses,
+            loadUse
+        ) {
+            return Ready.descend(that(function (t) {
                 /**
-                 * The requires collection containing the various required
-                 * data
+                 * The uses collection containing the various uses data
                  *
-                 * @property requires
-                 * @for Loader
+                 * @property uses
+                 * @for modl.Loader
                  * @private
                  * @type {object}
                  */
-                requires.mark(this, {});
+                uses.mark(t, {});
 
                 /**
-                 * The modl instance to be passed along to the exports
+                 * The uses order containing the order of uses declaration
+                 *
+                 * @property usesOrder
+                 * @for modl.Loader
+                 * @private
+                 * @type {array}
+                 */
+                usesOrder.mark(t, []);
+
+                /**
+                 * The module instance to be passed along to the exports
                  * callback function when called
                  *
-                 * @property modl
-                 * @for Loader
+                 * @property module
+                 * @for modl.Loader
                  * @private
                  * @type {object}
                  */
-                modl.mark(this, {
+                module.mark(t, {
                     imports: {},
                     exports: {}
                 });
@@ -960,33 +1522,33 @@
                  * The callback function to be executed when all the
                  * requires are ready
                  *
-                 * @property _payload
-                 * @for Loader
+                 * @property myPayload
+                 * @for modl.Loader
                  * @private
                  * @type {function}
                  */
-                _payload.mark(this, k);
+                myPayload.mark(t, k);
 
-                Ready.call(this);
-
-                log(&quot;loader created: &quot;, this);
-            }).
+                Ready.call(t);
+            })).
 
             /**
              * Attach a given asset to this Loader. When the loader is
              * ready, the asset will also be market as ready
              *
              * @method attachAsset
-             * @for Loader
+             * @for modl.Loader
              * @private
+             *
              * @param {Asset} asset The asset to be attached
              */
-            proto(attachAsset, that(function(that, asset) {
-                this.whenReady(function() {
-                    log(&quot;loader ready, triggering asset&quot;);
-                    asset.exports = that[modl].exports;
+            proto(attachAsset, that(function (t, asset) {
+                t.whenReady(function () {
+                    asset.exports = t[module].exports;
                     asset.ready();
                 });
+
+                t.whenFail(function (e) { asset.fail(e); });
             })).
 
             /**
@@ -994,14 +1556,16 @@
              * its requires and finally will run the payload function.
              *
              * @method dispatch
-             * @for Loader
+             * @for modl.Loader
              * @private
              */
-            proto(dispatch, that(function(that) {
+            proto(dispatch, that(function (t) {
                 var aliases = {};
-                forEach(this[requires], function(alias, require) {
-                    if (!alias) {
-                        that[requires][require] = alias = require.replace(ALIAS_RE, &quot;$2&quot;);
+
+                forEach(t[uses], function (alias, name) {
+                    if (alias === undef) {
+                        alias = name.replace(ALIAS_RE, &quot;$2&quot;);
+                        t[uses][name] = alias;
                     }
 
                     if (hop(aliases, alias)) {
@@ -1011,111 +1575,118 @@
                     aliases[alias] = undef;
                 });
 
+                t[loadUses]().
+                then(function (loadedUses) {
+                    var args = [t[module]];
 
-                that[loadRequires]().
-                when(function() {
-                    log(&quot;Running payload&quot;);
-                    that[_payload].call(null, that[modl], that[modl].imports);
-                    that.ready();
+                    forEach(t[usesOrder], function (u) { args.push(loadedUses[u]); });
+                    try {
+                        t[myPayload].apply(null, args);
+                        t.ready();
+                    } catch (e) {
+                        console.log(t.id + &quot;: dispatch&quot;, e);
+                        throw e;
+                    }
+                }, function (e) {
+                    console.log(t.id + &quot;: dispatch failed&quot;, e);
+                    t.fail(e);
                 });
             })).
 
             /**
              * Loads all requires for the loader.
              *
-             * @method loadRequires
-             * @for Loader
+             * @method loadUses
+             * @for modl.Loader
              * @private
-             * @return {modl.Util.Future} A promise for when all the requires are ready.
+             * @return {modl.Promise} A promise for when all the requires are ready.
              */
-            proto(loadRequires, that(function(that) {
-                var future = new Future(),
-                    reqs = map(this[requires], function(v, k) { return k; }),
-                    load = function(require) {
-                        if (!require) {
-                            log(&quot;done loading requires, moving on&quot;);
-                            future.fulfill();
+            proto(loadUses, that(Promise.promising(function (promise, that) {
+                var myUses = map(that[uses], function (v, k) { return k; }),
+                    loadedUses = {},
+                    load = function (useName) {
+                        if (!useName) {
+                            promise.fulfill(loadedUses);
                         } else {
-                            that[loadRequire](require).
-                            when(function() { load(reqs.shift()); });
+                            that[loadUse](useName).
+                            then(function (myUse) {
+                                loadedUses[useName] = myUse;
+                                load(myUses.shift());
+                            },
+                            promise.resuming(function (e) {
+                                console.log(&quot;loadUses&quot;, e);
+
+                            promise.fail(e); }));
                         }
                     };
-
-                log(&quot;loading requires&quot;);
-
-                load(reqs.shift());
-                return future;
-            })).
+                load(myUses.shift());
+            }, true))).
 
             /**
              * Loads a given require
              *
-             * @method loadRequire
-             * @for Loader
+             * @method loadUse
+             * @for modl.Loader
              * @private
-             * @param {string} require The require name
-             * @return {modl.Util.Future} The promise for when the require is done
+             * @param {string} name The use&#x27;s name
+             * @return {modl.Promise} The promise for when the use is done
              */
-            proto(loadRequire, that(function(that, require) {
-                var
-                    alias = this[requires][require],
-                    future = new Future(),
+            proto(loadUse, that(Promise.promising(function (promise, that, name) {
+                var alias = that[uses][name],
+                    registerUse = function (loadedUse) {
+                        var exports = loadedUse.exports;
+                        that[module].imports[alias] = exports;
+                        promise.fulfill(exports);
+                    },
 
-                    when = function(err, thing) {
-                        log(&quot;Require loaded: &quot;, require);
-                        that[modl].imports[alias] = thing.exports;
-                        future.fulfill();
+                    fail = function (e) {
+                        console.log(&quot;fail loadUse&quot;, e);
+
+                        promise.fail(e);
                     };
 
-                log(&quot;loading require: &quot;, require, alias);
-
-                if (require.indexOf(&quot;/&quot;) === 0) {
-                    current.asset(require).
-                    when(when);
+                if (name.indexOf(&quot;/&quot;) === 0) {
+                    currentModule.asset(name).then(registerUse, fail);
                 } else {
-                    current.module(require).
-                    when(when);
+                    currentModule.module(name).then(registerUse, fail);
                 }
-
-                return future;
-            })).
+            }, true))).
 
             proto({
 
                 /**
-                 * Requires an asset from it. The &lt;b&gt;resource&lt;/b&gt; string may
-                 * have the following formats:
+                 * Requires an asset from it. The
+                 * &lt;b&gt;resource&lt;/b&gt; string may have the following formats:
                  *
-                 *  - &lt;code&gt;&quot;/path/to/asset&lt;/code&gt;: in this case the asset
-                 * within the current module will be loaded
+                 *  - &lt;code&gt;&quot;/path/to/asset&lt;/code&gt;: in this case the asset within
+                 * the current module will be loaded
                  *
                  *  - &lt;code&gt;&quot;module&quot;&lt;/code&gt;: in this case the &quot;module&quot; within
                  * &lt;code&gt;node_modules&lt;/code&gt; folder will be required, and
-                 * afterwards the &lt;code&gt;/modl&lt;/code&gt; asset within the module
-                 * will be loaded.
+                 * afterwards the &lt;code&gt;/module&lt;/code&gt; asset within the module will
+                 * be loaded.
                  *
-                 *  - &lt;code&gt;&quot;module/path/to/asset&quot;&lt;/code&gt;: in this case the
-                 * &quot;module&quot; within &lt;code&gt;node_modules&lt;/code&gt; folder will be
-                 * required, and afterwards the indicated asset within the
-                 * module will be loaded.
-                 *
-                 * Optionally an &lt;b&gt;alias&lt;/b&gt; property may be passed to name
-                 * the required asset within the &lt;b&gt;imports&lt;/b&gt; object. If
+                 * Optionally an &lt;b&gt;alias&lt;/b&gt; property may be passed to name the
+                 * required asset within the &lt;b&gt;imports&lt;/b&gt; object. If
                  * ommited, the alias will be automatically generated based the
                  * &lt;b&gt;resource&lt;/b&gt; value.
                  *
-                 * @param {string} resource A given resource to be required
-                 * @param {string} [alias] An optional alias which to be named
-                 *              within the &lt;b&gt;imports&lt;/b&gt; object.
-                 * @method require
-                 * @for Loader
+                 * @method uses
+                 * @for modl.Loader
+                 * @static
                  * @chainable
-                 * @return {Loader} The loader instance
+                 *
+                 * @param {string} resource A given resource to be required
+                 * @param {string} [alias] An optional alias which to be named within the
+                 *            &lt;b&gt;imports&lt;/b&gt; object.
+                 *
+                 * @return {modl.Loader} The loader instance
                  */
-                require: function(resource, alias) {
-                    this[requires][resource] = alias;
-                    return this;
-                },
+                uses: that(function (t, resource, alias) {
+                    t[uses][resource] = alias;
+                    t[usesOrder].push(resource);
+                    return t;
+                }),
 
                 /**
                  * Schedules a given &lt;b&gt;payload&lt;/b&gt;
@@ -1123,9 +1694,8 @@
                  * run when all the requires are loaded and ready for prime time.
                  *
                  * When called, the &lt;b&gt;payload&lt;/b&gt; function will receive the
-                 * &lt;b&gt;module&lt;/b&gt; struct as its first argument and as second
-                 * argument, the &lt;b&gt;imports&lt;/b&gt; object containing all required
-                 * resources within will be passed.
+                 * &lt;b&gt;module&lt;/b&gt; struct as its first argument. The imports will be
+                 * passed as subsequent arguments in order.
                  *
                  * The &lt;b&gt;module&lt;/b&gt; object will have an &lt;code&gt;exports&lt;/code&gt;
                  * property which will be published for this asset. This property
@@ -1133,31 +1703,388 @@
                  * la&lt;/i&gt; nodejs module system).
                  *
                  * The &lt;b&gt;module&lt;/b&gt; object will also have an &lt;code&gt;imports&lt;/code&gt;
-                 * object containing all required resources which will be also
-                 * passed as a second argument to the &lt;b&gt;payload&lt;/b&gt; function
+                 * object containing all required resources.
                  *
-                 * @method exports
-                 * @for Loader
+                 * Every imports will be passed along as parameters to the payload
+                 * function
+                 *
+                 * @method unit
+                 * @for modl.Loader
+                 * @static
+                 *
                  * @param {function} payload The payload function
                  */
-                exports: function(payload) {
-                    this[_payload] = payload;
+                unit: that(function (t, payload) {
+                    t[myPayload] = payload;
+
                     if (loadingAsset !== undef) {
-                        this[attachAsset](loadingAsset);
+                        t[attachAsset](loadingAsset);
                         loadingAsset = undef;
+                    } else {
+                        t.whenFail(function (e) { throw e; });
                     }
-                    this[dispatch]();
-                }
+                    t[dispatch]();
+                })
             });
+        }),
+
+        Bilbo = (function () {
+            var bags = {},
+
+                /**
+                 * The standard bilbo&#x27;s bag.
+                 *
+                 * @class modl.Bilbo.Bag
+                 * @constructor
+                 *
+                 * @param {string} name The bag&#x27;s name
+                 */
+                Bag = Token.tokens(function (
+                    myName,
+                    stuff
+                ) {
+                    var builder = function (type) {
+                        var F = function () {};
+                        F.prototype = type.prototype;
+                        return function (args) {
+                            var stuff = new F(),
+                                result = type.apply(stuff, slice(args));
+
+                            if (objToStringCall(result) === &quot;[object Object]&quot;) {
+                                stuff = result;
+                            }
+
+                            return stuff;
+                        };
+                    };
+
+
+                    return type(that(function (that, name) {
+                        myName.mark(that, name);
+                        stuff.mark(that, {});
+                    })).
+
+                    proto({
+
+                        /**
+                         * Return the bag&#x27;s name
+                         *
+                         * @method name
+                         * @for modl.Bilbo.Bag
+                         *
+                         * @return {string}
+                         */
+                        name: function () {
+                            return this[myName];
+                        },
+
+                        /**
+                         * Empties the bag, and vanishes it removing it from bilbo
+                         * altogether.
+                         *
+                         * @method vanish
+                         * @for modl.Bilbo.Bag
+                         */
+                        vanish: that(function (that) {
+                            that.empty();
+                            delete bags[that[myName]];
+                        }),
+
+                        /**
+                         * Empties the bag, removing all stored stuff from within
+                         *
+                         * @method empty
+                         * @for modl.Bilbo.Bag
+                         */
+                        empty: function () {
+                            this[stuff] = {};
+                        },
+
+                        /**
+                         * Tries to grab a stored stuff. If a given thing can&#x27;t be found
+                         * within the bag, it throws an error.
+                         *
+                         * It may also receive aditional arguments if the storage method
+                         * supports varargs.
+                         *
+                         * @method grab
+                         * @for modl.Bilbo.Bag
+                         * @param {string} name The thing&#x27;s name
+                         * @param {mixed} [args*] Optional arguments passed to stored thing if supported
+                         * @return {mixed}
+                         */
+                        grab: that(function (that, name) {
+                            if (!hop(that[stuff], name)) {
+                                throw new Error(&quot;Couldn&#x27;t find stuff: &quot; + name);
+                            }
+
+                            return that[stuff][name].apply(null, slice(arguments, 2));
+                        }),
+
+                        /**
+                         * Stores an object within this bag under a given name. When
+                         * &lt;code&gt;grab&lt;/code&gt; is called, it will give a new object
+                         * having the previous object as prototype.
+                         *
+                         * @method prototype
+                         * @for modl.Bilbo.Bag
+                         * @param {string} name The given name
+                         * @param {object} proto The object to be used as prototype
+                         */
+                        prototype: function (name, proto) {
+                            this[stuff][name] = function () {
+                                var F = function () {};
+                                F.prototype = proto;
+                                return new F();
+                            };
+                        },
+
+                        /**
+                         * Stores something within the bag itself. When
+                         * &lt;code&gt;grab&lt;/code&gt; is called, it will give it back as is.
+                         *
+                         * @method stuff
+                         * @for modl.Bilbo.Bag
+                         * @param {string} name The given name
+                         * @param {mixed} thing The thing to be stored
+                         */
+                        stuff: function (name, thing) {
+                            this[stuff][name] = function () {
+                                return thing;
+                            };
+                        },
+
+                        /**
+                         * Stores a lazy initializer. When &lt;code&gt;grab&lt;/code&gt; is
+                         * called, it will call the lazy function and return it&#x27;s value.
+                         * Subsequent calls will always receive the same value.
+                         *
+                         * The lazy function may receive aditional arguments upon
+                         * calling &lt;code&gt;grab&lt;/code&gt; as varargs
+                         *
+                         * @method lazy
+                         * @for modl.Bilbo.Bag
+                         * @param {string} name The given name
+                         * @param {function} lazy The lazy function
+                         */
+                        lazy: that(function (that, name, lazy) {
+                            that[stuff][name] = args(function (args) {
+                                var lazyStuff;
+                                that[stuff][name] = function () {
+                                    return lazyStuff;
+                                };
+
+                                lazyStuff = lazy.apply(null, args);
+                                return lazyStuff;
+                            });
+                        }),
+
+                        /**
+                         * Stores a factory function. When &lt;code&gt;grab&lt;/code&gt; is
+                         * called, it will call the factory function and return it&#x27;s
+                         * value.
+                         *
+                         * The factory function may receive aditional arguments upon
+                         * calling &lt;code&gt;grab&lt;/code&gt; as varargs
+                         *
+                         * @method factory
+                         * @for modl.Bilbo.Bag
+                         * @param {string} name The given name
+                         * @param {function} factory The factory function
+                         */
+                        factory: function (name, factory) {
+                            this[stuff][name] = args(function (args) {
+                                return factory.apply(null, args);
+                            });
+                        },
+
+                        /**
+                         * Stores a constructor to be used as a singleton. When
+                         * &lt;code&gt;grab&lt;/code&gt; is called, it will instantiate the object
+                         * using the &lt;code&gt;type&lt;/code&gt; as a constructor for it.
+                         * Subsequent calls will always receive the same instance.
+                         *
+                         * The constructor may receive aditional arguments upon calling
+                         * &lt;code&gt;grab&lt;/code&gt; as varargs
+                         *
+                         * @method singleton
+                         * @for modl.Bilbo.Bag
+                         * @param {string} name The given name
+                         * @param {function} type The singleton constructor
+                         */
+                        singleton: function (name, type) {
+                            var singletonBuilder = builder(type);
+                            this.lazy(name, function () {
+                                return singletonBuilder(arguments);
+                            });
+                        },
+
+                        /**
+                         * Stores a constructor to be used as a type constructor. When
+                         * &lt;code&gt;grab&lt;/code&gt; is called, it will instantiate the object
+                         * using the &lt;code&gt;type&lt;/code&gt; as a constructor for it.
+                         *
+                         * The constructor may receive aditional arguments upon calling
+                         * &lt;code&gt;grab&lt;/code&gt; as varargs
+                         *
+                         * @method type
+                         * @for modl.Bilbo.Bag
+                         * @param {string} name The given name
+                         * @param {function} type The type constructor
+                         */
+                        type: function (name, type) {
+                            var typeBuilder = builder(type);
+                            this[stuff][name] = function () {
+                                return typeBuilder(arguments);
+                            };
+                        },
+
+                        /**
+                         * Registers a thing within the bag itself with a
+                         * specific storage method. The bag looks for a property
+                         * named &quot;precious&quot; or &quot;〇&quot; (Unicode Character
+                         * &#x27;IDEOGRAPHIC NUMBER ZERO&#x27; (U+3007)) within the thing.
+                         * The property may have the following values as hints:
+                         * &lt;b&gt;&quot;prototype&quot;&lt;/b&gt;, &lt;b&gt;&quot;lazy&quot;&lt;/b&gt;, &lt;b&gt;&quot;singleton&quot;&lt;/b&gt;,
+                         * &lt;b&gt;&quot;factory&quot;&lt;/b&gt;, &lt;b&gt;&quot;type&quot;&lt;/b&gt;, and &lt;b&gt;&quot;stuff&quot;&lt;/b&gt;.
+                         * The default storage method is &lt;b&gt;&quot;singleton&quot;&lt;/b&gt; for
+                         * functions or &lt;b&gt;&quot;stuff&quot;&lt;/b&gt; for objects.
+                         *
+                         * @method register
+                         * @for modl.Bilbo.Bag
+                         *
+                         * @param {string} name The thing&#x27;s name
+                         * @param {mixed} stuff The stuff to be registered
+                         */
+                        register: that(function (that, name, stuff) {
+                            var precious = stuff[&quot;\u3007&quot;] || stuff.precious;
+                            if ([&quot;prototype&quot;, &quot;lazy&quot;, &quot;singleton&quot;, &quot;factory&quot;, &quot;type&quot;, &quot;stuff&quot;].indexOf(precious) !== -1) {
+                                that[precious](name, stuff);
+                            } else if (typeof stuff === &quot;function&quot;) {
+                                that.singleton(name, stuff);
+                            } else {
+                                that.stuff(name, stuff);
+                            }
+                        })
+                    });
+                }),
+
+                /**
+                 * The MockingBag is a bag creates and stores empty objects when things
+                 * are not found within. It&#x27;s intended for &lt;b&gt;testing&lt;/b&gt; usage.
+                 *
+                 * When the bag creates objects it will store them with the &quot;stuff&quot;
+                 * storage method. Like so, modifying objects will modify created
+                 * references within.
+                 *
+                 * @class modl.Bilbo.MockingBag
+                 * @extends modl.Bilbo.Bag
+                 */
+                MockingBag = Bag.descend().
+
+                /**
+                 * Just like {{#crossLink &quot;modl.Bilbo.Bag&quot;}}{{/crossLink}}&#x27;s
+                 * grab method but when it cannot find stuff within, it creates a
+                 * new object and stores within itself.
+                 *
+                 * @method grab
+                 * @for modl.Bilbo.MockingBag
+                 * @param {string} name The thing&#x27;s name
+                 * @return {mixed}
+                 */
+                proto(&quot;grab&quot;, that(function (that, name) {
+                    try {
+                        return MockingBag.ancestor.grab.call(that, name);
+                    } catch (e) {
+                        var mock = {};
+                        that.stuff(name, mock);
+                        return mock;
+                    }
+                }));
+
+            /**
+             * Bilbo baggins!
+             *
+             * @class modl.Bilbo
+             * @static
+             */
+            return {
+
+                /**
+                 * Retrieves or creates a new bag
+                 *
+                 * @method bag
+                 * @for modl.Bilbo
+                 * @param {string} name The bag&#x27;s name
+                 * @return {modl.Bilbo.Bag}
+                 */
+                bag: function (name) {
+                    name = String(name);
+
+                    return hop(bags, name)?
+                        bags[name]:
+                        bags[name] = new Bag(name);
+                },
+
+                /**
+                 * Creates and returns a &lt;code&gt;bilbo.MockingBag&lt;/code&gt;
+                 *
+                 * @method mockingBag
+                 * @for modl.Bilbo
+                 * @param {string} name The bag&#x27;s name
+                 * @return {modl.bilbo.MockingBag}
+                 */
+                mockingBag: function (name) {
+                    name = String(name);
+                    var bag = new MockingBag(name);
+                    bags[name] = bag;
+                    return bag;
+                },
+
+                /**
+                 * Gives a bag for bilbo to keep
+                 *
+                 * @param {modl.Bilbo.Bag} ba
+                 */
+                keep: function (bag) {
+                    bags[bag.name()] = bag;
+                },
+
+                /**
+                 * Vanishes all bags reseting bilbo to it&#x27;s initial state. All bags
+                 * will be emptied, existing references will still be valid, but all
+                 * bags will have nothing inside.
+                 *
+                 * @method vanish
+                 * @for modl.Bilbo
+                 */
+                vanish: function () {
+                    forEach(bags, function (b) { b.vanish(); });
+                },
+
+                Bag: Bag,
+                MockingBag : MockingBag
+            };
         }()),
 
-        /**
-         * The modl loader
-         *
-         * @class modl
-         * @static
-         */
         modl = {
+
+            /**
+             * Simply creates &lt;b&gt;Loader&lt;/b&gt; and returns it.
+             *
+             * Good for instrumenting purposes, in case you need a reference
+             * without calling {{#crossLink &quot;modl/uses:method&quot;}}{{/crossLink}}
+             * or {{#crossLink &quot;modl/unit:method&quot;}}{{/crossLink}} methods
+             *
+             * @method loader
+             * @for modl
+             * @static
+             *
+             * @return {modl.Loader}
+             */
+            loader: function () {
+                return new Loader();
+            },
 
             /**
              * Creates a &lt;b&gt;Loader&lt;/b&gt; and requires an asset from it. The
@@ -1168,32 +2095,27 @@
              *
              *  - &lt;code&gt;&quot;module&quot;&lt;/code&gt;: in this case the &quot;module&quot; within
              * &lt;code&gt;node_modules&lt;/code&gt; folder will be required, and
-             * afterwards the &lt;code&gt;/modl&lt;/code&gt; asset within the module will
+             * afterwards the &lt;code&gt;/module&lt;/code&gt; asset within the module will
              * be loaded.
-             *
-             *  - &lt;code&gt;&quot;module/path/to/asset&quot;&lt;/code&gt;: in this case the
-             * &quot;module&quot; within &lt;code&gt;node_modules&lt;/code&gt; folder will be
-             * required, and afterwards the indicated asset within the module
-             * will be loaded.
              *
              * Optionally an &lt;b&gt;alias&lt;/b&gt; property may be passed to name the
              * required asset within the &lt;b&gt;imports&lt;/b&gt; object. If
              * ommited, the alias will be automatically generated based the
              * &lt;b&gt;resource&lt;/b&gt; value.
              *
-             * @param {string} resource A given resource to be required
-             * @param {string} [alias] An optional alias which to be named within the
-             *            &lt;b&gt;imports&lt;/b&gt; object.
-             * @method require
+             * @method uses
              * @for modl
              * @static
              * @chainable
-             * @return {Loader} The loader instance
+             *
+             * @param {string} resource A given resource to be required
+             * @param {string} [alias] An optional alias which to be named within the
+             *            &lt;b&gt;imports&lt;/b&gt; object.
+             *
+             * @return {modl.Loader} The loader instance
              */
-            require: function(resource, alias) {
-                log(&quot;modl.require called, creating new loader&quot;);
-                var loader = new Loader();
-                return loader.require(resource, alias);
+            uses: function (resource, alias) {
+                return new Loader().uses(resource, alias);
             },
 
             /**
@@ -1202,9 +2124,8 @@
              * run when all the requires are loaded and ready for prime time.
              *
              * When called, the &lt;b&gt;payload&lt;/b&gt; function will receive the
-             * &lt;b&gt;module&lt;/b&gt; struct as its first argument and as second
-             * argument, the &lt;b&gt;imports&lt;/b&gt; object containing all required
-             * resources within will be passed.
+             * &lt;b&gt;module&lt;/b&gt; struct as its first argument. The imports will be
+             * passed as subsequent arguments in order.
              *
              * The &lt;b&gt;module&lt;/b&gt; object will have an &lt;code&gt;exports&lt;/code&gt;
              * property which will be published for this asset. This property
@@ -1212,24 +2133,25 @@
              * la&lt;/i&gt; nodejs module system).
              *
              * The &lt;b&gt;module&lt;/b&gt; object will also have an &lt;code&gt;imports&lt;/code&gt;
-             * object containing all required resources which will be also
-             * passed as a second argument to the &lt;b&gt;payload&lt;/b&gt; function
+             * object containing all required resources.
              *
-             * @method exports
+             * Every imports will be passed along as parameters to the payload
+             * function
+             *
+             * @method unit
              * @for modl
              * @static
+             *
              * @param {function} payload The payload function
              */
-            exports: function(payload) {
-                log(&quot;modl.exports called, creating new loader&quot;);
-                var loader = new Loader();
-                loader.exports(payload);
+            unit: function (payload) {
+                new Loader().unit(payload);
             },
 
             /**
-             * Sets up the modl environment. It will reset all loaded modules
-             * and will set up the settings object along with the values passed
-             * along with the &lt;b&gt;options&lt;/b&gt; parameter.
+             * Sets up the modl module environment. It will reset all loaded
+             * modules and will set up the settings object along with the values
+             * passed along with the &lt;b&gt;options&lt;/b&gt; parameter.
              *
              * This function &lt;b&gt;MUST&lt;/b&gt; be called before any require/exports
              * can be actually made.
@@ -1238,24 +2160,36 @@
              * @for modl
              * @static
              * @param {object} options The options parameter
-             * @param {string} options.root The root directory form which to load all
-             *            assets and modules
-             * @param {boolean} [options.debug] If this flag is on, it will emit debug
-             *            messages to a console if available
+             * @param {string} options.root The root directory form which to
+             *            load all assets and modules
              */
-            setup: function(options) {
+            setup: function (options) {
                 settings = {};
                 merge(settings, options, validSettings);
-                current = new Module(&quot;&quot;, settings.root);
-            },
-
-
-            $modl: function(module) {
-                current.$modl(module);
+                currentModule = new Module(&quot;&quot;, settings.root);
+                rootModule = currentModule;
+                Bilbo.vanish();
             },
 
             /**
-             * Util class that provides inner utils to the outside world
+             * Dispatches the loading of a concatenated module. This method
+             * should be called only by machine generated code.
+             *
+             * @method $module
+             * @for modl
+             * @static
+             * @private
+             *
+             * @param {object} module The concantenated module
+             */
+            $module: function (module) {
+                MODULE_REFERENCE.mark(module, currentModule);
+                currentModule.hydrate(module);
+                module[&quot;/module&quot;].call(null);
+            },
+
+            /**
+             * Exported utilities class from modl module system
              *
              * @class modl.Util
              * @static
@@ -1263,151 +2197,18 @@
             Util: {
 
                 /**
-                 * Flag that indicates if we are running under nodejs environment
-                 *
-                 * @property Uode
-                 * @for modl.Util
-                 * @type boolean
-                 * @final
-                 */
-                node: node,
-
-                /**
-                 * Returns a function that always returns the same value
+                 * Returns a function that when called returns always the same starting value
                  *
                  * @method constant
                  * @for modl.Util
-                 * @param {mixed} v Returned value
+                 *
+                 * @param {mixed} value
                  * @return {function}
                  */
                 constant: constant,
 
                 /**
-                 * Short for setTimeout(f, 0);
-                 *
-                 * @method work
-                 * @for modl.Util
-                 * @param {function} f Work function
-                 * @return {number} timeout id
-                 */
-                work: work,
-
-                /**
-                 * Short for Object.prototype.hasOwnProperty
-                 *
-                 * @method hop
-                 * @for modl
-                 * @param {object} o Object to check its property
-                 * @param {string} p Property name
-                 * @return {boolean} whether a property exists within the object or not
-                 */
-                hop: hop,
-
-                /**
-                 * Merges all properties from &lt;b&gt;b&lt;/b&gt; into &lt;b&gt;a&lt;/b&gt;. Optionally it
-                 * can be passes a property whitelist
-                 *
-                 * @method merge
-                 * @for modl.Util
-                 * @param {object} a The target object
-                 * @param {object} b The source object
-                 * @param {array} [list] Properties whitelist
-                 */
-                merge: merge,
-
-                /**
-                 * Iterates over an object&#x27;s properties or an array&#x27;s values calling the
-                 * &lt;b&gt;f&lt;/b&gt; callback function each time passing the value as it&#x27;s first
-                 * argument and the index or property name as it&#x27;s second argument. The
-                 * callback function must return either &lt;code&gt;true&lt;/code&gt; or
-                 * &lt;code&gt;false&lt;/code&gt;. If for a given property or index the function
-                 * returns &lt;code&gt;true&lt;/code&gt; then the indexOf function will return the
-                 * current property name or index.
-                 *
-                 * @method indexOf
-                 * @for modl.Util
-                 * @param {array|object} a The array or object to be iterated
-                 * @param {function} f The callback function for each iteration
-                 */
-                indexOf: indexOf,
-
-                /**
-                 * Iterates over an object&#x27;s properties or an array&#x27;s values calling the
-                 * &lt;b&gt;f&lt;/b&gt; callback function each time passing the value as it&#x27;s first
-                 * argument and the index or property name as it&#x27;s second argument.
-                 *
-                 * @method forEach
-                 * @for modl.Util
-                 * @param {array|object} a The array or object to be iterated
-                 * @param {function} f The callback function for each iteration
-                 */
-                forEach: forEach,
-
-                /**
-                 * Short for Array.prototype.slice.apply(arguments[0], arguments[1...n])
-                 *
-                 * @method slice
-                 * @for modl.Util
-                 * @return {array}
-                 */
-                slice: slice,
-
-                /**
-                 * Iterates over an object&#x27;s properties or an array&#x27;s values
-                 * calling the &lt;b&gt;f&lt;/b&gt; callback function each time passing the
-                 * value as it&#x27;s first argument and the index or property name
-                 * as it&#x27;s second argument. The returned value of each function
-                 * call is stored in a new array that is returned in the end.
-                 *
-                 * @method map
-                 * @for modl.Util
-                 * @param {array|object} a The array or object to be iterated
-                 * @param {function} f The callback function for each iteration
-                 * @return {array}
-                 */
-                map: map,
-
-                /**
-                 * Returns a function that decides which function to call based on the number of arguments passed.
-                 *
-                 * @method overload
-                 * @for modl.Util
-                 * @param {function} functions*
-                 * @return {function}
-                 */
-                overload: overload,
-
-                /**
-                 * Returns another function that passes the this arguments as first argument to the other function
-                 *
-                 * @method that
-                 * @for modl.Util
-                 * @param {function} f Function that receives &quot;this&quot; as &quot;that&quot;
-                 * @return {function}
-                 */
-                that: that,
-
-                /**
-                 * Creates a unique token
-                 *
-                 * @method token
-                 * @for modl.Util
-                 * @return {modl.Util.Token}
-                 */
-                token: token,
-
-                /**
-                 * Creates new classes of things
-                 *
-                 * @method kin
-                 * @for modl.Util
-                 * @param {function} constructor
-                 * @return {function} A new kin, or class if you may
-                 */
-                kin: kin,
-
-                /**
-                 * A noop function
+                 * A function that does nothing and returns undefined. Useful when you need a noop function
                  *
                  * @method k
                  * @for modl.Util
@@ -1415,31 +2216,261 @@
                 k: k,
 
                 /**
-                 * Token class
+                 * Returns a function that whe called, passes the arguments
+                 * collection as an array to the passed function as its first
+                 * parameter.
                  *
-                 * @class modl.Util.Token
-                 * @constructor
-                 * @param {string} token Token value
+                 * @method args
+                 * @for modl.Util
+                 *
+                 * @param {function} f
+                 *
+                 * @return {function}
                  */
-                Token: Token,
+                args: args,
 
                 /**
-                 * Represents a future promise
+                 * Processes the function on the next tick
                  *
-                 * @class modl.Util.Future
-                 * @constructor
+                 * @method work
+                 * @for modl.Util
+                 *
+                 * @param {function} f
                  */
-                Future: Future
-            }
+                work: work,
+
+                /**
+                 * Short for object.hasOwnProperty(property)
+                 *
+                 * @method hop
+                 * @for modl.Util
+                 *
+                 * @param {Object} object
+                 * @param {string} property
+                 *
+                 * @return {boolean}
+                 */
+                hop: hop,
+
+                /**
+                 * Copy the properties from the &quot;source&quot; object onto the
+                 * &quot;target&quot; object. Optionally it can be passed an array
+                 * containing the property-list to be copied, if ommited, all
+                 * own properties should be copied.
+                 *
+                 * @method merge
+                 * @for modl.Util
+                 *
+                 * @param {Object} target
+                 * @param {Object} source
+                 * @param {array} [propertyList]
+                 */
+                merge: merge,
+
+                /**
+                 * Looks for the first ocurrence that satisfies the conditional
+                 * function of a given value within an array or an object,
+                 * returning its index or property.
+                 *
+                 * The conditional function will be called for each item within
+                 * the collection, it will receive the item as first parameter
+                 * and its index as the second. The function must return a
+                 * boolean indicating whether the condition has been met.
+                 *
+                 * @method indexOf
+                 * @for modl.Util
+                 *
+                 * @param {array|object} collection
+                 * @param {function} condition
+                 *
+                 * @return {number|string}
+                 */
+                indexOf: indexOf,
+
+                /**
+				 * Returns the first ocurrence that satisfies the conditional
+				 * function of a given value within an array or an object.
+				 *
+				 * The conditional function will be called for each item within
+				 * the collection, it will receive the item as first parameter
+				 * and its index as the second. The function must return a
+				 * boolean indicating whether the condition has been met.
+				 *
+				 * If the function is ommited, it will return the first item
+				 * within the collection.
+                 *
+                 * @method first
+                 * @for modl.Util
+                 *
+                 * @param {array|object} collection
+                 * @param {function} [condition]
+                 *
+                 * @return {mixed}
+				 */
+                first: first,
+
+                /**
+                 * Executes a function for each item within the collection
+                 * (array or object), passing the item itself as the first
+                 * parameter and it&#x27;s index as the second parameter.
+                 *
+                 * @method forEach
+                 * @for modl.Util
+                 *
+                 * @param {array|object} collection
+                 * @param {function} f
+                 */
+                forEach: forEach,
+
+                /**
+                 * Iterates through the items of a collection, calling the map
+                 * function for each of those items, passing the item itself as
+                 * first parameter and it&#x27;s index as the second parameter. The
+                 * function&#x27;s return will be pushed to a new array that will be
+                 * returned in the end.
+                 *
+                 * @method map
+                 * @for modl.Util
+                 *
+                 * @param {array|object} collection
+                 * @param {function} f
+                 *
+                 * @return {array}
+                 */
+                map: map,
+
+                /**
+                 * Short for:
+                 * var args = Array.prototype.slice.call(arguments);
+                 * return Array.prototype.slice.apply(args.shift(), args);
+                 *
+                 * @method slice
+                 * @for modl.Util
+                 *
+                 * @param {mixed} collection
+                 * @param {number} [begin=0]
+                 * @param {number} [end]
+                 *
+                 * @return {array}
+                 */
+                slice: slice,
+
+                /**
+                 * Kind of a method overloading. It should be called passing
+                 * various functions, each with a different number of declared
+                 * parameters.
+                 *
+                 * It will return a function that depending of the number of
+                 * arguments passed, will call the respective function. If there
+                 * is no respective function for a given number of arguments,
+                 * the latter function will be used as default.
+                 *
+                 * @method overload
+                 * @for modl.Util
+                 *
+                 * @param {function} functions*
+                 *
+                 * @return {function}
+                 */
+                overload: overload,
+
+                /**
+                 * Returns a function that when called, it will pass the _this_
+                 * object as first parameter, along with the remaining
+                 * parameters if any.
+                 *
+                 * @method that
+                 * @for modl.Util
+                 *
+                 * @param {function} thatFunction
+                 *
+                 * @return {function}
+                 */
+                that: that,
+
+                /**
+                 * Method used to create a new class using the functionality
+                 * described in the pseudo {{#crossLink &quot;modl.Type&quot;}}{{/crossLink}} class
+                 *
+                 * @method type
+                 * @for modl.Util
+                 *
+                 * @param {function} constructor
+                 *
+                 * @return {function}
+                 */
+                type: type,
+
+                /**
+                 * Inherit the prototype methods from one constructor into
+                 * another. The prototype of constructor will be set to a new
+                 * object created from superConstructor.
+                 *
+                 * As an additional convenience, superConstructor.prototype will
+                 * be accessible through the constructor.ancestor property,
+                 * along with other facilities within the modl&#x27;s type
+                 * suggar.
+                 *
+                 * The method returns the constructor reference.
+                 *
+                 * @method inherits
+                 * @for modl.Util
+                 *
+                 * @param {function} constructor
+                 * @param {function} superConstructor
+                 *
+                 * @return {function}
+                 */
+                inherits: inherits,
+
+                /**
+                 * Creates tMODULE_REFERENCEhe prototype bond between a constructor and its
+                 * superConstructor, nothing more.
+                 *
+                 * @method bond
+                 * @for modl.Util
+                 *
+                 * @param {function} constructor
+                 * @param {function} superConstructor
+                 *
+                 * @return {function}
+                 */
+                bond: bond,
+
+                /**
+                 * A reference to the undefined value
+                 *
+                 * @property undef
+                 * @for modl.Util
+                 * @type undefined
+                 * @final
+                 */
+                undef: undef,
+
+                /**
+                 * Shortcut for {{#crossLink &quot;modl.Token/tokens:method&quot;}}{{/crossLink}}&#x27;s method
+                 *
+                 * @method tokens
+                 * @for modl.Util
+                 * @static
+                 *
+                 * @return {mixed}
+                 */
+                tokens: function (f) { return Token.tokens.call(Token, f); }
+            },
+
+            Bilbo: Bilbo,
+            Token: Token,
+            Promise: Promise
         };
+
+    main.modl = modl;
 
     if (node) {
         module.exports = modl;
-    } else {
-        global.modl = modl;
     }
 
-}(this));
+}(typeof exports !== &quot;undefined&quot; &amp;&amp; global.exports !== exports));
     </pre>
 </div>
 
