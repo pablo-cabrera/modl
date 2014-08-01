@@ -59,8 +59,6 @@
             
                 <li><a href="../classes/modl.Ready.html">modl.Ready</a></li>
             
-                <li><a href="../classes/modl.REady.html">modl.REady</a></li>
-            
                 <li><a href="../classes/modl.Token.html">modl.Token</a></li>
             
                 <li><a href="../classes/modl.Type.html">modl.Type</a></li>
@@ -956,7 +954,7 @@
                  * Holds the failure reason
                  *
                  * @property failure
-                 * @for modl.REady
+                 * @for modl.Ready
                  * @private
                  * @type {mixed}
                  */
@@ -1580,17 +1578,9 @@
                     var args = [t[module]];
 
                     forEach(t[usesOrder], function (u) { args.push(loadedUses[u]); });
-                    try {
-                        t[myPayload].apply(null, args);
-                        t.ready();
-                    } catch (e) {
-                        console.log(t.id + &quot;: dispatch&quot;, e);
-                        throw e;
-                    }
-                }, function (e) {
-                    console.log(t.id + &quot;: dispatch failed&quot;, e);
-                    t.fail(e);
-                });
+                    t[myPayload].apply(null, args);
+                    t.ready();
+                }, function (e) { t.fail(e); });
             })).
 
             /**
@@ -1613,10 +1603,7 @@
                                 loadedUses[useName] = myUse;
                                 load(myUses.shift());
                             },
-                            promise.resuming(function (e) {
-                                console.log(&quot;loadUses&quot;, e);
-
-                            promise.fail(e); }));
+                            promise.resuming(function (e) { promise.fail(e); }));
                         }
                     };
                 load(myUses.shift());
@@ -1639,11 +1626,7 @@
                         promise.fulfill(exports);
                     },
 
-                    fail = function (e) {
-                        console.log(&quot;fail loadUse&quot;, e);
-
-                        promise.fail(e);
-                    };
+                    fail = function (e) { promise.fail(e); };
 
                 if (name.indexOf(&quot;/&quot;) === 0) {
                     currentModule.asset(name).then(registerUse, fail);

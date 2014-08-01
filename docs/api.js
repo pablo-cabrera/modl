@@ -9,7 +9,6 @@ YUI.add("yuidoc-meta", function(Y) {
         "modl.Loader",
         "modl.Module",
         "modl.Promise",
-        "modl.REady",
         "modl.Ready",
         "modl.Token",
         "modl.Type",

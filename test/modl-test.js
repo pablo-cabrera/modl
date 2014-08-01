@@ -202,6 +202,33 @@
                 test.wait();
             }),
 
+            "should load a concatenated module with more inner references": setup(function() {
+                modl.
+                uses("mod-g").
+                unit(resume(function(module, g) {
+                    Assert.areSame("foo", g.name);
+                    Assert.areSame("foo-Thing", g.Thing.name);
+                    Assert.areSame("foo-AnotherThing", g.AnotherThing.name);
+                    Assert.areSame(g.Thing, g.AnotherThing.Thing);
+
+                    Assert.areSame("bar", g.bar.name);
+                    Assert.areSame("bar-Thing", g.bar.Thing.name);
+                    Assert.areSame("bar-AnotherThing", g.bar.AnotherThing.name);
+                    Assert.areSame(g.bar.Thing, g.bar.AnotherThing.Thing);
+                    Assert.areSame(g.baz, g.bar.baz);
+
+                    Assert.areSame("baz", g.baz.name);
+                    Assert.areSame("baz-Thing", g.baz.Thing.name);
+                    Assert.areSame("baz-AnotherThing", g.baz.AnotherThing.name);
+                    Assert.areSame(g.baz.Thing, g.baz.AnotherThing.Thing);
+
+
+
+                }));
+
+                test.wait();
+            }),
+
             "should handle a concatenated module": setup(function() {
                 modl.$module({
                     "/module": function() {
