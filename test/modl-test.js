@@ -57,8 +57,7 @@
             _should: {
                 error: {
                     "should break when there are 2 aliases with the same name" : "Alias clash: x",
-                    "bilbo should fail when trying to grab something that isn't there": "Couldn't find stuff: yo momma's ass",
-                    "sync promise should throw the same error when the then handler are called": "fuck off"
+                    "bilbo should fail when trying to grab something that isn't there": "Couldn't find stuff: yo momma's ass"
                 }
             },
 
@@ -433,84 +432,6 @@
 
                 Assert.isObject(o);
                 Assert.areSame(o, bag.grab("yolo"));
-            },
-
-            /* promises tests */
-
-            "promise should be async": function() {
-                var p = new modl.Promise(),
-                    f = false;
-
-                p.when(resume(function(p) {
-                    Assert.isTrue(f);
-                }));
-
-                f = true;
-
-                p.then(util.k);
-
-                test.wait();
-            },
-
-            "promise should be sync": function () {
-                var p = new modl.Promise(true),
-                    f = false;
-
-                p.when(function(p) {
-                    Assert.isFalse(f);
-                });
-
-                p.then(util.k);
-
-                f = true;
-            },
-
-            "sync promise should pass through the then success handler": function () {
-                var p = new modl.Promise(true),
-                    v = {};
-
-                p.when(function(p) {
-                    p.fulfill(v);
-                });
-
-                p.then(function(value) {
-                    Assert.areSame(v, value);
-                });
-            },
-
-            "sync promise should throw an error only when the then handler are called": function () {
-                var p = new modl.Promise(true),
-                    f = false,
-                    msg = "fuck off";
-
-                p.when(function() {
-                    f = true;
-                    throw new Error(msg);
-                });
-
-                try {
-                    p.then(util.k);
-                } catch (e) {
-                    Assert.isTrue(f);
-                    Assert.areSame(msg, e.message);
-                }
-            },
-
-            "sync promise should throw the same error when the then handler are called": function () {
-                var p = new modl.Promise(true);
-                p.when(function() { throw new Error("fuck off"); });
-                p.then(util.k);
-            },
-
-            "sync promise should call the fail handler passing the error thrown": function () {
-                var p = new modl.Promise(true),
-                    e = new Error();
-
-                p.when(function() { throw e; });
-
-                p.then(util.k, function(error) {
-                    Assert.areSame(e, error);
-                });
             },
 
             dummy: undefined
