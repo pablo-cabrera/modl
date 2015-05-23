@@ -1,49 +1,73 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     "use strict";
+
+    grunt.option("stack", true);
 
     // Project configuration.
     grunt.initConfig({
-        pkg : grunt.file.readJSON("package.json"),
+        pkg: grunt.file.readJSON("package.json"),
 
-        meta : {
-            banner : "/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - " +
-                "<%= grunt.template.today(\"yyyy-mm-dd\") %>\n" +
-                "<%= pkg.homepage ? \"* \" + pkg.homepage + \"\n\" : \"\" %>" +
-                "* Copyright (c) <%= grunt.template.today(\"yyyy\") %> <%= pkg.author.name %>;" +
-                " Licensed <%= _.pluck(pkg.licenses, \"type\").join(\", \") %> */"
+        meta: {
+            banner:
+                "/*! " +
+                "<%= pkg.title || pkg.name %> v<%= pkg.version %> | " +
+                "(c) <%= grunt.template.today(\"yyyy\") %> " +
+                "<%= pkg.author.name %> | " +
+                " Available via <%= pkg.license %> license " +
+                "*/"
         },
 
-        test : {
-            files : ["test/**/*.js"]
-        },
+        test: {
+            dev: {
+                src: [
+                    require.resolve("parts"),
+                    require.resolve("ilk"),
+                    "lib/modl.js",
+                    "test/cases/modl.js"
+                ],
 
-        uglify : {
-            dist : {
-                src : "lib/modl.js",
-                dest : "dist/modl.js"
+                options: {
+                    config: ".gabarito-dev.rc"
+                }
+            },
+
+            ci: {
+                src: [
+                    require.resolve("parts"),
+                    require.resolve("ilk"),
+                    "lib/modl.js",
+                    "test/cases/modl.js"
+                ]
             }
         },
 
-        jshint : {
-            options : {
-                /* enforcing */
-                strict : true,
-                bitwise : false,
-                curly : true,
-                eqeqeq : true,
-                immed : true,
-                latedef : true,
-                newcap : true,
-                noarg : true,
-                noempty : true,
-                plusplus : true,
-                quotmark : "double",
+        uglify: {
+            dist: {
+                src: "lib/modl.js",
+                dest: "dist/modl.js"
+            }
+        },
 
-                undef : true,
+        jshint: {
+            options: {
+                /* enforcing */
+                strict: true,
+                bitwise: false,
+                curly: true,
+                eqeqeq: true,
+                immed: true,
+                latedef: true,
+                newcap: true,
+                noarg: true,
+                noempty: true,
+                plusplus: true,
+                quotmark: "double",
+
+                undef: true,
 
                 /* relaxing */
-                eqnull : true,
-                sub : true,
+                eqnull: true,
+                sub: true,
 
                 /* environment */
                 node: true,
@@ -51,10 +75,17 @@ module.exports = function(grunt) {
                 globals: { modl: true }
             },
 
-            files : ["Gruntfile.js", "lib/**/*.js", "test/**/*.js"]
+            files: ["Gruntfile.js", "lib/**/*.js", "test/cases/**/*.js"]
         },
 
-        yuidoc : {
+        jscs: {
+            src: ["Gruntfile.js", "lib/**/*.js", "test/cases/**/*.js"],
+            options: {
+                config: ".jscsrc"
+            }
+        },
+
+        yuidoc: {
             compile: {
                 name: "<%= pkg.name %>",
                 description: "<%= pkg.description %>",
@@ -65,7 +96,7 @@ module.exports = function(grunt) {
                     outdir: "docs/"
                 }
             }
-          }
+        }
 
     });
 
@@ -73,11 +104,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-yuidoc");
-
-    // Local tasks
-    grunt.loadTasks("tasks");
+    grunt.loadNpmTasks("grunt-gabarito");
+    grunt.loadNpmTasks("grunt-jscs");
 
     // Defaults
-    grunt.registerTask("default", ["jshint", "test", "uglify", "yuidoc"]);
+    grunt.registerTask("default", ["jscs", "jshint", "test:dev"]);
+    grunt.registerTask("ci", ["jscs", "jshint", "test:ci"]);
+    grunt.registerTask("dist", ["uglify"]);
 
 };
