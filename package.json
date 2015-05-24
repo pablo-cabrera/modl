@@ -10,8 +10,8 @@
     },
 
     "devDependencies": {
-        "grunt-gabarito": "^0.0.1-alpha.005",
-        "gabarito": "^0.0.1-alpha.005",
+        "grunt-gabarito": "^0.0.1-alpha.006",
+        "gabarito": "^0.0.1-alpha.006",
 
         "grunt-contrib-jshint": "*",
         "grunt-contrib-uglify": "*",
