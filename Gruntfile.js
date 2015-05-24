@@ -3,6 +3,14 @@ module.exports = function (grunt) {
 
     grunt.option("stack", true);
 
+
+    var testFiles = [
+        require.resolve("parts"),
+        require.resolve("ilk"),
+        "lib/modl.js",
+        "test/cases/modl.js"
+    ];
+
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
@@ -19,25 +27,90 @@ module.exports = function (grunt) {
 
         test: {
             dev: {
-                src: [
-                    require.resolve("parts"),
-                    require.resolve("ilk"),
-                    "lib/modl.js",
-                    "test/cases/modl.js"
-                ],
+                src: testFiles,
 
                 options: {
                     config: ".gabarito-dev.rc"
                 }
             },
 
+            "ie10": {
+                src: testFiles,
+
+                options: {
+                    environments: [
+                        {
+                            "type": "vbox-selenium",
+                            "browserName": "internet explorer",
+                            "version": "10",
+                            "platform": "WINDOWS",
+                            "vm": "IE10 - Win7",
+                            "vmAddress": "20.0.0.151"
+                        }
+                    ]
+                }
+            },
+
+            "ie11": {
+                src: testFiles,
+
+                options: {
+                    environments: [
+                        {
+                            "type": "vbox-selenium",
+                            "browserName": "internet explorer",
+                            "version": "11",
+                            "platform": "WINDOWS",
+                            "vm": "IE11 - Win7",
+                            "vmAddress": "20.0.0.151"
+                        }
+                    ]
+                }
+            },
+
+            "ff-linux": {
+                src: testFiles,
+
+                options: {
+                    environments: [
+                        {
+                            "type": "selenium",
+                            "browserName": "firefox",
+                            "platform": "LINUX"
+                        }
+                    ]
+                }
+            },
+
+            "cr-linux": {
+                src: testFiles,
+
+                options: {
+                    environments: [
+                        {
+                            "type": "selenium",
+                            "browserName": "chrome",
+                            "platform": "LINUX"
+                        }
+                    ]
+                }
+            },
+
+            "node": {
+                src: testFiles,
+                options: { environments: ["node"] }
+            },
+
+            local: {
+                src: testFiles,
+
+                options: {
+                    config: ".gabarito-local.rc"
+                }
+            },
+
             ci: {
-                src: [
-                    require.resolve("parts"),
-                    require.resolve("ilk"),
-                    "lib/modl.js",
-                    "test/cases/modl.js"
-                ]
+                src: testFiles
             }
         },
 

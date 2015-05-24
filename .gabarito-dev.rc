@@ -21,22 +21,6 @@
         },
         {
             "type": "vbox-selenium",
-            "browserName": "internet explorer",
-            "version": "9",
-            "platform": "WINDOWS",
-            "vm": "IE9 - Win7",
-            "vmAddress": "20.0.0.151"
-        },
-        {
-            "type": "vbox-selenium",
-            "browserName": "internet explorer",
-            "version": "8",
-            "platform": "WINDOWS",
-            "vm": "IE8 - WinXP",
-            "vmAddress": "20.0.0.151"
-        },
-        {
-            "type": "vbox-selenium",
             "browserName": "chrome",
             "platform": "WINDOWS",
             "vm": "IE8 - WinXP",

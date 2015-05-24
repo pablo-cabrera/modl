@@ -15,52 +15,22 @@
         modl = require(root + "/lib/modl");
     } else {
         main = window;
-        gabarito = window.gabarito;
-        parts = window.parts;
-        root = "../";
+        gabarito = main.gabarito;
+        parts = main.parts;
+        modl = main.modl;
+        root = "/r/";
     }
 
     var assert = gabarito.assert;
-
-    var uncaughtExceptionListeners = node?
-        parts.slice(process.listeners("uncaughtException")):
-        null;
-
-    var catchAll = node?
-        function (f) {
-            process.removeAllListeners("uncaughtException");
-            process.on("uncaughtException", function (e) { f(e.toString()); });
-        }:
-        function (f) {
-            main.onerror = function (e) {
-                try {
-                    f(e);
-                } finally {
-                    return true;
-                }
-            };
-        };
 
     gabarito.add(parts.make()
 
     ("name", "modl-test")
 
     ("before", function () {
-        modl.setup({ "root": root + "test/fixtures" });
+        modl.setup({ "root": root + "test/fixtures"});
     })
 
-    ("after", function () {
-        if (node) {
-            process.removeAllListeners("uncaughtException");
-            uncaughtExceptionListeners.forEach(function (l) {
-                process.on("uncaughtException", l);
-            });
-        } else {
-            main.onerror = null;
-        }
-    })
-
-    /*
     ("should have a module object as first argument", function () {
         modl.
         unit(function (module) {
@@ -107,6 +77,8 @@
     })
 
     ("should load a module that depends on another module", function () {
+        modl.on("error", function (e) { console.log(e); });
+
         modl.
         uses("mod-b").
         unit(gabarito.going(function (module, modB) {
@@ -157,7 +129,7 @@
             assert.areSame(e.message, "Alias clash: x");
         }
     })
-*/
+
     ("should reuse a parent loaded module", function () {
         modl.
         uses("mod-e", "e").
@@ -169,7 +141,7 @@
 
         gabarito.stay();
     })
-/*
+
     ("should load a concatenated module", function () {
         modl.
         uses("mod-c").
@@ -225,13 +197,17 @@
     })
 
     ("should handle a concatenated module", function () {
+        var run = false;
+
         modl.$module({
             "/module": function () {
                 modl.unit(function (module) {
-                    assert.pass();
+                    run = true;
                 });
             }
         });
+
+        assert.isTrue(run);
     })
 
     ("should handle a concatenated module with local assets", function () {
@@ -277,33 +253,37 @@
     })
 
     ("should fail when an error is thrown within the unit", function () {
-        catchAll(gabarito.going(function (e) {
-            assert.areSame("Error: fail", e);
+        var error = new Error("fail");
+
+        modl.on("error", gabarito.going(function (e) {
+            assert.areSame(error, e);
         }));
+
+        gabarito.stay();
 
         modl.
         unit(function () {
-            throw new Error("fail");
+            throw error;
         });
 
-        gabarito.stay();
     })
 
     ("should fail when an error is thrown within the unit of a local asset",
     function () {
-        catchAll(gabarito.going(function (e) {
-            assert.areSame("Error: Fucked up", e);
+
+        modl.on("error", gabarito.going(function (e) {
+            assert.areSame("Fucked up", e.message);
         }));
+
+        gabarito.stay();
 
         modl.
         uses("/Throw").
         unit(gabarito.going(function () {
-            assert.fail();
+            throw new Error("Shouldn't reach here");
         }));
-
-        gabarito.stay();
     })
-*/
+
     ("dummy", undefined).build());
 
 }(typeof exports !== "undefined" && global.exports !== exports));
