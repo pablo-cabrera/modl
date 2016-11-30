@@ -3,16 +3,9 @@ YUI.add("yuidoc-meta", function(Y) {
     "classes": [
         "modl",
         "modl.Asset",
-        "modl.Bilbo",
-        "modl.Bilbo.Bag",
-        "modl.Bilbo.MockingBag",
         "modl.Loader",
         "modl.Module",
-        "modl.Promise",
-        "modl.Ready",
-        "modl.Token",
-        "modl.Type",
-        "modl.Util"
+        "modl.Ready"
     ],
     "modules": [],
     "allModules": []

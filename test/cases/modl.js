@@ -23,101 +23,101 @@
 
     var assert = gabarito.assert;
 
-    gabarito.add(parts.make()
+    gabarito.test("modl").
 
-    ("name", "modl-test")
-
-    ("before", function () {
+    before(function () {
         modl.setup({ "root": root + "test/fixtures"});
-    })
+    }).
 
-    ("should have a module object as first argument", function () {
+    clause("should have a module object as first argument", function () {
         modl.
         unit(function (module) {
             assert.isObject(module);
             assert.isObject(module.exports);
             assert.isObject(module.imports);
         });
-    })
+    }).
 
-    ("should load two assets that uses the same asset", function () {
+    clause("should load two assets that uses the same asset", function (ctx) {
         modl.
         uses("/AssetA").
         uses("/AssetB").
-        unit(gabarito.going(function (module) {
+        unit(ctx.going(function (module) {
             assert.isObject(module.imports["AssetA"],
                     "No AssetA within imports");
             assert.isObject(module.imports["AssetB"],
                     "No AssetB within imports");
         }));
 
-        gabarito.stay();
-    })
+        ctx.stay();
+    }).
 
-    ("should load a local asset", function () {
+    clause("should load a local asset", function (ctx) {
         modl.
         uses("/LocalAsset").
-        unit(gabarito.going(function (module, localAsset) {
+        unit(ctx.going(function (module, localAsset) {
             assert.isObject(module.imports["LocalAsset"],
                     "No local asset within imports");
             assert.areSame(module.imports["LocalAsset"], localAsset,
                     "No localAsset parameter");
         }));
-        gabarito.stay();
-    })
+        ctx.stay();
+    }).
 
-    ("should load a single module", function () {
+    clause("should load a single module", function (ctx) {
         modl.
         uses("mod-a").
-        unit(gabarito.going(function (module) {
+        unit(ctx.going(function (module) {
             assert.isObject(module.imports["mod-a"]);
         }));
 
-        gabarito.stay();
-    })
+        ctx.stay();
+    }).
 
-    ("should load a module that depends on another module", function () {
+    clause("should load a module that depends on another module",
+    function (ctx) {
         modl.on("error", function (e) { console.log(e); });
 
         modl.
         uses("mod-b").
-        unit(gabarito.going(function (module, modB) {
+        unit(ctx.going(function (module, modB) {
             assert.isObject(modB);
             assert.areSame("mod-b", modB.name);
             assert.isObject(modB["mod-c"], "No mod-c");
             assert.areSame("mod-c", modB["mod-c"].name, "Wrong mod-c");
         }));
 
-        gabarito.stay();
-    })
+        ctx.stay();
+    }).
 
-    ("should load a module and put into imports using its alias name",
-    function () {
+    clause("should load a module and put into imports using its alias name",
+    function (ctx) {
         modl.
         uses("mod-a", "module-a").
-        unit(gabarito.going(function (module) {
+        unit(ctx.going(function (module) {
             assert.isUndefined(module.imports["mod-a"]);
             assert.isObject(module.imports["module-a"]);
             assert.areSame("mod-a", module.imports["module-a"].name);
         }));
 
-        gabarito.stay();
-    })
+        ctx.stay();
+    }).
 
-    ("should load an asset and put into imports using its alias name",
-    function () {
+    clause("should load an asset and put into imports using its alias name",
+    function (ctx) {
         modl.
         uses("/LocalAsset", "MyAsset").
-        unit(gabarito.going(function (module) {
+        unit(ctx.going(function (module) {
             assert.isUndefined(module.imports["LocalAsset"]);
             assert.isObject(module.imports["MyAsset"]);
             assert.areSame("LocalAsset", module.imports["MyAsset"].name);
         }));
 
-        gabarito.stay();
-    })
+        ctx.stay();
+    }).
 
-    ("should break when there are 2 aliases with the same name", function () {
+    clause("should break when there are 2 aliases with the same name",
+    function (ctx) {
         try {
             modl.
             uses("mod-a", "x").
@@ -128,37 +128,38 @@
         } catch (e) {
             assert.areSame(e.message, "Alias clash: x");
         }
-    })
+    }).
 
-    ("should reuse a parent loaded module", function () {
+    clause("should reuse a parent loaded module", function (ctx) {
         modl.
         uses("mod-e", "e").
         uses("mod-d", "d").
-        unit(gabarito.going(function (module) {
+        unit(ctx.going(function (module) {
             assert.areSame("mod-e", module.imports.e.name);
             assert.areSame(module.imports.e, module.imports.d.e);
         }));
 
-        gabarito.stay();
-    })
+        ctx.stay();
+    }).
 
-    ("should load a concatenated module", function () {
+    clause("should load a concatenated module", function (ctx) {
         modl.
         uses("mod-c").
-        unit(gabarito.going(function (module, c) {
+        unit(ctx.going(function (module, c) {
             assert.isObject(c);
             assert.areSame("mod-c", c.name);
             assert.isObject(c.d);
             assert.areSame("mod-d", c.d.name);
         }));
 
-        gabarito.stay();
-    })
+        ctx.stay();
+    }).
 
-    ("should load a concatenated module with inner references", function () {
+    clause("should load a concatenated module with inner references",
+    function (ctx) {
         modl.
         uses("mod-f").
-        unit(gabarito.going(function (module, f) {
+        unit(ctx.going(function (module, f) {
             assert.isObject(f);
 
             assert.areSame("mod-f", f.name);
@@ -168,14 +169,14 @@
             assert.areSame(f.g, f.h.g);
         }));
 
-        gabarito.stay();
-    })
+        ctx.stay();
+    }).
 
-    ("should load a concatenated module with more inner references",
-    function () {
+    clause("should load a concatenated module with more inner references",
+    function (ctx) {
         modl.
         uses("mod-g").
-        unit(gabarito.going(function (module, g) {
+        unit(ctx.going(function (module, g) {
             assert.areSame("foo", g.name);
             assert.areSame("foo-Thing", g.Thing.name);
             assert.areSame("foo-AnotherThing", g.AnotherThing.name);
@@ -193,10 +194,10 @@
             assert.areSame(g.baz.Thing, g.baz.AnotherThing.Thing);
         }));
 
-        gabarito.stay();
-    })
+        ctx.stay();
+    }).
 
-    ("should handle a concatenated module", function () {
+    clause("should handle a concatenated module", function (ctx) {
         var run = false;
 
         modl.$module({
@@ -208,9 +209,10 @@
         });
 
         assert.isTrue(run);
-    })
+    }).
 
-    ("should handle a concatenated module with local assets", function () {
+    clause("should handle a concatenated module with local assets",
+    function (ctx) {
 
         modl.$module({
             "/module": function () {
@@ -228,9 +230,10 @@
                 });
             }
         });
-    })
+    }).
 
-    ("should handle a concatenated module with inner references", function () {
+    clause("should handle a concatenated module with inner references",
+    function (ctx) {
         modl.$module({
             "/module": function () {
                 modl.
@@ -250,40 +253,40 @@
                 }
             }
         });
-    })
+    }).
 
-    ("should fail when an error is thrown within the unit", function () {
+    clause("should fail when an error is thrown within the unit",
+    function (ctx) {
         var error = new Error("fail");
 
-        modl.on("error", gabarito.going(function (e) {
+        modl.on("error", ctx.going(function (e) {
             assert.areSame(error, e);
         }));
 
-        gabarito.stay();
+        ctx.stay();
 
         modl.
         unit(function () {
             throw error;
         });
 
-    })
+    }).
 
-    ("should fail when an error is thrown within the unit of a local asset",
-    function () {
+    clause(
+    "should fail when an error is thrown within the unit of a local asset",
+    function (ctx) {
 
-        modl.on("error", gabarito.going(function (e) {
+        modl.on("error", ctx.going(function (e) {
             assert.areSame("Fucked up", e.message);
         }));
 
-        gabarito.stay();
+        ctx.stay();
 
         modl.
         uses("/Throw").
-        unit(gabarito.going(function () {
+        unit(ctx.going(function () {
             throw new Error("Shouldn't reach here");
         }));
-    })
-
-    ("dummy", undefined).build());
+    });
 
 }(typeof exports !== "undefined" && global.exports !== exports));

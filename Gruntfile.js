@@ -25,93 +25,15 @@ module.exports = function (grunt) {
                 "*/"
         },
 
-        test: {
+        gabarito: {
             dev: {
                 src: testFiles,
 
                 options: {
-                    config: ".gabarito-dev.rc"
+                    environments: ["node", "phantom"]
                 }
-            },
-
-            "ie10": {
-                src: testFiles,
-
-                options: {
-                    environments: [
-                        {
-                            "type": "vbox-selenium",
-                            "browserName": "internet explorer",
-                            "version": "10",
-                            "platform": "WINDOWS",
-                            "vm": "IE10 - Win7",
-                            "vmAddress": "20.0.0.151"
-                        }
-                    ]
-                }
-            },
-
-            "ie11": {
-                src: testFiles,
-
-                options: {
-                    environments: [
-                        {
-                            "type": "vbox-selenium",
-                            "browserName": "internet explorer",
-                            "version": "11",
-                            "platform": "WINDOWS",
-                            "vm": "IE11 - Win7",
-                            "vmAddress": "20.0.0.151"
-                        }
-                    ]
-                }
-            },
-
-            "ff-linux": {
-                src: testFiles,
-
-                options: {
-                    environments: [
-                        {
-                            "type": "selenium",
-                            "browserName": "firefox",
-                            "platform": "LINUX"
-                        }
-                    ]
-                }
-            },
-
-            "cr-linux": {
-                src: testFiles,
-
-                options: {
-                    environments: [
-                        {
-                            "type": "selenium",
-                            "browserName": "chrome",
-                            "platform": "LINUX"
-                        }
-                    ]
-                }
-            },
-
-            "node": {
-                src: testFiles,
-                options: { environments: ["node"] }
-            },
-
-            local: {
-                src: testFiles,
-
-                options: {
-                    config: ".gabarito-local.rc"
-                }
-            },
-
-            ci: {
-                src: testFiles
             }
+
         },
 
         uglify: {
@@ -181,8 +103,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-jscs");
 
     // Defaults
-    grunt.registerTask("default", ["jscs", "jshint", "test:dev"]);
-    grunt.registerTask("ci", ["jscs", "jshint", "test:ci"]);
+    grunt.registerTask("default", ["jscs", "jshint", "gabarito"]);
     grunt.registerTask("dist", ["uglify"]);
 
 };
