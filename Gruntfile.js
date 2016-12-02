@@ -3,14 +3,6 @@ module.exports = function (grunt) {
 
     grunt.option("stack", true);
 
-
-    var testFiles = [
-        require.resolve("parts"),
-        require.resolve("ilk"),
-        "lib/modl.js",
-        "test/cases/modl.js"
-    ];
-
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
@@ -26,13 +18,34 @@ module.exports = function (grunt) {
         },
 
         gabarito: {
-            dev: {
-                src: testFiles,
+            modl: {
+                src: [
+                    require.resolve("parts"),
+                    require.resolve("ilk"),
+                    "lib/modl.js",
+                    "test/cases/modl.js"
+                ],
 
                 options: {
                     environments: ["node", "phantom"]
                 }
+            },
+            builder: {
+                src: [
+                    "test/cases/Builder.js"
+                ],
+
+                options: {
+                    environments: ["node"],
+                    reporters: [
+                        {
+                            type: "console",
+                            stack: true
+                        }
+                    ]
+                }
             }
+
 
         },
 
@@ -57,6 +70,7 @@ module.exports = function (grunt) {
                 noempty: true,
                 plusplus: true,
                 quotmark: "double",
+                evil: true,
 
                 undef: true,
 
@@ -91,7 +105,21 @@ module.exports = function (grunt) {
                     outdir: "docs/"
                 }
             }
-        }
+        },
+
+        watch: {
+            lint: {
+                files: ["Gruntfile.js", "lib/**/*.js", "test/cases/**/*.js"],
+                tasks: ["jscs", "jshint", "gabarito:builder"],
+                options: {
+                    atBegin: true
+                }
+            }
+
+        },
+
+        clean: ["build", "dist"]
+
 
     });
 
@@ -99,11 +127,16 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-yuidoc");
+    grunt.loadNpmTasks("grunt-contrib-watch");
+    grunt.loadNpmTasks("grunt-contrib-clean");
+
     grunt.loadNpmTasks("grunt-gabarito");
     grunt.loadNpmTasks("grunt-jscs");
 
     // Defaults
-    grunt.registerTask("default", ["jscs", "jshint", "gabarito"]);
+    grunt.registerTask("default", ["jscs", "jshint", "gabarito:modl",
+            "gabarito:builder"]);
+
     grunt.registerTask("dist", ["uglify"]);
 
 };
