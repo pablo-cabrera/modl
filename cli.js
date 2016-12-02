@@ -5,7 +5,7 @@ var fs = require("fs");
 
 var options = cli.parse({
     path: ["p", "Path to module", "path", process.cwd()],
-    output: ["o", "Output file", "output", "module.js"]
+    output: ["o", "Output file", "file", "module.js"]
 });
 
 var Builder = require("./lib/Builder");
