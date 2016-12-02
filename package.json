@@ -1,11 +1,11 @@
 {
   "name": "modl",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Pablo Cabrera <pablo.cabrera.munoz@gmail.com>",
   "main": "lib/modl.js",
   "dependencies": {
     "cli": "^1.0.1",
-    "ilk": "0.0.1",
+    "ilk": "0.0.1-alpha.1",
     "parts": "0.0.1"
   },
   "devDependencies": {
