@@ -41,6 +41,8 @@ before(function () {
                 null;
         }),
 
+        accessSync: parts.constant(true),
+
         statSync: gabarito.spy(function () {
             return { isDirectory: gabarito.spy(parts.constant(true)) };
         })
@@ -53,7 +55,9 @@ before(function () {
     builder = new MyBuilder(root, fs);
 }).
 
-clause("build should fetchContents, resolveMissingModules and return assemble",
+clause(
+"build should fetchContents, resolveMissingModules and return assemble " +
+"wrapped in the $module initialization",
 function () {
     var assembleContents = unique();
 
@@ -63,7 +67,7 @@ function () {
 
     var out = builder.build();
 
-    assert.that(out).sameAs(assembleContents);
+    assert.that(out).sameAs("modl.$module(" + assembleContents + ");");
 
     builder[shared.fetchContents].verify();
     builder[shared.resolveMissingModules].verify();
@@ -91,6 +95,8 @@ function () {
         parts.format("return String(%s);", [innerModule]);
 
     var body = builder.build();
+    body = body.substr(13);
+    body = body.substr(0, body.length - 2);
     var out = (new Function("return " + body + ";"))();
 
     assert.that(out["/asset"]()).sameAs(asset);

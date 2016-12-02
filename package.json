@@ -1,29 +1,27 @@
 {
-    "name": "modl",
-    "version": "0.0.1",
-    "author": "Pablo Cabrera <pablo.cabrera.munoz@gmail.com>",
-    "main": "lib/modl.js",
-
-    "dependencies": {
-        "ilk": "0.0.1-alpha.1",
-        "parts": "0.0.1"
-    },
-
-    "devDependencies": {
-        "gabarito": "0.0.1",
-        "grunt-gabarito": "^0.0.4",
-        "grunt-contrib-jshint": "*",
-        "grunt-contrib-uglify": "*",
-        "grunt-contrib-yuidoc": "~0.4.0",
-        "grunt-contrib-watch": "^1.0.0",
-        "grunt-contrib-clean": "^1.0.0",
-        "grunt": "~0.4.0",
-        "grunt-jscs": "^1.6.0"
-    },
-
-    "scripts": {
-        "test": "grunt"
-    },
-
-    "license": "MIT"
+  "name": "modl",
+  "version": "0.0.1",
+  "author": "Pablo Cabrera <pablo.cabrera.munoz@gmail.com>",
+  "main": "lib/modl.js",
+  "dependencies": {
+    "cli": "^1.0.1",
+    "ilk": "0.0.1-alpha.1",
+    "parts": "0.0.1"
+  },
+  "devDependencies": {
+    "gabarito": "0.0.1",
+    "grunt-gabarito": "^0.0.4",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-yuidoc": "~0.4.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt": "~0.4.0",
+    "grunt-jscs": "^1.6.0"
+  },
+  "scripts": {
+    "test": "grunt"
+  },
+  "bin": "cli.js",
+  "license": "MIT"
 }
