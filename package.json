@@ -1,16 +1,16 @@
 {
   "name": "modl",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Pablo Cabrera <pablo.cabrera.munoz@gmail.com>",
   "main": "lib/modl.js",
   "dependencies": {
     "cli": "^1.0.1",
-    "ilk": "0.0.1-alpha.1",
-    "parts": "0.0.1"
+    "ilk": "0.3.0",
+    "parts": "0.0.2"
   },
   "devDependencies": {
     "gabarito": "0.0.1",
-    "grunt-gabarito": "^0.0.4",
+    "grunt-gabarito": "^0.0.5",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-yuidoc": "~0.4.0",
